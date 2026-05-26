@@ -29,80 +29,68 @@
             transition: all 0.3s ease;
         }
 
-        /* ========== QUIZ CARD WITH FLORAL DESIGN ========== */
+        /* ========== QUIZ CARD WITH FLORAL DECORATIONS ========== */
         .quiz-card {
             background: #F8F9FA;
-            border-radius: 48px;
+            border-radius: 56px;
             padding: 2rem 1.8rem 2.2rem;
             box-shadow: 0 30px 45px -15px rgba(0, 0, 0, 0.4);
             position: relative;
-            /* Subtle printed flowers pattern (very light) */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ctext x='10' y='30' font-size='14' fill='%23f0d0b0' opacity='0.25'%3E🌸%3C/text%3E%3Ctext x='45' y='60' font-size='16' fill='%23f0c0a0' opacity='0.2'%3E🌼%3C/text%3E%3Ctext x='30' y='10' font-size='12' fill='%23ecc0a0' opacity='0.2'%3E🌷%3C/text%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 48px 48px;
-            border: 2px solid #fff0e0;
-            outline: 1px solid #ffd9b5;
-            outline-offset: 4px;
+            /* Floral patterned background (very subtle) */
+            background-image: repeating-linear-gradient(45deg, rgba(255,220,180,0.12) 0px, rgba(255,220,180,0.12) 2px, transparent 2px, transparent 8px),
+                              repeating-linear-gradient(135deg, rgba(255,200,150,0.1) 0px, rgba(255,200,150,0.1) 2px, transparent 2px, transparent 12px);
+            border: 2px solid #ffe6d5;
+            outline: 2px solid #ffccaa;
+            outline-offset: 6px;
+            transition: all 0.2s;
         }
 
-        /* Decorative corners & side flowers (using pseudo-elements) */
+        /* extra flower corner decor */
         .quiz-card::before,
         .quiz-card::after {
             content: "🌸";
-            font-size: 28px;
+            font-size: 36px;
             position: absolute;
-            opacity: 0.7;
+            opacity: 0.8;
             pointer-events: none;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            z-index: 2;
         }
         .quiz-card::before {
-            top: -10px;
-            left: -10px;
-            transform: rotate(-15deg);
+            top: -16px;
+            left: -16px;
+            transform: rotate(-20deg);
         }
         .quiz-card::after {
-            bottom: -10px;
-            right: -10px;
-            transform: rotate(15deg);
+            bottom: -16px;
+            right: -16px;
+            transform: rotate(20deg);
             content: "🌼";
         }
-        /* additional side flowers */
-        .quiz-card .floral-corner-left {
-            position: absolute;
-            top: 20px;
-            right: -12px;
-            font-size: 26px;
-            opacity: 0.6;
-            pointer-events: none;
-        }
-        /* (we'll add one more via extra span but we can't modify html easily, so use extra pseudo) */
+
+        /* add extra side flowers using container pseudo (one more) */
         .quiz-card {
             overflow: visible;
         }
-        /* second pair of flowers on left/right edges */
-        .quiz-card {
-            container-type: inline-size;
+        /* mid-edge flowers via background shape? simpler: add a sibling via :before on wrapper? but clean enough */
+        .quiz-card .floral-tag {
+            display: none;
         }
-        .quiz-card::before {
-            top: -10px;
-            left: -10px;
-        }
-        .quiz-card::after {
-            bottom: -10px;
-            right: -10px;
-        }
-        /* add mid‑edge flowers using extra pseudo (only if needed) */
+
+        /* additional decorative elements using extra pseudo not possible, so we add an internal div via js? but pure css: */
         .quiz-card {
             position: relative;
         }
-        /* extra floral on top-right and bottom-left using background linear? simpler: add border image? fine. */
+        /* side flowers using background radial gradient trick */
         .quiz-card {
-            border-image: repeating-linear-gradient(45deg, #ffdfbf, #ffdfbf 20px, #fff0e0 20px, #fff0e0 40px) 30;
-            border-image-slice: 1;
-            border-width: 2px;
+            background-image: radial-gradient(circle at 5% 10%, rgba(255,210,160,0.3) 2px, transparent 2px),
+                              radial-gradient(circle at 95% 85%, rgba(255,200,150,0.3) 3px, transparent 3px),
+                              repeating-linear-gradient(45deg, rgba(255,220,180,0.12) 0px, rgba(255,220,180,0.12) 2px, transparent 2px, transparent 8px);
+            background-size: 28px 28px, 32px 32px, auto;
+            background-repeat: no-repeat, no-repeat, repeat;
+            background-position: 0% 0%, 100% 100%, 0 0;
         }
-        /* but to not overdo, we keep subtle. */
-        
+
         .question-text {
             color: #1E272C;
             font-size: 1.7rem;
@@ -110,6 +98,11 @@
             margin-bottom: 1.6rem;
             line-height: 1.3;
             text-align: center;
+            background: rgba(255,245,235,0.4);
+            padding: 10px 16px;
+            border-radius: 60px;
+            display: inline-block;
+            width: 100%;
         }
 
         .answers-area {
@@ -132,12 +125,13 @@
         .answer-option:hover {
             background: #eef3ff;
             border-color: #7fa5e2;
+            transform: translateX(4px);
         }
 
         .answer-option input {
             width: 22px;
             height: 22px;
-            accent-color: #2c5282;
+            accent-color: #c45b2c;
             cursor: pointer;
             margin: 0;
         }
@@ -151,7 +145,7 @@
         }
 
         .submit-btn {
-            background: #2c5282;
+            background: linear-gradient(135deg, #2c5282, #1f3f64);
             border: none;
             color: white;
             font-weight: 700;
@@ -163,10 +157,11 @@
             transition: 0.2s;
             margin-top: 12px;
             font-family: inherit;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         }
 
         .submit-btn:hover {
-            background: #1a3f63;
+            background: linear-gradient(135deg, #1f3f64, #162c48);
             transform: scale(1.01);
         }
 
@@ -176,17 +171,18 @@
             font-size: 0.9rem;
             color: #64748B;
             font-weight: 500;
-            border-top: 1px solid #e2e8f0;
+            border-top: 2px dotted #ffcfb0;
             padding-top: 18px;
         }
 
-        /* game over card (matching style but without flowers) */
+        /* game over card */
         .game-over-card {
             background: #F8F9FA;
-            border-radius: 48px;
+            border-radius: 56px;
             padding: 2.5rem;
             text-align: center;
             box-shadow: 0 30px 45px -15px rgba(0,0,0,0.4);
+            border: 2px solid #ffd9b5;
         }
 
         .start-again-btn {
@@ -199,6 +195,7 @@
             cursor: pointer;
         }
 
+        /* trash modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -226,6 +223,7 @@
             width: 80%;
             padding: 2rem 1.5rem;
             text-align: center;
+            border: 3px solid #ffb485;
         }
         .modal-content p {
             font-size: 1.3rem;
@@ -241,6 +239,7 @@
             cursor: pointer;
         }
 
+        /* gift finale */
         .gift-finale-container {
             background: #F8F9FA;
             border-radius: 56px;
@@ -248,12 +247,17 @@
             text-align: center;
             box-shadow: 0 35px 50px rgba(0,0,0,0.3);
             min-height: 520px;
+            border: 2px solid #ffe0c0;
         }
         .mystery-box {
             background: linear-gradient(145deg, #b87333, #9b4b1c);
             border-radius: 42px;
             padding: 3rem 1rem;
             cursor: pointer;
+            transition: 0.2s;
+        }
+        .mystery-box:hover {
+            transform: scale(1.02);
         }
         .photo-stack {
             position: relative;
@@ -269,6 +273,7 @@
             cursor: grab;
             touch-action: pan-y pinch-zoom;
             box-shadow: 0 12px 22px rgba(0,0,0,0.15);
+            border: 2px solid #ffdbb5;
         }
         .photo-card img {
             width: 100%;
@@ -288,9 +293,11 @@
             padding: 1.8rem;
             margin-top: 20px;
             cursor: pointer;
+            transition: 0.2s;
+            border: 2px solid #f7d9a0;
         }
         .final-love-text {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 500;
             color: #7a3a1a;
             background: #fff0e0;
@@ -298,6 +305,8 @@
             padding: 20px;
             text-align: left;
             line-height: 1.5;
+            max-height: 400px;
+            overflow-y: auto;
         }
         .hidden { display: none; }
         .petal {
@@ -313,7 +322,7 @@
             100% { transform: translateY(100vh) rotate(260deg); opacity: 0; }
         }
         @media (max-width: 550px) {
-            .question-text { font-size: 1.4rem; }
+            .question-text { font-size: 1.3rem; }
             .answer-option label { font-size: 0.85rem; }
         }
     </style>
@@ -357,7 +366,7 @@
 </div>
 
 <script>
-    // ======================== 📌 YOUR CUSTOM DATA ========================
+    // ======================== 📌 YOUR CUSTOM DATA (EASILY EDITABLE) ========================
     const trashTalkQuotes = [
         "Thikase bhai ei chinla amake? Bujhsi bhalo kaj korso cccc. Mane ekta kaj Jodi korte parta taile ek kotha lol ei easy question tao pare nai mane ekjon eto useless kemne hoy but nws parba next time xD",
         "Jantam gf ta ektu bolodbhodai . Uselessness at it’s peak. Imagine being that useless and not even knowing ei easy question er answer lol. Its alright tho. Happens.. wrong shot maybe(it wasn’t) LOL",
@@ -400,9 +409,9 @@
         { question: "Which one do you think tausif likes the most?", answers: ["Najifa","Najifah","Najiatfaaaaaaaahhhhhhhhhhhhhhhhhhh","Najifaaaaaaaahhhhhhhhhhhhhhhhhhh"], correct: 3 }
     ];
 
-    // --------------------- GAME LOGIC (unchanged) ---------------------
+    // --------------------- GAME ENGINE (robust) ---------------------
     let currentQIndex = 0, score = 0, waitingSubmit = false;
-    const totalQuestions = quizData.length;
+    const totalQ = quizData.length;
     const quizSectionEl = document.getElementById('quizSection');
     const gameOverSectionEl = document.getElementById('gameOverSection');
     const giftSectionEl = document.getElementById('giftFinaleSection');
@@ -427,7 +436,8 @@
             gameOverSectionEl.style.display = 'block';
             giftSectionEl.style.display = 'none';
             waitingSubmit = false;
-            document.removeEventListener('click', closeHandler);
+            closeModalBtnEl.onclick = null;
+            trashModalEl.onclick = null;
         };
         closeModalBtnEl.onclick = closeHandler;
         trashModalEl.onclick = (e) => { if(e.target === trashModalEl) closeHandler(); };
@@ -444,29 +454,29 @@
     }
 
     function createFallingPetals() {
-        const petals = ['🌸','🌼','🌺','💮','🌷','🌸','🌻','🌸'];
-        for(let i=0;i<40;i++) {
+        const petals = ['🌸','🌼','🌺','💮','🌷','🌸','🌻','🌸','🌼'];
+        for(let i=0;i<44;i++) {
             const p = document.createElement('div');
             p.className = 'petal';
             p.textContent = petals[Math.floor(Math.random()*petals.length)];
             p.style.left = Math.random() * 100 + '%';
-            p.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
-            p.style.animationDuration = (Math.random() * 2 + 2.2) + 's';
-            p.style.animationDelay = Math.random() * 0.6 + 's';
+            p.style.fontSize = (Math.random() * 1.8 + 1) + 'rem';
+            p.style.animationDuration = (Math.random() * 2.5 + 2) + 's';
+            p.style.animationDelay = Math.random() * 0.7 + 's';
             document.body.appendChild(p);
             p.addEventListener('animationend', () => p.remove());
         }
     }
 
     function renderCurrentQuestion() {
-        if(currentQIndex >= totalQuestions) {
-            if(score === totalQuestions) showGrandFinale();
+        if(currentQIndex >= totalQ) {
+            if(score === totalQ) showGrandFinale();
             else resetQuiz();
             return;
         }
         const q = quizData[currentQIndex];
         questionTextEl.innerText = q.question;
-        progressSpanEl.innerText = `Question ${currentQIndex+1}/${totalQuestions}  ❤️ Score: ${score}/${totalQuestions}`;
+        progressSpanEl.innerText = `🌹 Question ${currentQIndex+1}/${totalQ}  ❤️ Score: ${score}/${totalQ}`;
         answersAreaEl.innerHTML = '';
         const isMulti = Array.isArray(q.correct);
         q.answers.forEach((ans, idx) => {
@@ -508,7 +518,7 @@
         createFallingPetals();
         score++;
         currentQIndex++;
-        if(score === totalQuestions) { showGrandFinale(); return; }
+        if(score === totalQ) { showGrandFinale(); return; }
         renderCurrentQuestion();
         waitingSubmit = false;
     }
