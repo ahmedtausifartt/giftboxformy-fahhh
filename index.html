@@ -23,22 +23,86 @@
             overflow-x: hidden;
         }
 
-        /* main container */
         .game-container {
             max-width: 850px;
             width: 100%;
             transition: all 0.3s ease;
         }
 
-        /* QUIZ CARD */
+        /* ========== QUIZ CARD WITH FLORAL DESIGN ========== */
         .quiz-card {
             background: #F8F9FA;
             border-radius: 48px;
-            box-shadow: 0 30px 45px -15px rgba(0, 0, 0, 0.4);
             padding: 2rem 1.8rem 2.2rem;
-            transition: 0.2s;
+            box-shadow: 0 30px 45px -15px rgba(0, 0, 0, 0.4);
+            position: relative;
+            /* Subtle printed flowers pattern (very light) */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ctext x='10' y='30' font-size='14' fill='%23f0d0b0' opacity='0.25'%3E🌸%3C/text%3E%3Ctext x='45' y='60' font-size='16' fill='%23f0c0a0' opacity='0.2'%3E🌼%3C/text%3E%3Ctext x='30' y='10' font-size='12' fill='%23ecc0a0' opacity='0.2'%3E🌷%3C/text%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 48px 48px;
+            border: 2px solid #fff0e0;
+            outline: 1px solid #ffd9b5;
+            outline-offset: 4px;
         }
 
+        /* Decorative corners & side flowers (using pseudo-elements) */
+        .quiz-card::before,
+        .quiz-card::after {
+            content: "🌸";
+            font-size: 28px;
+            position: absolute;
+            opacity: 0.7;
+            pointer-events: none;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .quiz-card::before {
+            top: -10px;
+            left: -10px;
+            transform: rotate(-15deg);
+        }
+        .quiz-card::after {
+            bottom: -10px;
+            right: -10px;
+            transform: rotate(15deg);
+            content: "🌼";
+        }
+        /* additional side flowers */
+        .quiz-card .floral-corner-left {
+            position: absolute;
+            top: 20px;
+            right: -12px;
+            font-size: 26px;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        /* (we'll add one more via extra span but we can't modify html easily, so use extra pseudo) */
+        .quiz-card {
+            overflow: visible;
+        }
+        /* second pair of flowers on left/right edges */
+        .quiz-card {
+            container-type: inline-size;
+        }
+        .quiz-card::before {
+            top: -10px;
+            left: -10px;
+        }
+        .quiz-card::after {
+            bottom: -10px;
+            right: -10px;
+        }
+        /* add mid‑edge flowers using extra pseudo (only if needed) */
+        .quiz-card {
+            position: relative;
+        }
+        /* extra floral on top-right and bottom-left using background linear? simpler: add border image? fine. */
+        .quiz-card {
+            border-image: repeating-linear-gradient(45deg, #ffdfbf, #ffdfbf 20px, #fff0e0 20px, #fff0e0 40px) 30;
+            border-image-slice: 1;
+            border-width: 2px;
+        }
+        /* but to not overdo, we keep subtle. */
+        
         .question-text {
             color: #1E272C;
             font-size: 1.7rem;
@@ -116,18 +180,13 @@
             padding-top: 18px;
         }
 
-        /* game over */
+        /* game over card (matching style but without flowers) */
         .game-over-card {
             background: #F8F9FA;
             border-radius: 48px;
             padding: 2.5rem;
             text-align: center;
-        }
-
-        .game-over-card h2 {
-            color: #cb2e2e;
-            font-size: 2rem;
-            margin-bottom: 1rem;
+            box-shadow: 0 30px 45px -15px rgba(0,0,0,0.4);
         }
 
         .start-again-btn {
@@ -140,7 +199,6 @@
             cursor: pointer;
         }
 
-        /* modal trash talk */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -157,12 +215,10 @@
             opacity: 0;
             transition: 0.2s;
         }
-
         .modal-overlay.active {
             visibility: visible;
             opacity: 1;
         }
-
         .modal-content {
             background: #fff0e7;
             border-radius: 48px;
@@ -171,14 +227,11 @@
             padding: 2rem 1.5rem;
             text-align: center;
         }
-
         .modal-content p {
             font-size: 1.3rem;
             font-weight: 600;
             color: #b33;
-            margin-bottom: 1.5rem;
         }
-
         .modal-close {
             background: #2c3e50;
             border: none;
@@ -188,7 +241,6 @@
             cursor: pointer;
         }
 
-        /* gift finale */
         .gift-finale-container {
             background: #F8F9FA;
             border-radius: 56px;
@@ -197,49 +249,31 @@
             box-shadow: 0 35px 50px rgba(0,0,0,0.3);
             min-height: 520px;
         }
-
         .mystery-box {
             background: linear-gradient(145deg, #b87333, #9b4b1c);
             border-radius: 42px;
             padding: 3rem 1rem;
             cursor: pointer;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
-
-        .mystery-box p {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #ffecb3;
-        }
-
         .photo-stack {
             position: relative;
             width: 100%;
             max-width: 360px;
             margin: 0 auto;
         }
-
         .photo-card {
             background: white;
             border-radius: 32px;
             padding: 12px;
             margin-bottom: 18px;
             cursor: grab;
-            transition: 0.1s linear;
             touch-action: pan-y pinch-zoom;
             box-shadow: 0 12px 22px rgba(0,0,0,0.15);
         }
-
-        .photo-card:active {
-            cursor: grabbing;
-        }
-
         .photo-card img {
             width: 100%;
             border-radius: 24px;
-            background: #f2e8da;
         }
-
         .swipe-hint {
             font-size: 0.8rem;
             color: #64748B;
@@ -247,18 +281,14 @@
             display: inline-block;
             padding: 6px 16px;
             border-radius: 50px;
-            margin: 12px auto;
         }
-
         .folded-paper {
             background: #fff7e8;
             border-radius: 28px;
             padding: 1.8rem;
             margin-top: 20px;
             cursor: pointer;
-            transition: 0.2s;
         }
-
         .final-love-text {
             font-size: 1.1rem;
             font-weight: 500;
@@ -269,12 +299,7 @@
             text-align: left;
             line-height: 1.5;
         }
-
-        .hidden {
-            display: none;
-        }
-
-        /* falling petals */
+        .hidden { display: none; }
         .petal {
             position: fixed;
             pointer-events: none;
@@ -283,12 +308,10 @@
             font-size: 1.8rem;
             animation: fall linear forwards;
         }
-
         @keyframes fall {
             0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
             100% { transform: translateY(100vh) rotate(260deg); opacity: 0; }
         }
-
         @media (max-width: 550px) {
             .question-text { font-size: 1.4rem; }
             .answer-option label { font-size: 0.85rem; }
@@ -297,7 +320,6 @@
 </head>
 <body>
 <div class="game-container" id="gameContainer">
-    <!-- QUIZ SECTION -->
     <div id="quizSection" class="quiz-card">
         <div class="question-text" id="questionText"></div>
         <div class="answers-area" id="answersArea"></div>
@@ -305,14 +327,12 @@
         <div class="progress-info" id="progressText"></div>
     </div>
 
-    <!-- GAME OVER -->
     <div id="gameOverSection" class="game-over-card" style="display: none;">
         <h2>💀 u lost lol blood ekta 💀</h2>
         <p>Better luck next time, cutie! The quiz resets now.</p>
         <button class="start-again-btn" id="resetGameBtn">✨ Start Again ✨</button>
     </div>
 
-    <!-- GRAND FINALE GIFT -->
     <div id="giftFinaleSection" class="gift-finale-container" style="display: none;">
         <div id="giftInner">
             <div id="mysteryBoxStage">
@@ -329,7 +349,6 @@
     </div>
 </div>
 
-<!-- TRASH MODAL -->
 <div id="trashModal" class="modal-overlay">
     <div class="modal-content">
         <p id="trashMessage"></p>
@@ -338,8 +357,7 @@
 </div>
 
 <script>
-    // ======================== 📌 DATA CONFIGURATION (EDIT HERE) ========================
-    // --- TRASH TALK QUOTES (alternates randomly) ---
+    // ======================== 📌 YOUR CUSTOM DATA ========================
     const trashTalkQuotes = [
         "Thikase bhai ei chinla amake? Bujhsi bhalo kaj korso cccc. Mane ekta kaj Jodi korte parta taile ek kotha lol ei easy question tao pare nai mane ekjon eto useless kemne hoy but nws parba next time xD",
         "Jantam gf ta ektu bolodbhodai . Uselessness at it’s peak. Imagine being that useless and not even knowing ei easy question er answer lol. Its alright tho. Happens.. wrong shot maybe(it wasn’t) LOL",
@@ -350,7 +368,6 @@
         "I really had high hopes for you nigga anyways take this*kisses* (this Is a hidden popup, if u have managed to find it, that means you have successfully messed up an answer lol)"
     ];
 
-    // --- PHOTO GALLERY (replace with your own images) ---
     const photoGallery = [
         "https://scontent.fdac11-1.fna.fbcdn.net/v/t1.15752-9/661819722_806676069184899_4448572708845762364_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=BPm5AN_rVOsQ7kNvwE2TePC&_nc_oc=Adrt06V1G1jegtvMQgyln0XUhxR2JIR7oFBohYpwyyfhvirjhgmOZHj0ryfyQ2U4yJE&_nc_zt=23&_nc_ht=scontent.fdac11-1.fna&_nc_ss=7b6a8&oh=03_Q7cD5QETqHMq42zNcAAxf9APmL_m5HkufQDvyJDiR5hwT67HhQ&oe=6A3D398F",
         "https://scontent.fdac11-1.fna.fbcdn.net/v/t1.15752-9/647513816_4180426978887853_5867822299109313342_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=1eXeWT5reCUQ7kNvwGai-vD&_nc_oc=Ado00F4wbB3dL4nh_W3z7aty6hl9VXp7qnCZ0Yh1ymBmJ4U16Q5S42jgwW149DhXdio&_nc_zt=23&_nc_ht=scontent.fdac11-1.fna&_nc_ss=7b6a8&oh=03_Q7cD5QHRMBiYxtXraoSOrILTTFBHXys0dhkELnwf12bdh1eNpQ&oe=6A3D335B",
@@ -363,14 +380,12 @@
         "https://scontent.cdninstagram.com/v/t51.82787-15/651735706_18057449900476926_1069821413149383850_n.png?_nc_cat=104&ccb=7-5&_nc_sid=ecb677&_nc_ohc=LRDAbCS8lHsQ7kNvwFwNd6w&_nc_oc=AdrSRDkPshgQtd_5cQCpWDrfU7HyCG2H0GhUEvLxVDYLJNVDwvrxW58DyqC2IfqnP0c&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=7F8IF9kw6E9yTsNPJCbhfw&_nc_ss=7b6a8&oh=00_Af6NFNUygXK_QZ6e8F-brDm4SOwFhn2wnd1AJvGSW1Vx7w&oe=6A1BBBE6"
     ];
 
-    // --- FINAL LOVE MESSAGE (appears after unfolding) ---
     const finalLoveMessage = `Hii baby!! How was the quiz? Ig it was pretty easy for you lol, sorry Jodi hard hoye thake or beshi matha use kora lage but then again matha toh surely use koronai since tomar matha e nai LOLZ. Anyways shonapakhijadurtukra amar, I love you my cutie. You’re the best thing that has ever happened to me and insha’Allah oneday we’ll be able to fulfill all of our dreams and hopes and oneday we’ll hold eachother and insha’Allah ill never have to leave that hand alone as I have already promised the queen that this subject shall take care of her for the rest of her life. You’re beautiful, I don’t know how but I find you beautiful in the way you are. Youre like a champagne to me, something id celebrate my victory with, something id like to wash away all my sorrows with. And hopefully ill be your benefactor who always wishes the best thing for you and hopefully we’ll argue a lot and then have a deep convo where we end up kissing eachother and hugging and saying sorry like we do now. Insha’Allah our efforts will never decrease and itll increase a lot. My love for you grows each day like a child who’s in his adolescence and ill keep loving you this way. One day I was thinking je hmmmmmmmm ki gift dewa jay online e oke and I came across this idea and I kinda loved it. Ektu funny,ektu wholesome and ektu cute and lots of efforts. AI diye banaileo amar eventually nijeri draft texts,photos,lekha and allat stuff lekha lage lol, already been 3 to 4days. Hopefully you liked it. Thank you for taking your time to play this game out lol. Goodluck tomar exams er jonno, asha kori it will motivate you to move forward. Thank you for existing in my life. Jano when I say I love you more, I don’t mean it like in a competitive way where I mean je I love you more than you love me. Idk its not like that. I really mean it je I love you more than the days we have come past. I love you more than the arguments we might face shamne. I love you more than the problems we might face  together. Idk onek kom time e onek beshi attached hoye gesi and hopefully tumi ei gift tar thru bujhtei parteso lol. Idk amar bhoy lagtesilo je tomare eto hyped up korar por Jodi dekhi je eta onek choto gift hoye jay?  Pore bhablam, eta choto hole porer bar aro boro project nibo lolz I love you more than you can even imagine. I really do. Thank you for choosing me. Youre the one who chose this soul, Jodi konodin bhul kore thaki, correct this soul instead of tossing it away. Mwahhhhhh.. sorry pc te lips emoji nai lol ❤❤😘😘 (load hoyyna maybe) .. anyways keep moving forward with confidence and keep breezing thru all those barriers and fly high up in the sky, im chasing you like I always do! AND HOPEFULLY TOMAR KONO FND EMON KISU LIFE E JIBONEO PAYNAI`;
 
-    // ======================== QUIZ DATA ========================
     const quizData = [
         { question: "How Much do you think I love you?", answers: ["Onekkkkkkkkkkkkkkkk", "Onek", "Onekkk", "Onekkkkkkk"], correct: 3 },
         { question: "What was your first impression when you saw me standing infront of 5no gate, waiting for you to give me the participants lists?", answers: ["Nervous & excited", "Thought you were mysterious", "Felt an instant connection 💘", "Just wanted the lists quickly"], correct: 2 },
-        { question: "What’s my most loveable flaw?", answers: ["Clingy", "Stubborn", "Dramatic", "Jealous"], correct: [0,1,2,3] },   // all right
+        { question: "What’s my most loveable flaw?", answers: ["Clingy", "Stubborn", "Dramatic", "Jealous"], correct: [0,1,2,3] },
         { question: "What was the first hindi word that you taught me?", answers: ["Pakde", "Sahi", "Bauni"], correct: 2 },
         { question: "What was the first thing I told you when we met for the first time?", answers: ["Participants list ta dao", "Hello", "Ki khobor", "Najifa na?"], correct: 0 },
         { question: "What was the first question you dodged during our first conversation?", answers: ["Kon class e poro? 11 or 10?", "Eishob tomar kase keno?", "Dodge dao e nai funplay e charay geso"], correct: 0 },
@@ -385,50 +400,46 @@
         { question: "Which one do you think tausif likes the most?", answers: ["Najifa","Najifah","Najiatfaaaaaaaahhhhhhhhhhhhhhhhhhh","Najifaaaaaaaahhhhhhhhhhhhhhhhhhh"], correct: 3 }
     ];
 
-    // ======================== GAME ENGINE ========================
-    let currentQIndex = 0;
-    let score = 0;          // number of correctly answered questions
-    let waitingSubmit = false;
-    let totalQuestions = quizData.length;
-
-    const quizSection = document.getElementById('quizSection');
-    const gameOverSection = document.getElementById('gameOverSection');
-    const giftSection = document.getElementById('giftFinaleSection');
-    const questionText = document.getElementById('questionText');
-    const answersArea = document.getElementById('answersArea');
-    const submitBtn = document.getElementById('submitAnswerBtn');
-    const progressSpan = document.getElementById('progressText');
-    const trashModal = document.getElementById('trashModal');
-    const trashMsg = document.getElementById('trashMessage');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const resetGameBtn = document.getElementById('resetGameBtn');
+    // --------------------- GAME LOGIC (unchanged) ---------------------
+    let currentQIndex = 0, score = 0, waitingSubmit = false;
+    const totalQuestions = quizData.length;
+    const quizSectionEl = document.getElementById('quizSection');
+    const gameOverSectionEl = document.getElementById('gameOverSection');
+    const giftSectionEl = document.getElementById('giftFinaleSection');
+    const questionTextEl = document.getElementById('questionText');
+    const answersAreaEl = document.getElementById('answersArea');
+    const submitBtnEl = document.getElementById('submitAnswerBtn');
+    const progressSpanEl = document.getElementById('progressText');
+    const trashModalEl = document.getElementById('trashModal');
+    const trashMsgEl = document.getElementById('trashMessage');
+    const closeModalBtnEl = document.getElementById('closeModalBtn');
+    const resetGameBtnEl = document.getElementById('resetGameBtn');
 
     function showTrashAndGameOver() {
-        if (waitingSubmit) return;
+        if(waitingSubmit) return;
         waitingSubmit = true;
         const randomQuote = trashTalkQuotes[Math.floor(Math.random() * trashTalkQuotes.length)];
-        trashMsg.innerText = randomQuote;
-        trashModal.classList.add('active');
-        // after close -> game over screen
+        trashMsgEl.innerText = randomQuote;
+        trashModalEl.classList.add('active');
         const closeHandler = () => {
-            trashModal.classList.remove('active');
-            quizSection.style.display = 'none';
-            gameOverSection.style.display = 'block';
-            giftSection.style.display = 'none';
+            trashModalEl.classList.remove('active');
+            quizSectionEl.style.display = 'none';
+            gameOverSectionEl.style.display = 'block';
+            giftSectionEl.style.display = 'none';
             waitingSubmit = false;
             document.removeEventListener('click', closeHandler);
         };
-        closeModalBtn.onclick = closeHandler;
-        trashModal.onclick = (e) => { if(e.target === trashModal) closeHandler(); };
+        closeModalBtnEl.onclick = closeHandler;
+        trashModalEl.onclick = (e) => { if(e.target === trashModalEl) closeHandler(); };
     }
 
     function resetQuiz() {
         currentQIndex = 0;
         score = 0;
         waitingSubmit = false;
-        quizSection.style.display = 'block';
-        gameOverSection.style.display = 'none';
-        giftSection.style.display = 'none';
+        quizSectionEl.style.display = 'block';
+        gameOverSectionEl.style.display = 'none';
+        giftSectionEl.style.display = 'none';
         renderCurrentQuestion();
     }
 
@@ -448,15 +459,15 @@
     }
 
     function renderCurrentQuestion() {
-        if (currentQIndex >= totalQuestions) {
-            if (score === totalQuestions) showGrandFinale();
+        if(currentQIndex >= totalQuestions) {
+            if(score === totalQuestions) showGrandFinale();
             else resetQuiz();
             return;
         }
         const q = quizData[currentQIndex];
-        questionText.innerText = q.question;
-        progressSpan.innerText = `Question ${currentQIndex+1}/${totalQuestions}  ❤️ Score: ${score}/${totalQuestions}`;
-        answersArea.innerHTML = '';
+        questionTextEl.innerText = q.question;
+        progressSpanEl.innerText = `Question ${currentQIndex+1}/${totalQuestions}  ❤️ Score: ${score}/${totalQuestions}`;
+        answersAreaEl.innerHTML = '';
         const isMulti = Array.isArray(q.correct);
         q.answers.forEach((ans, idx) => {
             const div = document.createElement('div');
@@ -471,23 +482,20 @@
             label.innerText = ans;
             div.appendChild(input);
             div.appendChild(label);
-            div.addEventListener('click', (e) => {
-                if(e.target.tagName !== 'INPUT') input.click();
-            });
-            answersArea.appendChild(div);
+            div.addEventListener('click', (e) => { if(e.target.tagName !== 'INPUT') input.click(); });
+            answersAreaEl.appendChild(div);
         });
         waitingSubmit = false;
     }
 
     function evaluateAndSubmit() {
-        if (waitingSubmit) return;
+        if(waitingSubmit) return;
         const q = quizData[currentQIndex];
         const isMulti = Array.isArray(q.correct);
         let selected = [];
-        const allInputs = answersArea.querySelectorAll('input');
+        const allInputs = answersAreaEl.querySelectorAll('input');
         allInputs.forEach(inp => { if(inp.checked) selected.push(parseInt(inp.value)); });
         if(selected.length === 0) return;
-
         let correctFlag = false;
         if(isMulti) {
             const correctSet = new Set(q.correct);
@@ -495,28 +503,20 @@
         } else {
             if(selected.length === 1 && selected[0] === q.correct) correctFlag = true;
         }
-
-        if(!correctFlag) {
-            showTrashAndGameOver();
-            return;
-        }
-        // correct answer
+        if(!correctFlag) { showTrashAndGameOver(); return; }
         waitingSubmit = true;
         createFallingPetals();
         score++;
         currentQIndex++;
-        if(score === totalQuestions) {
-            showGrandFinale();
-            return;
-        }
+        if(score === totalQuestions) { showGrandFinale(); return; }
         renderCurrentQuestion();
         waitingSubmit = false;
     }
 
     function showGrandFinale() {
-        quizSection.style.display = 'none';
-        gameOverSection.style.display = 'none';
-        giftSection.style.display = 'block';
+        quizSectionEl.style.display = 'none';
+        gameOverSectionEl.style.display = 'none';
+        giftSectionEl.style.display = 'block';
         const mysteryDiv = document.getElementById('mysteryBoxStage');
         const photoStageDiv = document.getElementById('photoStage');
         mysteryDiv.style.display = 'block';
@@ -602,8 +602,8 @@
         rebuildStack();
     }
 
-    submitBtn.addEventListener('click', evaluateAndSubmit);
-    resetGameBtn.addEventListener('click', resetQuiz);
+    submitBtnEl.addEventListener('click', evaluateAndSubmit);
+    resetGameBtnEl.addEventListener('click', resetQuiz);
     resetQuiz();
 </script>
 </body>
