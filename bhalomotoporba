@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>💖 Heart's Odyssey – Romantic Quiz for Najifa 💖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 30% 20%, #0b2f6c, #01122e);
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* main container */
+        .game-container {
+            max-width: 850px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        /* QUIZ CARD */
+        .quiz-card {
+            background: #F8F9FA;
+            border-radius: 48px;
+            box-shadow: 0 30px 45px -15px rgba(0, 0, 0, 0.4);
+            padding: 2rem 1.8rem 2.2rem;
+            transition: 0.2s;
+        }
+
+        .question-text {
+            color: #1E272C;
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 1.6rem;
+            line-height: 1.3;
+            text-align: center;
+        }
+
+        .answers-area {
+            margin: 1.5rem 0 1.8rem;
+        }
+
+        .answer-option {
+            background: white;
+            border: 2px solid #e2edf2;
+            border-radius: 60px;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .answer-option:hover {
+            background: #eef3ff;
+            border-color: #7fa5e2;
+        }
+
+        .answer-option input {
+            width: 22px;
+            height: 22px;
+            accent-color: #2c5282;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .answer-option label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1E272C;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .submit-btn {
+            background: #2c5282;
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+            margin-top: 12px;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background: #1a3f63;
+            transform: scale(1.01);
+        }
+
+        .progress-info {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748B;
+            font-weight: 500;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 18px;
+        }
+
+        /* game over */
+        .game-over-card {
+            background: #F8F9FA;
+            border-radius: 48px;
+            padding: 2.5rem;
+            text-align: center;
+        }
+
+        .game-over-card h2 {
+            color: #cb2e2e;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .start-again-btn {
+            background: #2c5282;
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* modal trash talk */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: #fff0e7;
+            border-radius: 48px;
+            max-width: 340px;
+            width: 80%;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .modal-content p {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #b33;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            background: #2c3e50;
+            border: none;
+            color: white;
+            padding: 8px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+
+        /* gift finale */
+        .gift-finale-container {
+            background: #F8F9FA;
+            border-radius: 56px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 35px 50px rgba(0,0,0,0.3);
+            min-height: 520px;
+        }
+
+        .mystery-box {
+            background: linear-gradient(145deg, #b87333, #9b4b1c);
+            border-radius: 42px;
+            padding: 3rem 1rem;
+            cursor: pointer;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .mystery-box p {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffecb3;
+        }
+
+        .photo-stack {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        .photo-card {
+            background: white;
+            border-radius: 32px;
+            padding: 12px;
+            margin-bottom: 18px;
+            cursor: grab;
+            transition: 0.1s linear;
+            touch-action: pan-y pinch-zoom;
+            box-shadow: 0 12px 22px rgba(0,0,0,0.15);
+        }
+
+        .photo-card:active {
+            cursor: grabbing;
+        }
+
+        .photo-card img {
+            width: 100%;
+            border-radius: 24px;
+            background: #f2e8da;
+        }
+
+        .swipe-hint {
+            font-size: 0.8rem;
+            color: #64748B;
+            background: #eef2ff;
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 50px;
+            margin: 12px auto;
+        }
+
+        .folded-paper {
+            background: #fff7e8;
+            border-radius: 28px;
+            padding: 1.8rem;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .final-love-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #7a3a1a;
+            background: #fff0e0;
+            border-radius: 32px;
+            padding: 20px;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* falling petals */
+        .petal {
+            position: fixed;
+            pointer-events: none;
+            top: -20px;
+            z-index: 999;
+            font-size: 1.8rem;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(260deg); opacity: 0; }
+        }
+
+        @media (max-width: 550px) {
+            .question-text { font-size: 1.4rem; }
+            .answer-option label { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container" id="gameContainer">
+    <!-- QUIZ SECTION -->
+    <div id="quizSection" class="quiz-card">
+        <div class="question-text" id="questionText"></div>
+        <div class="answers-area" id="answersArea"></div>
+        <button class="submit-btn" id="submitAnswerBtn">✨ Check Answer ✨</button>
+        <div class="progress-info" id="progressText"></div>
+    </div>
+
+    <!-- GAME OVER -->
+    <div id="gameOverSection" class="game-over-card" style="display: none;">
+        <h2>💀 u lost lol blood ekta 💀</h2>
+        <p>Better luck next time, cutie! The quiz resets now.</p>
+        <button class="start-again-btn" id="resetGameBtn">✨ Start Again ✨</button>
+    </div>
+
+    <!-- GRAND FINALE GIFT -->
+    <div id="giftFinaleSection" class="gift-finale-container" style="display: none;">
+        <div id="giftInner">
+            <div id="mysteryBoxStage">
+                <div class="mystery-box" id="openMysteryBox">
+                    <p>🎁✨ SECRET BOX ✨🎁<br>click to open</p>
+                </div>
+            </div>
+            <div id="photoStage" style="display: none;">
+                <div class="photo-stack" id="photoStackDiv"></div>
+                <div class="swipe-hint">✨ swipe left/right on a photo to remove it ✨</div>
+                <div id="foldedLetterArea"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TRASH MODAL -->
+<div id="trashModal" class="modal-overlay">
+    <div class="modal-content">
+        <p id="trashMessage"></p>
+        <button class="modal-close" id="closeModalBtn">Close</button>
+    </div>
+</div>
+
+<script>
+    // ======================== 📌 DATA CONFIGURATION (EDIT HERE) ========================
+    // --- TRASH TALK QUOTES (alternates randomly) ---
+    const trashTalkQuotes = [
+        "Thikase bhai ei chinla amake? Bujhsi bhalo kaj korso cccc. Mane ekta kaj Jodi korte parta taile ek kotha lol ei easy question tao pare nai mane ekjon eto useless kemne hoy but nws parba next time xD",
+        "Jantam gf ta ektu bolodbhodai . Uselessness at it’s peak. Imagine being that useless and not even knowing ei easy question er answer lol. Its alright tho. Happens.. wrong shot maybe(it wasn’t) LOL",
+        "Better Luck Next Time! Amar noobiewoobie",
+        "Eta toh skill based question o na, comprehension based o na, eta to basic question ew",
+        "Was it that hard? *Tsk tsk tsk* disappointed FAHHHHHHHHHH",
+        "Avg FAAAAAHHHHHHH moment, kisu Jodi parto",
+        "I really had high hopes for you nigga anyways take this*kisses* (this Is a hidden popup, if u have managed to find it, that means you have successfully messed up an answer lol)"
+    ];
+
+    // --- PHOTO GALLERY (replace with your own images) ---
+    const photoGallery = [
+        "https://scontent.fdac11-1.fna.fbcdn.net/v/t1.15752-9/661819722_806676069184899_4448572708845762364_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=BPm5AN_rVOsQ7kNvwE2TePC&_nc_oc=Adrt06V1G1jegtvMQgyln0XUhxR2JIR7oFBohYpwyyfhvirjhgmOZHj0ryfyQ2U4yJE&_nc_zt=23&_nc_ht=scontent.fdac11-1.fna&_nc_ss=7b6a8&oh=03_Q7cD5QETqHMq42zNcAAxf9APmL_m5HkufQDvyJDiR5hwT67HhQ&oe=6A3D398F",
+        "https://scontent.fdac11-1.fna.fbcdn.net/v/t1.15752-9/647513816_4180426978887853_5867822299109313342_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=1eXeWT5reCUQ7kNvwGai-vD&_nc_oc=Ado00F4wbB3dL4nh_W3z7aty6hl9VXp7qnCZ0Yh1ymBmJ4U16Q5S42jgwW149DhXdio&_nc_zt=23&_nc_ht=scontent.fdac11-1.fna&_nc_ss=7b6a8&oh=03_Q7cD5QHRMBiYxtXraoSOrILTTFBHXys0dhkELnwf12bdh1eNpQ&oe=6A3D335B",
+        "https://scontent.fdac11-1.fna.fbcdn.net/v/t1.15752-9/645010427_1936643167241379_2163537657003723123_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=GRzjNAFV8WcQ7kNvwF-rv8b&_nc_oc=AdpsCg7SU8l1Wss4fPhC9lmuMcQ7fpQP95_Pss8aESaz8dP4WKz1ZKh5wqIlh-jXhKo&_nc_zt=23&_nc_ht=scontent.fdac11-1.fna&_nc_ss=7b6a8&oh=03_Q7cD5QF4Dq1hjYpQXieBY47jHCu5bjMpwz8t6XowEeNQ33qwvQ&oe=6A3D31E2",
+        "https://scontent.fdac11-1.fna.fbcdn.net/v/t1.15752-9/599250184_1216095383724548_889557751406693162_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=s5_Eod1mMwUQ7kNvwFExFgh&_nc_oc=AdqqLpQMRjqCBDLMSwtw3JMA3zRY9KTU95QAImyyzhPsr4G43ai-256Fz3PRxRrgcQk&_nc_zt=23&_nc_ht=scontent.fdac11-1.fna&_nc_ss=7b6a8&oh=03_Q7cD5QGo1z1I2K564B17W5oRpCa8ghcUdAAx4xWn7L7MGcBUmQ&oe=6A3D64AA",
+        "https://scontent.fdac11-2.fna.fbcdn.net/v/t1.15752-9/672584952_1275306091447266_4681825378181205498_n.png?_nc_cat=100&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=t8NhmgXNc5MQ7kNvwEcl25h&_nc_oc=AdpDC8bLH3Dm5y9epu5Ug0gJ_laEalT_pMMtMOVGrRj-xzqKpdzCebo_Sudr3WWpe1Y&_nc_zt=23&_nc_ht=scontent.fdac11-2.fna&_nc_ss=7b6a8&oh=03_Q7cD5QHWvl2iXnL06fMXuTM8BZ0i0Zri6h5tkxz2j603AYXm_g&oe=6A3D4D64",
+        "https://scontent.fdac11-1.fna.fbcdn.net/v/t1.15752-9/693905573_2463985950705681_4940807760435243776_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=q1gpO8lhnX0Q7kNvwFwriVw&_nc_oc=Adrb4NJynt7d_yKOPgz7BlM2I9C2rBNFYB05PBFdeeSNmdtW-mNo0YKP11qVRsYdqYs&_nc_zt=23&_nc_ht=scontent.fdac11-1.fna&_nc_ss=7b6a8&oh=03_Q7cD5QFiGnbMi2iZuIl_EB6qXncgZATpH3LLPmTRSn9fyyiknA&oe=6A3D55EB",
+        "https://scontent.fdac11-2.fna.fbcdn.net/v/t1.15752-9/694472608_2010322342892979_5577000446459084893_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=AfEMJ1VU7k0Q7kNvwGAdZw_&_nc_oc=AdqPjBTXw4_Mm6visqmlL2PHzdHvgkgTYRptqgATdj4rbxMvjy6iEaSLKzAeEAXKuy0&_nc_zt=23&_nc_ht=scontent.fdac11-2.fna&_nc_ss=7b6a8&oh=03_Q7cD5QErHrzyRB2Aj1D1KZKpoA-F8KMnyTKW_32t0D_TdwT9JQ&oe=6A3D3E2B",
+        "https://scontent.fdac11-2.fna.fbcdn.net/v/t1.15752-9/689898657_1499593254900449_9145533195994382433_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=h5Sy06Nowx4Q7kNvwGAxP74&_nc_oc=AdrDHJm_YFYWkZHEySshkzvoIchenHGp7btqstAtBouLTe63V1diFNW4rUY-HR19w98&_nc_zt=23&_nc_ht=scontent.fdac11-2.fna&_nc_ss=7b6a8&oh=03_Q7cD5QGkQYKfY2F0FUSJ0mfqbOXeCQGn6q9j9GYkFFDut3P25g&oe=6A3D43E9",
+        "https://scontent.cdninstagram.com/v/t51.82787-15/651735706_18057449900476926_1069821413149383850_n.png?_nc_cat=104&ccb=7-5&_nc_sid=ecb677&_nc_ohc=LRDAbCS8lHsQ7kNvwFwNd6w&_nc_oc=AdrSRDkPshgQtd_5cQCpWDrfU7HyCG2H0GhUEvLxVDYLJNVDwvrxW58DyqC2IfqnP0c&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=7F8IF9kw6E9yTsNPJCbhfw&_nc_ss=7b6a8&oh=00_Af6NFNUygXK_QZ6e8F-brDm4SOwFhn2wnd1AJvGSW1Vx7w&oe=6A1BBBE6"
+    ];
+
+    // --- FINAL LOVE MESSAGE (appears after unfolding) ---
+    const finalLoveMessage = `Hii baby!! How was the quiz? Ig it was pretty easy for you lol, sorry Jodi hard hoye thake or beshi matha use kora lage but then again matha toh surely use koronai since tomar matha e nai LOLZ. Anyways shonapakhijadurtukra amar, I love you my cutie. You’re the best thing that has ever happened to me and insha’Allah oneday we’ll be able to fulfill all of our dreams and hopes and oneday we’ll hold eachother and insha’Allah ill never have to leave that hand alone as I have already promised the queen that this subject shall take care of her for the rest of her life. You’re beautiful, I don’t know how but I find you beautiful in the way you are. Youre like a champagne to me, something id celebrate my victory with, something id like to wash away all my sorrows with. And hopefully ill be your benefactor who always wishes the best thing for you and hopefully we’ll argue a lot and then have a deep convo where we end up kissing eachother and hugging and saying sorry like we do now. Insha’Allah our efforts will never decrease and itll increase a lot. My love for you grows each day like a child who’s in his adolescence and ill keep loving you this way. One day I was thinking je hmmmmmmmm ki gift dewa jay online e oke and I came across this idea and I kinda loved it. Ektu funny,ektu wholesome and ektu cute and lots of efforts. AI diye banaileo amar eventually nijeri draft texts,photos,lekha and allat stuff lekha lage lol, already been 3 to 4days. Hopefully you liked it. Thank you for taking your time to play this game out lol. Goodluck tomar exams er jonno, asha kori it will motivate you to move forward. Thank you for existing in my life. Jano when I say I love you more, I don’t mean it like in a competitive way where I mean je I love you more than you love me. Idk its not like that. I really mean it je I love you more than the days we have come past. I love you more than the arguments we might face shamne. I love you more than the problems we might face  together. Idk onek kom time e onek beshi attached hoye gesi and hopefully tumi ei gift tar thru bujhtei parteso lol. Idk amar bhoy lagtesilo je tomare eto hyped up korar por Jodi dekhi je eta onek choto gift hoye jay?  Pore bhablam, eta choto hole porer bar aro boro project nibo lolz I love you more than you can even imagine. I really do. Thank you for choosing me. Youre the one who chose this soul, Jodi konodin bhul kore thaki, correct this soul instead of tossing it away. Mwahhhhhh.. sorry pc te lips emoji nai lol ❤❤😘😘 (load hoyyna maybe) .. anyways keep moving forward with confidence and keep breezing thru all those barriers and fly high up in the sky, im chasing you like I always do! AND HOPEFULLY TOMAR KONO FND EMON KISU LIFE E JIBONEO PAYNAI`;
+
+    // ======================== QUIZ DATA ========================
+    const quizData = [
+        { question: "How Much do you think I love you?", answers: ["Onekkkkkkkkkkkkkkkk", "Onek", "Onekkk", "Onekkkkkkk"], correct: 3 },
+        { question: "What was your first impression when you saw me standing infront of 5no gate, waiting for you to give me the participants lists?", answers: ["Nervous & excited", "Thought you were mysterious", "Felt an instant connection 💘", "Just wanted the lists quickly"], correct: 2 },
+        { question: "What’s my most loveable flaw?", answers: ["Clingy", "Stubborn", "Dramatic", "Jealous"], correct: [0,1,2,3] },   // all right
+        { question: "What was the first hindi word that you taught me?", answers: ["Pakde", "Sahi", "Bauni"], correct: 2 },
+        { question: "What was the first thing I told you when we met for the first time?", answers: ["Participants list ta dao", "Hello", "Ki khobor", "Najifa na?"], correct: 0 },
+        { question: "What was the first question you dodged during our first conversation?", answers: ["Kon class e poro? 11 or 10?", "Eishob tomar kase keno?", "Dodge dao e nai funplay e charay geso"], correct: 0 },
+        { question: "What do you think made me fall for you?", answers: ["Your charisma", "Your smile", "Your pfp", "Your humour"], correct: 3 },
+        { question: "Why do you think I promised to be with you for the rest of my life?", answers: ["Emnei sympathy ashsilo", "Mon chaise", "Im just ektu bhalo", "I already had my eyes set on you"], correct: 3 },
+        { question: "What was the very first piece of clothing I ever complimented you on?", answers: ["Jekono dress ei always korsi cz you look good on everything", "Your school uniform", "The dress which u wore during our fest", "Mone nai"], correct: 0 },
+        { question: "What is my fav flower?", answers: ["Rose", "Lavender", "Sunflower", "Dahlia", "All of em"], correct: 4 },
+        { question: "If we were together and we needed something to eat, which one do you think I would’ve chosen?", answers: ["Burger", "Sandwich", "Shawrma"], correct: 0 },
+        { question: "NICHER KONTI SHOTHIK NOY? *why do u think ami kansilam on friday?*", answers: ["Cuz I thought kotha hobena", "Bhabsi je miss korbo", "Bhabsi ar dekhai hobena", "Cuz I miss ur voice"], correct: 2 },
+        { question: "What do I love the most about you? (select ALL that apply - except 'Your anxiety')", answers: ["Your smile","Your behavior","Your talks","Your hands","Your gestures","Your ragebaits","Your facecard","Your anxiety","Your cuteness","Your truthfulness","Your calls","Your voice","Your love"], correct: [0,1,2,3,4,5,6,8,9,10,11,12] },
+        { question: "Arthik ebong manoshik dik theke kon jinish ti tausif shobcheye opochondo kore?", answers: ["Beshi tk khoroch kora","Najifar yappayappa","Her anxieties","Her saying 'ami dekhte shundor na'"], correct: 3 },
+        { question: "Which one do you think tausif likes the most?", answers: ["Najifa","Najifah","Najiatfaaaaaaaahhhhhhhhhhhhhhhhhhh","Najifaaaaaaaahhhhhhhhhhhhhhhhhhh"], correct: 3 }
+    ];
+
+    // ======================== GAME ENGINE ========================
+    let currentQIndex = 0;
+    let score = 0;          // number of correctly answered questions
+    let waitingSubmit = false;
+    let totalQuestions = quizData.length;
+
+    const quizSection = document.getElementById('quizSection');
+    const gameOverSection = document.getElementById('gameOverSection');
+    const giftSection = document.getElementById('giftFinaleSection');
+    const questionText = document.getElementById('questionText');
+    const answersArea = document.getElementById('answersArea');
+    const submitBtn = document.getElementById('submitAnswerBtn');
+    const progressSpan = document.getElementById('progressText');
+    const trashModal = document.getElementById('trashModal');
+    const trashMsg = document.getElementById('trashMessage');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const resetGameBtn = document.getElementById('resetGameBtn');
+
+    function showTrashAndGameOver() {
+        if (waitingSubmit) return;
+        waitingSubmit = true;
+        const randomQuote = trashTalkQuotes[Math.floor(Math.random() * trashTalkQuotes.length)];
+        trashMsg.innerText = randomQuote;
+        trashModal.classList.add('active');
+        // after close -> game over screen
+        const closeHandler = () => {
+            trashModal.classList.remove('active');
+            quizSection.style.display = 'none';
+            gameOverSection.style.display = 'block';
+            giftSection.style.display = 'none';
+            waitingSubmit = false;
+            document.removeEventListener('click', closeHandler);
+        };
+        closeModalBtn.onclick = closeHandler;
+        trashModal.onclick = (e) => { if(e.target === trashModal) closeHandler(); };
+    }
+
+    function resetQuiz() {
+        currentQIndex = 0;
+        score = 0;
+        waitingSubmit = false;
+        quizSection.style.display = 'block';
+        gameOverSection.style.display = 'none';
+        giftSection.style.display = 'none';
+        renderCurrentQuestion();
+    }
+
+    function createFallingPetals() {
+        const petals = ['🌸','🌼','🌺','💮','🌷','🌸','🌻','🌸'];
+        for(let i=0;i<40;i++) {
+            const p = document.createElement('div');
+            p.className = 'petal';
+            p.textContent = petals[Math.floor(Math.random()*petals.length)];
+            p.style.left = Math.random() * 100 + '%';
+            p.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+            p.style.animationDuration = (Math.random() * 2 + 2.2) + 's';
+            p.style.animationDelay = Math.random() * 0.6 + 's';
+            document.body.appendChild(p);
+            p.addEventListener('animationend', () => p.remove());
+        }
+    }
+
+    function renderCurrentQuestion() {
+        if (currentQIndex >= totalQuestions) {
+            if (score === totalQuestions) showGrandFinale();
+            else resetQuiz();
+            return;
+        }
+        const q = quizData[currentQIndex];
+        questionText.innerText = q.question;
+        progressSpan.innerText = `Question ${currentQIndex+1}/${totalQuestions}  ❤️ Score: ${score}/${totalQuestions}`;
+        answersArea.innerHTML = '';
+        const isMulti = Array.isArray(q.correct);
+        q.answers.forEach((ans, idx) => {
+            const div = document.createElement('div');
+            div.className = 'answer-option';
+            const input = document.createElement('input');
+            input.type = isMulti ? 'checkbox' : 'radio';
+            input.name = 'quizOption';
+            input.value = idx;
+            input.id = `opt_${idx}`;
+            const label = document.createElement('label');
+            label.htmlFor = `opt_${idx}`;
+            label.innerText = ans;
+            div.appendChild(input);
+            div.appendChild(label);
+            div.addEventListener('click', (e) => {
+                if(e.target.tagName !== 'INPUT') input.click();
+            });
+            answersArea.appendChild(div);
+        });
+        waitingSubmit = false;
+    }
+
+    function evaluateAndSubmit() {
+        if (waitingSubmit) return;
+        const q = quizData[currentQIndex];
+        const isMulti = Array.isArray(q.correct);
+        let selected = [];
+        const allInputs = answersArea.querySelectorAll('input');
+        allInputs.forEach(inp => { if(inp.checked) selected.push(parseInt(inp.value)); });
+        if(selected.length === 0) return;
+
+        let correctFlag = false;
+        if(isMulti) {
+            const correctSet = new Set(q.correct);
+            if(selected.length === correctSet.size && selected.every(v => correctSet.has(v))) correctFlag = true;
+        } else {
+            if(selected.length === 1 && selected[0] === q.correct) correctFlag = true;
+        }
+
+        if(!correctFlag) {
+            showTrashAndGameOver();
+            return;
+        }
+        // correct answer
+        waitingSubmit = true;
+        createFallingPetals();
+        score++;
+        currentQIndex++;
+        if(score === totalQuestions) {
+            showGrandFinale();
+            return;
+        }
+        renderCurrentQuestion();
+        waitingSubmit = false;
+    }
+
+    function showGrandFinale() {
+        quizSection.style.display = 'none';
+        gameOverSection.style.display = 'none';
+        giftSection.style.display = 'block';
+        const mysteryDiv = document.getElementById('mysteryBoxStage');
+        const photoStageDiv = document.getElementById('photoStage');
+        mysteryDiv.style.display = 'block';
+        photoStageDiv.style.display = 'none';
+        document.getElementById('foldedLetterArea').innerHTML = '';
+        const openBtn = document.getElementById('openMysteryBox');
+        const newBtn = openBtn.cloneNode(true);
+        openBtn.parentNode.replaceChild(newBtn, openBtn);
+        newBtn.addEventListener('click', () => {
+            mysteryDiv.style.display = 'none';
+            photoStageDiv.style.display = 'block';
+            initPhotoStack();
+        });
+    }
+
+    function initPhotoStack() {
+        const stackContainer = document.getElementById('photoStackDiv');
+        const foldedContainer = document.getElementById('foldedLetterArea');
+        stackContainer.innerHTML = '';
+        foldedContainer.innerHTML = '';
+        let photosRemaining = [...photoGallery];
+        function rebuildStack() {
+            stackContainer.innerHTML = '';
+            if(photosRemaining.length === 0) {
+                const paper = document.createElement('div');
+                paper.className = 'folded-paper';
+                paper.innerHTML = `<p>📜 A secret letter waits...<br> ✨ click to unfold ✨</p>`;
+                paper.style.cursor = 'pointer';
+                paper.addEventListener('click', () => {
+                    paper.innerHTML = `<div class="final-love-text">💖 ${finalLoveMessage} 💖</div>`;
+                    paper.style.cursor = 'default';
+                });
+                foldedContainer.appendChild(paper);
+                return;
+            }
+            photosRemaining.forEach((url, idx) => {
+                const card = document.createElement('div');
+                card.className = 'photo-card';
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = 'our memory';
+                card.appendChild(img);
+                stackContainer.appendChild(card);
+                attachSwipe(card, idx);
+            });
+        }
+        function attachSwipe(card, idx) {
+            let startX = 0, currentX = 0, isDragging = false;
+            const onMove = (e) => {
+                if(!isDragging) return;
+                currentX = e.clientX;
+                const delta = currentX - startX;
+                card.style.transform = `translateX(${delta}px) rotate(${delta*0.03}deg)`;
+                card.style.transition = 'none';
+            };
+            const onUp = (e) => {
+                if(!isDragging) return;
+                const delta = currentX - startX;
+                card.style.transition = 'transform 0.2s ease';
+                if(Math.abs(delta) > 70) {
+                    card.style.transform = `translateX(${delta>0?'500px':'-500px'})`;
+                    setTimeout(() => {
+                        photosRemaining.splice(idx,1);
+                        rebuildStack();
+                    }, 150);
+                } else {
+                    card.style.transform = '';
+                }
+                window.removeEventListener('pointermove', onMove);
+                window.removeEventListener('pointerup', onUp);
+                isDragging = false;
+                card.style.cursor = 'grab';
+            };
+            card.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                startX = e.clientX;
+                isDragging = true;
+                card.style.cursor = 'grabbing';
+                window.addEventListener('pointermove', onMove);
+                window.addEventListener('pointerup', onUp);
+            });
+        }
+        rebuildStack();
+    }
+
+    submitBtn.addEventListener('click', evaluateAndSubmit);
+    resetGameBtn.addEventListener('click', resetQuiz);
+    resetQuiz();
+</script>
+</body>
+</html>
