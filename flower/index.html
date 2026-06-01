@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Gift For You</title>
+    <title>Flower Giftbox</title>
     <style>
         * {
             box-sizing: border-box;
@@ -15,7 +15,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             overflow: hidden;
         }
 
@@ -25,7 +25,7 @@
             cursor: pointer;
         }
 
-        /* The Gift Box Container */
+        /* The Gift Box Base */
         .gift-box {
             position: relative;
             width: 160px;
@@ -36,7 +36,7 @@
             transition: transform 0.3s ease;
         }
 
-        /* Ribbon Lid */
+        /* Box Lid */
         .lid {
             position: absolute;
             width: 170px;
@@ -49,7 +49,7 @@
             z-index: 3;
         }
 
-        /* Ribbons (Cross) */
+        /* Ribbon Styles */
         .gift-box::before, .lid::before {
             content: '';
             position: absolute;
@@ -70,7 +70,7 @@
             transform: translateY(-50%);
         }
 
-        /* The Flower (Hidden inside initially) */
+        /* The Flower (Hidden inside at start) */
         .flower {
             position: absolute;
             font-size: 80px;
@@ -82,34 +82,28 @@
             pointer-events: none;
         }
 
-        /* Text Message */
+        /* Message Text */
         .message {
             margin-top: 30px;
             font-size: 1.5rem;
             color: #d63352;
             font-weight: bold;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            opacity: 1;
+            transition: opacity 0.5s ease;
         }
 
-        /* OPEN STATE ANIMATIONS */
+        /* OPEN STATE ANIMATIONS (Triggered by click) */
         .container.open .lid {
-            transform: translateY(-120px) rotate(-15deg);
+            transform: translateY(-140px) rotate(-20deg);
         }
 
         .container.open .flower {
-            transform: translate(-50%, -50%) scale(1.5) rotate(360deg);
-            top: -100px; /* Pops out of the box */
-        }
-
-        .container.open .message {
-            opacity: 1;
-            transform: translateY(0);
+            transform: translate(-50%, -50%) scale(1.6) rotate(360deg);
+            top: -110px; /* Pops out the top */
         }
 
         .container:hover .gift-box {
-            transform: scale(1.03);
+            transform: scale(1.02);
         }
     </style>
 </head>
@@ -119,22 +113,22 @@
         <div class="flower">🌸</div>
         <div class="lid"></div>
         <div class="gift-box"></div>
-        <div class="message">Press me!</div>
+        <div class="message" id="msg-text">Press me!</div>
     </div>
 
     <script>
         function openBox() {
             const container = document.querySelector('.container');
-            const message = document.querySelector('.message');
+            const msgText = document.getElementById('msg-text');
             
             // Toggle the open class
             container.classList.toggle('open');
             
-            // Update text based on state
+            // Update the text string instantly
             if (container.classList.contains('open')) {
-                message.innerText = "Surprise! 🌸";
+                msgText.innerText = "Surprise! 🌸";
             } else {
-                message.innerText = "Press me!";
+                msgText.innerText = "Press me!";
             }
         }
     </script>
