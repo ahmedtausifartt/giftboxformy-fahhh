@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>✨ for you · love & music player ✨</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #2B3B8A;
+      font-family: 'Quicksand', 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      color: #1e1e2a;
+    }
+
+    .deco {
+      position: fixed;
+      pointer-events: none;
+      z-index: 1;
+      font-size: 1.6rem;
+      opacity: 0.3;
+      animation: floatAround 18s infinite ease-in-out;
+    }
+
+    @keyframes floatAround {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-25px) rotate(8deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: row;
+      min-height: 100vh;
+      position: relative;
+      z-index: 2;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 2rem 2rem 2rem 2rem;
+      transition: all 0.3s ease;
+      max-width: calc(100% - 380px);
+    }
+
+    .player-card {
+      background: rgba(255, 245, 240, 0.1);
+      backdrop-filter: blur(8px);
+      border-radius: 2rem;
+      padding: 1.2rem;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 200, 0.25);
+      margin-bottom: 2rem;
+    }
+
+    .greeting {
+      font-size: 1.7rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #FFE484, #FFB347, #FF69B4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+      display: inline-block;
+    }
+
+    .sub-love {
+      color: #FFD966;
+      margin-bottom: 1rem;
+      font-weight: 500;
+      border-left: 4px solid #ff99cc;
+      padding-left: 0.8rem;
+    }
+
+    iframe {
+      border-radius: 1.2rem;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    /* DRAWER */
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 400px;
+      height: 100vh;
+      background: rgba(255, 248, 245, 0.97);
+      backdrop-filter: blur(12px);
+      box-shadow: -8px 0 30px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      transition: right 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      border-left: 5px solid #FFB7C5;
+      font-family: 'Quicksand', sans-serif;
+      color: #2c2c2c;
+    }
+
+    .drawer.open {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 1.5rem;
+      background: #FFE5EC;
+      border-bottom: 2px solid #ffb3c6;
+      position: sticky;
+      top: 0;
+      background: #ffecf0;
+      z-index: 5;
+    }
+
+    .drawer-header h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(125deg, #D43F6B, #FF8C42);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .close-drawer {
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #bf4e6e;
+      transition: transform 0.2s;
+    }
+
+    .close-drawer:hover {
+      transform: rotate(90deg);
+      color: #ff2e63;
+    }
+
+    .gallery-section {
+      padding: 1rem 1.2rem;
+    }
+
+    .gallery-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #c44f6f;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 2px dashed #ffb3c6;
+      display: inline-block;
+    }
+
+    .photo-scatter {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .thumb-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      border: 3px solid #fff7e8;
+    }
+
+    .thumb-img:hover {
+      transform: scale(1.03) rotate(1deg);
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.3);
+      border-color: #ffb347;
+    }
+
+    .love-message-box {
+      background: rgba(255, 235, 215, 0.7);
+      border-radius: 28px;
+      padding: 1.2rem;
+      margin: 0.8rem 1.2rem 1rem 1.2rem;
+      border: 1px solid #ffbf91;
+      box-shadow: inset 0 0 0 1px #fff9f0, 0 5px 12px rgba(0,0,0,0.05);
+    }
+
+    .love-text {
+      font-size: 0.85rem;
+      line-height: 1.55;
+      font-weight: 500;
+      color: #2b2a2f;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 45vh;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .love-text::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .love-text::-webkit-scrollbar-track {
+      background: #ffcdb0;
+      border-radius: 10px;
+    }
+
+    .love-text::-webkit-scrollbar-thumb {
+      background: #ff8a5c;
+      border-radius: 10px;
+    }
+
+    /* extra close drawer button */
+    .close-drawer-btn-bottom {
+      display: flex;
+      justify-content: center;
+      margin: 0.5rem 1.2rem 1.8rem 1.2rem;
+    }
+
+    .close-drawer-bottom {
+      background: #ff99bb;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 40px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      color: #2d2a2e;
+      cursor: pointer;
+      transition: 0.2s;
+      width: 100%;
+      font-family: 'Quicksand', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .close-drawer-bottom:hover {
+      background: #ff7aa8;
+      transform: scale(0.98);
+      color: white;
+    }
+
+    .drawer-toggle-btn {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: #FF69B4;
+      width: 54px;
+      height: 54px;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      z-index: 1100;
+      border: 2px solid #fff3c9;
+      transition: 0.2s;
+      background: linear-gradient(145deg, #FF8AAE, #FF6B9E);
+    }
+
+    .drawer-toggle-btn i {
+      font-size: 2rem;
+      color: white;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    .drawer-toggle-btn:hover {
+      transform: scale(1.07);
+      background: #ff4d85;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-content {
+      max-width: 85vw;
+      max-height: 85vh;
+      animation: zoomIn 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+    }
+
+    .modal-content img {
+      width: auto;
+      max-width: 100%;
+      max-height: 85vh;
+      border-radius: 28px;
+      box-shadow: 0 20px 35px black;
+      border: 5px solid white;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 25px;
+      right: 35px;
+      font-size: 3rem;
+      color: white;
+      cursor: pointer;
+      background: rgba(0,0,0,0.6);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+
+    @media (max-width: 780px) {
+      .main-content {
+        max-width: 100%;
+        padding: 1rem;
+      }
+      .drawer {
+        width: 90%;
+        right: -95%;
+      }
+      .drawer.open {
+        right: 0;
+      }
+      .photo-scatter {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .greeting {
+        font-size: 1.3rem;
+      }
+    }
+
+    .extra-note {
+      background: #ffe2b5;
+      border-radius: 40px;
+      padding: 0.7rem 1rem;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      text-align: center;
+      color: #5a3e1b;
+    }
+
+    .heart-animation {
+      display: inline-block;
+      animation: heartbeat 1.2s infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1);}
+      50% { transform: scale(1.2);}
+    }
+
+    .footer-credit {
+      margin-top: 1rem;
+      font-size: 0.7rem;
+      color: #f9e0c0;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div id="decorContainer"></div>
+
+<div class="app-container">
+  <div class="main-content">
+    <div class="player-card">
+      <div>
+        <span class="greeting">🎀 𝗵𝗲𝗿 𝗽𝗹𝗮𝘆𝗹𝗶𝘀𝘁 · 𝗳𝗼𝗿 𝘆𝗼𝘂  🎀</span>
+        <div class="sub-love">
+          <i class="fas fa-headphones"></i> a melody shaped by us — press play, feel every note 🌙
+        </div>
+      </div>
+      <iframe 
+        data-testid="embed-iframe" 
+        style="border-radius:20px" 
+        src="https://open.spotify.com/embed/playlist/3DV4FehAr8B2eNxrnxKfFm?utm_source=generator" 
+        width="100%" 
+        height="352" 
+        frameborder="0" 
+        allowfullscreen="" 
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+        loading="lazy">
+      </iframe>
+      <div class="extra-note">
+        <i class="fas fa-heart heart-animation" style="color:#ff5e8e;"></i> every song whispers your name <i class="fas fa-feather-alt"></i>
+      </div>
+    </div>
+    <div class="footer-credit">
+      🌸 made with infinite love & royal dreams 🌸
+    </div>
+  </div>
+
+  <!-- DRAWER -->
+  <div id="loveDrawer" class="drawer">
+    <div class="drawer-header">
+      <h3><i class="fas fa-envelope-open-text"></i>  diary of us</h3>
+      <button class="close-drawer" id="closeDrawerBtn"><i class="fas fa-times-circle"></i></button>
+    </div>
+
+    <div class="gallery-section">
+      <div class="gallery-title">
+        <i class="fas fa-camera-retro"></i> scattered memories ‧₊˚✩彡
+      </div>
+      <div class="photo-scatter" id="photoGallery"></div>
+    </div>
+
+    <div class="love-message-box">
+      <div class="love-text" id="loveTextContainer"></div>
+    </div>
+
+    <!-- NEW BOTTOM CLOSE BUTTON FOR DRAWER -->
+    <div class="close-drawer-btn-bottom">
+      <button class="close-drawer-bottom" id="closeDrawerBottomBtn">
+        <i class="fas fa-chevron-circle-right"></i> Close drawer ✨
+      </button>
+    </div>
+    <div style="height: 0.5rem;"></div>
+  </div>
+
+  <div class="drawer-toggle-btn" id="openDrawerBtn">
+    <i class="fas fa-arrow-left"></i>
+  </div>
+</div>
+
+<div id="imageModal" class="modal">
+  <span class="close-modal">&times;</span>
+  <div class="modal-content">
+    <img id="modalImage" src="" alt="enlarged memory">
+  </div>
+</div>
+
+<script>
+  const photoUrls = [
+    "https://media.discordapp.net/attachments/1483203477151678539/1509827818572349460/Snapchat-2082611973.jpg?ex=6a1e8cbb&is=6a1d3b3b&hm=18bd9c0a568d57a96c67d07f174a5c4caa174957d65cb21bc6f084d7419d1162&=&format=webp&width=280&height=499",
+    "https://media.discordapp.net/attachments/1483203477151678539/1509827819843227790/Snapchat-585602619.jpg?ex=6a1e8cbb&is=6a1d3b3b&hm=a5f749f5b8ccf3b22829859fc222ec442cc6fa7aae974dcc2787705e19e829d9&=&format=webp&width=280&height=499",
+    "https://media.discordapp.net/attachments/1483203477151678539/1509828302653882419/20260321_190046.jpg?ex=6a1e8d2e&is=6a1d3bae&hm=f741e6cacc5e5cca921c0d92bf9b411ff2694b480b35de33f7d698e971b29ef8&=&format=webp&width=373&height=499",
+    "https://media.discordapp.net/attachments/1483203477151678539/1509828303853453333/20260321173500847.jpg?ex=6a1e8d2e&is=6a1d3bae&hm=201e627d991a78173baa4f6b355856afcd0f678f33b4392a004e9036c2846f19&=&format=webp&width=748&height=499",
+    "https://media.discordapp.net/attachments/1483203477151678539/1509828438997864498/20260321173458490.jpg?ex=6a1e8d4f&is=6a1d3bcf&hm=75f18fdfb39e41d806e065d49a134cb9ca3e04dda408e21cde7d841c39fb68b1&=&format=webp&width=748&height=499",
+    "https://media.discordapp.net/attachments/1483203477151678539/1509828437869858926/20260321173457817.jpg?ex=6a1e8d4e&is=6a1d3bce&hm=1607a5990884d0fd2ba375afaf8d3350b1f998c95353522d24044605b96e863e&=&format=webp&width=748&height=499",
+    "https://media.discordapp.net/attachments/1483203477151678539/1509828674151514173/Snapchat-1004564130.jpg?ex=6a1e8d87&is=6a1d3c07&hm=61d41f8352a2c4751c2b3795d46773d462db2fcb6b13076c9a79634d5138eee3&=&format=webp&width=280&height=499",
+    "https://media.discordapp.net/attachments/1483203477151678539/1509829356573425784/bcff8ed0ecc7110f8ff1100ada436b0e_0.jpg?ex=6a1e8e29&is=6a1d3ca9&hm=c302df1fd349a2ca545bcc7b00837131bbcdc315224fe391a44af4e9b0ec5400&=&format=webp&width=373&height=498",
+    "https://media.discordapp.net/attachments/1483203477151678539/1509832934960660580/Snapchat-2101897497.jpg?ex=6a1e917f&is=6a1d3fff&hm=6a6269c1108241cf501bc3a65ed9730d6571037b6d3c629862614b89f9ee18df&=&format=webp&width=280&height=499",
+    "https://scontent.fdac11-1.fna.fbcdn.net/v/t1.15752-9/688607712_2185403792236748_3540644513208861903_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=iLSSedgAGsYQ7kNvwGfzFY2&_nc_oc=Adq0KYNsTFzOVru-yaz10kHtBGP-doGfpPfxvX4gWyONMSyvrMpuFW2HfM7rQpQfV2A&_nc_zt=23&_nc_ht=scontent.fdac11-1.fna&_nc_ss=7b6a8&oh=03_Q7cD5gEqYtwjbucpBM-01lh4vscHVMD3AKbS030bh-E5zdzXWQ&oe=6A44B353",
+    "https://scontent.fdac11-2.fna.fbcdn.net/v/t1.15752-9/689862734_2098930727505793_6396091629034657852_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=cNGQWHkntk8Q7kNvwFsCkla&_nc_oc=AdphHVkjSCM81HZwWno4xWc3e9UQ5YlxBMWu2eBDZ2eNlr8n7oQFMexcYst5FQEaSfU&_nc_zt=23&_nc_ht=scontent.fdac11-2.fna&_nc_ss=7b6a8&oh=03_Q7cD5gE0_nyIKXE-_aA8cbwPgynP5M6yXzkDp1Dqn8gO2CDlQA&oe=6A44CC00",
+    "https://scontent.fdac11-2.fna.fbcdn.net/v/t1.15752-9/689898657_1499593254900449_9145533195994382433_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=3Ne8JYR5-tkQ7kNvwHWuAQH&_nc_oc=Adq2Sb1zwt1pV12GeIp8dfh-3RuajDymeItEPHOm-XNtTfiBWDheEauLiDY0AgJMqE8&_nc_zt=23&_nc_ht=scontent.fdac11-2.fna&_nc_ss=7b6a8&oh=03_Q7cD5gHStpu-xC1RHkhk4Rad32jNxElmuLaN7YJl6Jh_Vt8K1g&oe=6A44BC69"
+  ];
+
+  const loveLetter = `Hey, wsg??? um are you still thinking about ur previous quiz game? lolz its time to move on bro KARON UR BF IS BACK WITH SOME NEW COOL SHIT WHICH MIGHT STICK WITH YOU FOR THE REST OF YOUR LIFE. and i hope that it's once again, one of the finest gifts u have ever received.. Does it hold more value than the quiz game? In long term, yes but let’s not compare em.. Both are different in their own way lol.
+Thank you for being there for me. it’s been a month huh.. feels like it has been forever. i really feel like tomar shathe onekdhone asi and onekdi dhone chini abr at the same time, i feel like eito 2din agei to chinlam oke .. but then again.. those eyes, those hands, those texts, those tears, i love em. i love every single thing about you. your kindness, your love, your warmth and everything. im sorry if konodin koshto diye thaki, im sorry for all the sufferings, im sorry for what u went thru amar jonno. Sorry for all the trouble I have caused you, sorry for all the trouble and chaos I might cause in the near future and lifelong all issues :3.. DEAL WITH IT lolz.. 
+
+jano paragraph likhsi ettar ageo but bhule 2bar tab e press marsi and all gone ☺️ so im having to type it out again lol.. the emotions wont be the same but I hope they’ll hit the spot. Sorry in advance and ill try to keep as it is… here enjoy:
+
+
+I love you, I love my dear wife, I love my dear girlfriend. I love everything about you, I love you from the bottom of my heart. I love your eyes, your hands, which I held that day, it was beautiful, you are beautiful. You are special. I know ami tomar first but sadly u are not my first but I know for a fact that youll be my last karon I can already feel what we both have for eachother, I love you. I L O V E      Y O U   !!!!!! I love this pure soul, those kind words, that mirrored carbon copy of mine. Thanks to you, I have a new aim in life, u have given me what I have been missing for all these days, a place to call home, a chest where I can lay my head and cry all I want, a new life, a new beginning. Oneday Insha’Allah we’ll reach the end… the end of the new beginning(djo)… the new beginning where we both hold eachother like the way I promised you to, ill hold that hand.. not in a general or normal way… but in a special way for my special person.. ill hold that hand forever and will never let it go. It’ll be close to me, like it has always been but the closure will be even closer than it always has been, ill wake up to see your face, well love eachother the way we wanted to, we’ll kiss eachother the way we told we’ll.  To reach that end, I need your help, yes YOUR. I want you to have faith in me, so that I can move forward  with sheer confidence and with a pure heart who only thinks about how he can succeed and how he can make her happy. Oneday somerandom girl dmed me for a few stickers and now she’s all I could ever ask for. Her efforts, her love, her warmth, her skin, her texts, her promsies, everything about her screamed as if she was made for me in heaven  and surely  that’s true cz Allah said “﴿وَخَلَقْنَاكُمْ أَزْوَاجًا﴾” (Surah An-Naba (78:8)) which stands for  “ And we’ve created you in pairs” . oh my love, such beautiful love found me and now that’s all I want in my life and I wish this love to grow.
+
+I know this deep ocean, the ocean of love, the ocean in which I have dived deeper than I thought I’d. oneday ada said “bhalobashake jibon banais na” and that’s when I realized that nah man I have already done it, she’s all I ever wanted and after many years, I have found her (JVKE). Ill dive even deeper as we go thru many stuff, good days and the bad days and I promise you, at the end of the each day, you’ll be left with only 1 problem and THAT’S ME HAHAHAHAHHAHHA BEAR WITH IT . thank you lol ily my girl mwah 
+
+Im proud of you my girl, I really am, proud of all the thing u went thru and u still didn’t give up. Mwah. Hats off to you shona. I love you. Im really happy je I got someone like you in my life. Thank you. Btw is it enough? Is it  romantic enough? Is it cool enough? Did it hit the spot? Did I manage to hit my arrow right where I wanted it to go? Ifdk im not satisfied with it SOOOOOOOOOOOOOOOO im gonna do something even crazier..coding e jeye paragraph e ill add new stuff always jaate u ever get bored and  ill make it like a diary. New gan shunte ashle hopefully paba new kichu :3. Keep it safe girl. Keep it close to your heart
+
+LASTLY, I LOVE YOU I LOVE MY NAJIFAH I LOVE MY F A H H H H H H H IRWEALLY DO I ALWAYS DID AND I ALWAYS WILL. THANK YOU MY GIFT youre my best gift and youre everything I wished for. Mwahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh nao a longggggggggggggggggggggggggggggg one :3 I  love you mwahwmahwmahwmahwah I love you shona.. ill be updating this always  jaate tomar new diary eta hoy hehe`;
+
+  function renderGallery() {
+    const galleryDiv = document.getElementById('photoGallery');
+    galleryDiv.innerHTML = '';
+    photoUrls.forEach((url, idx) => {
+      const img = document.createElement('img');
+      img.src = url;
+      img.classList.add('thumb-img');
+      img.alt = `memory ${idx+1}`;
+      img.loading = 'lazy';
+      img.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openModal(url);
+      });
+      galleryDiv.appendChild(img);
+    });
+  }
+
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImage');
+  const closeModalSpan = document.querySelector('.close-modal');
+
+  function openModal(imgUrl) {
+    modal.style.display = 'flex';
+    modalImg.src = imgUrl;
+  }
+
+  function closeModal() {
+    modal.style.display = 'none';
+    modalImg.src = '';
+  }
+
+  closeModalSpan.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  const drawer = document.getElementById('loveDrawer');
+  const openBtn = document.getElementById('openDrawerBtn');
+  const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+  const closeDrawerBottomBtn = document.getElementById('closeDrawerBottomBtn');
+
+  function openDrawer() { drawer.classList.add('open'); }
+  function closeDrawer() { drawer.classList.remove('open'); }
+
+  openBtn.addEventListener('click', openDrawer);
+  closeDrawerBtn.addEventListener('click', closeDrawer);
+  closeDrawerBottomBtn.addEventListener('click', closeDrawer);
+
+  document.getElementById('loveTextContainer').innerText = loveLetter;
+
+  // floating decorations
+  const decorations = ['❤️', '🌸', '🍃', '🌿', '🌲', '🌳', '👼', '✨', '🍂', '💖', '🕊️', '🍁', '🌺', '⭐'];
+  const decorContainer = document.getElementById('decorContainer');
+  for (let i = 0; i < 55; i++) {
+    const el = document.createElement('div');
+    el.className = 'deco';
+    const randomIcon = decorations[Math.floor(Math.random() * decorations.length)];
+    el.innerHTML = randomIcon;
+    const size = Math.floor(Math.random() * 28 + 16);
+    el.style.fontSize = size + 'px';
+    el.style.left = Math.random() * 100 + '%';
+    el.style.top = Math.random() * 100 + '%';
+    const duration = Math.random() * 20 + 10;
+    el.style.animationDuration = duration + 's';
+    el.style.animationDelay = Math.random() * 8 + 's';
+    el.style.opacity = Math.random() * 0.3 + 0.12;
+    decorContainer.appendChild(el);
+  }
+
+  document.body.addEventListener('click', (e) => {
+    if (e.target.classList && e.target.classList.contains('thumb-img')) return;
+    const heart = document.createElement('div');
+    heart.innerHTML = '💗';
+    heart.style.position = 'fixed';
+    heart.style.left = e.clientX + 'px';
+    heart.style.top = e.clientY + 'px';
+    heart.style.fontSize = '1.6rem';
+    heart.style.pointerEvents = 'none';
+    heart.style.zIndex = '9999';
+    heart.style.opacity = '0.8';
+    heart.style.transition = 'transform 0.6s ease, opacity 0.8s';
+    heart.style.transform = 'translateY(0px)';
+    document.body.appendChild(heart);
+    setTimeout(() => {
+      heart.style.transform = 'translateY(-80px)';
+      heart.style.opacity = '0';
+    }, 10);
+    setTimeout(() => heart.remove(), 900);
+  });
+
+  renderGallery();
+</script>
+</body>
+</html>
