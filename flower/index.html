@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flower Giftbox</title>
+    <title>The Blooming Giftbox</title>
     <style>
         * {
             box-sizing: border-box;
         }
         body {
-            background-color: #ffe3e8;
+            background-color: #fff0f3;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             overflow: hidden;
         }
 
@@ -23,83 +23,199 @@
             position: relative;
             text-align: center;
             cursor: pointer;
+            width: 300px;
+            height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
         }
 
-        /* The Gift Box Base */
+        /* --- THE BOX (REALISTIC 3D LOOK) --- */
         .gift-box {
             position: relative;
-            width: 160px;
+            width: 180px;
             height: 160px;
-            background: #ff4a6b;
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #ff4a6b 0%, #e62e52 100%);
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 15px 30px rgba(230, 46, 82, 0.25), inset 0 -10px 20px rgba(0,0,0,0.1);
+            z-index: 4;
             transition: transform 0.3s ease;
         }
 
-        /* Box Lid */
-        .lid {
-            position: absolute;
-            width: 170px;
-            height: 40px;
-            background: #ff3356;
-            top: -40px;
-            left: -5px;
-            border-radius: 5px 5px 0 0;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 3;
-        }
-
-        /* Ribbon Styles */
-        .gift-box::before, .lid::before {
+        /* 3D Inner Rim of the Box */
+        .gift-box::before {
             content: '';
             position: absolute;
-            background: #fff;
-            width: 30px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: #b31937;
+            border-radius: 0 0 4px 4px;
+            z-index: 5;
+        }
+
+        /* Vertical Satin Ribbon */
+        .box-ribbon {
+            position: absolute;
+            background: linear-gradient(to right, #fff, #f0f0f0, #fff);
+            width: 34px;
+            height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 6;
+        }
+
+        /* --- THE LID & BOW --- */
+        .lid-container {
+            position: absolute;
+            width: 194px;
+            height: 40px;
+            bottom: 155px; /* Sits right on top */
+            z-index: 10;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+            transform-origin: bottom left;
+        }
+
+        .lid {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff5777 0%, #f03d61 100%);
+            border-radius: 6px 6px 3px 3px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        /* Lid Ribbon Cross */
+        .lid::before {
+            content: '';
+            position: absolute;
+            background: linear-gradient(to right, #fff, #e6e6e6, #fff);
+            width: 34px;
             height: 100%;
             left: 50%;
             transform: translateX(-50%);
         }
-        .gift-box::after {
+
+        /* Realistic Ribbon Bow Loops */
+        .bow {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 20px;
+            z-index: 11;
+        }
+        .bow::before, .bow::after {
             content: '';
             position: absolute;
-            background: #fff;
-            width: 100%;
-            height: 30px;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
+            width: 30px;
+            height: 25px;
+            border: 6px solid #fff;
+            border-radius: 50%;
+            top: -5px;
         }
+        .bow::before { left: -18px; transform: rotate(-25deg); }
+        .bow::after { right: -18px; transform: rotate(25deg); }
 
-        /* The Flower (Hidden inside at start) */
-        .flower {
+        /* --- THE FLOWER & STEM (ডাল) --- */
+        .flower-structure {
             position: absolute;
-            font-size: 80px;
+            bottom: 80px; /* Hidden deep inside base */
             left: 50%;
-            top: 40px;
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.8s ease;
-            z-index: 1;
-            pointer-events: none;
+            transform: translateX(-50%) scale(0);
+            transform-origin: bottom center;
+            z-index: 2;
+            transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.4, 1.1), bottom 0.9s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Message Text */
+        /* LONG GREEN STEM (ডাল) */
+        .stem {
+            width: 10px;
+            height: 180px; /* Long and prominent */
+            background: linear-gradient(to right, #4CAF50, #388E3C);
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Leaves on the stem */
+        .stem::before, .stem::after {
+            content: '';
+            position: absolute;
+            width: 35px;
+            height: 20px;
+            background: #4CAF50;
+            border-radius: 20px 0 20px 0;
+            top: 60px;
+        }
+        .stem::before { left: -32px; transform: rotate(-15deg); }
+        .stem::after { right: -32px; transform: rotate(65deg); border-radius: 0 20px 0 20px; top: 100px; }
+
+        /* RE-DESIGNED PINK & YELLOW FLOWER */
+        .flower-head {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin-bottom: -5px; /* Connected seamlessly to stem */
+        }
+
+        /* Center Yellow Circle */
+        .center-circle {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #FFEB3B 0%, #FBC02D 100%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        }
+
+        /* 5 Pink Petals */
+        .petal {
+            position: absolute;
+            background: linear-gradient(135deg, #ff7da7 0%, #ff4081 100%);
+            width: 42px;
+            height: 42px;
+            border-radius: 50% 50% 0 50%;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0% 0%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .petal1 { transform: rotate(0deg) translate(-50%, -50%); }
+        .petal2 { transform: rotate(72deg) translate(-50%, -50%); }
+        .petal3 { transform: rotate(144deg) translate(-50%, -50%); }
+        .petal4 { transform: rotate(216deg) translate(-50%, -50%); }
+        .petal5 { transform: rotate(288deg) translate(-50%, -50%); }
+
+        /* --- ANIMATION TRIGGERS --- */
+        .container.open .lid-container {
+            transform: translateY(-160px) rotate(-45deg) scale(0.9);
+            opacity: 0.9;
+        }
+
+        /* Flower rises up completely exposing the stem */
+        .container.open .flower-structure {
+            transform: translateX(-50%) scale(1);
+            bottom: 140px; /* Rises up high out of the box */
+        }
+
         .message {
-            margin-top: 30px;
-            font-size: 1.5rem;
-            color: #d63352;
+            margin-top: 25px;
+            font-size: 1.6rem;
+            color: #e62e52;
             font-weight: bold;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-        }
-
-        /* OPEN STATE ANIMATIONS (Triggered by click) */
-        .container.open .lid {
-            transform: translateY(-140px) rotate(-20deg);
-        }
-
-        .container.open .flower {
-            transform: translate(-50%, -50%) scale(1.6) rotate(360deg);
-            top: -110px; /* Pops out the top */
+            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .container:hover .gift-box {
@@ -110,9 +226,28 @@
 <body>
 
     <div class="container" onclick="openBox()">
-        <div class="flower">🌸</div>
-        <div class="lid"></div>
-        <div class="gift-box"></div>
+        <!-- The Complete Flower Structure -->
+        <div class="flower-structure">
+            <div class="flower-head">
+                <div class="center-circle"></div>
+                <div class="petal petal1"></div>
+                <div class="petal petal2"></div>
+                <div class="petal petal3"></div>
+                <div class="petal petal4"></div>
+                <div class="petal petal5"></div>
+            </div>
+            <div class="stem"></div>
+        </div>
+
+        <!-- The Realistic 3D Box & Lid -->
+        <div class="lid-container">
+            <div class="bow"></div>
+            <div class="lid"></div>
+        </div>
+        <div class="gift-box">
+            <div class="box-ribbon"></div>
+        </div>
+
         <div class="message" id="msg-text">Press me!</div>
     </div>
 
@@ -121,14 +256,12 @@
             const container = document.querySelector('.container');
             const msgText = document.getElementById('msg-text');
             
-            // Toggle the open class
             container.classList.toggle('open');
             
-            // Update the text string instantly
             if (container.classList.contains('open')) {
-                msgText.innerText = "Surprise! 🌸";
+                msgText.innerHTML = "Surprise! 🌸";
             } else {
-                msgText.innerText = "Press me!";
+                msgText.innerHTML = "Press me!";
             }
         }
     </script>
