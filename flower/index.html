@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Blooming Giftbox</title>
+    <title>The Blooming Dahlia Giftbox</title>
     <style>
         * {
             box-sizing: border-box;
@@ -24,7 +24,7 @@
             text-align: center;
             cursor: pointer;
             width: 300px;
-            height: 450px;
+            height: 480px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -73,7 +73,7 @@
             position: absolute;
             width: 194px;
             height: 40px;
-            bottom: 155px; /* Sits right on top */
+            bottom: 155px;
             z-index: 10;
             transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.2);
             transform-origin: bottom left;
@@ -88,7 +88,6 @@
             position: relative;
         }
 
-        /* Lid Ribbon Cross */
         .lid::before {
             content: '';
             position: absolute;
@@ -99,7 +98,6 @@
             transform: translateX(-50%);
         }
 
-        /* Realistic Ribbon Bow Loops */
         .bow {
             position: absolute;
             top: -20px;
@@ -121,15 +119,15 @@
         .bow::before { left: -18px; transform: rotate(-25deg); }
         .bow::after { right: -18px; transform: rotate(25deg); }
 
-        /* --- THE FLOWER & STEM (ডাল) --- */
+        /* --- THE FLOWER & STEM --- */
         .flower-structure {
             position: absolute;
-            bottom: 80px; /* Hidden deep inside base */
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%) scale(0);
             transform-origin: bottom center;
             z-index: 2;
-            transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.4, 1.1), bottom 0.9s ease;
+            transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.1), bottom 0.9s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -137,77 +135,86 @@
 
         /* LONG GREEN STEM (ডাল) */
         .stem {
-            width: 10px;
-            height: 180px; /* Long and prominent */
+            width: 12px;
+            height: 200px;
             background: linear-gradient(to right, #4CAF50, #388E3C);
-            border-radius: 4px;
+            border-radius: 6px;
             position: relative;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* Leaves on the stem */
+        /* Sturdy Green Leaves */
         .stem::before, .stem::after {
             content: '';
             position: absolute;
-            width: 35px;
-            height: 20px;
-            background: #4CAF50;
-            border-radius: 20px 0 20px 0;
+            width: 45px;
+            height: 25px;
+            background: linear-gradient(135deg, #66bb6a, #388E3C);
+            border-radius: 30px 0 30px 0;
             top: 60px;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
         }
-        .stem::before { left: -32px; transform: rotate(-15deg); }
-        .stem::after { right: -32px; transform: rotate(65deg); border-radius: 0 20px 0 20px; top: 100px; }
+        .stem::before { left: -42px; transform: rotate(-15deg); }
+        .stem::after { right: -42px; transform: rotate(65deg); border-radius: 0 30px 0 30px; top: 110px; }
 
-        /* RE-DESIGNED PINK & YELLOW FLOWER */
+        /* --- LUSH DAHLIA FLOWER HEAD --- */
         .flower-head {
             position: relative;
-            width: 110px;
-            height: 110px;
-            margin-bottom: -5px; /* Connected seamlessly to stem */
+            width: 160px; /* Made it much bigger and well-fed */
+            height: 160px;
+            margin-bottom: -10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Center Yellow Circle */
+        /* Central Gold Circle */
         .center-circle {
             position: absolute;
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, #FFEB3B 0%, #FBC02D 100%);
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #FFE082 0%, #FFA000 100%);
             border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             z-index: 10;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: 2px solid #FFD54F;
         }
 
-        /* 5 Pink Petals */
+        /* Roundish Dahlia Petals */
         .petal {
             position: absolute;
-            background: linear-gradient(135deg, #ff7da7 0%, #ff4081 100%);
-            width: 42px;
-            height: 42px;
-            border-radius: 50% 50% 0 50%;
-            top: 50%;
-            left: 50%;
-            transform-origin: 0% 0%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: linear-gradient(to bottom, #ff8da1 0%, #ff4081 50%, #d81b60 100%);
+            width: 46px;
+            height: 65px;
+            border-radius: 50% 50% 40% 40%; /* Roundish, full shape */
+            transform-origin: center bottom;
+            bottom: 50%; /* Anchor to center */
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
-        .petal1 { transform: rotate(0deg) translate(-50%, -50%); }
-        .petal2 { transform: rotate(72deg) translate(-50%, -50%); }
-        .petal3 { transform: rotate(144deg) translate(-50%, -50%); }
-        .petal4 { transform: rotate(216deg) translate(-50%, -50%); }
-        .petal5 { transform: rotate(288deg) translate(-50%, -50%); }
+
+        /* 12-Petal Rotations for a full Dahlia look */
+        .p1 { transform: rotate(0deg); }
+        .p2 { transform: rotate(30deg); }
+        .p3 { transform: rotate(60deg); }
+        .p4 { transform: rotate(90deg); }
+        .p5 { transform: rotate(120deg); }
+        .p6 { transform: rotate(150deg); }
+        .p7 { transform: rotate(180deg); }
+        .p8 { transform: rotate(210deg); }
+        .p9 { transform: rotate(240deg); }
+        .p10 { transform: rotate(270deg); }
+        .p11 { transform: rotate(300deg); }
+        .p12 { transform: rotate(330deg); }
 
         /* --- ANIMATION TRIGGERS --- */
         .container.open .lid-container {
-            transform: translateY(-160px) rotate(-45deg) scale(0.9);
+            transform: translateY(-200px) rotate(-45deg) scale(0.9);
             opacity: 0.9;
         }
 
-        /* Flower rises up completely exposing the stem */
         .container.open .flower-structure {
             transform: translateX(-50%) scale(1);
-            bottom: 140px; /* Rises up high out of the box */
+            bottom: 145px; /* Rises up high out of the box */
         }
 
         .message {
@@ -226,20 +233,28 @@
 <body>
 
     <div class="container" onclick="openBox()">
-        <!-- The Complete Flower Structure -->
+        <!-- The Complete Well-Fed Dahlia Structure -->
         <div class="flower-structure">
             <div class="flower-head">
                 <div class="center-circle"></div>
-                <div class="petal petal1"></div>
-                <div class="petal petal2"></div>
-                <div class="petal petal3"></div>
-                <div class="petal petal4"></div>
-                <div class="petal petal5"></div>
+                <!-- 12 Roundish Beautiful Petals -->
+                <div class="petal p1"></div>
+                <div class="petal p2"></div>
+                <div class="petal p3"></div>
+                <div class="petal p4"></div>
+                <div class="petal p5"></div>
+                <div class="petal p6"></div>
+                <div class="petal p7"></div>
+                <div class="petal p8"></div>
+                <div class="petal p9"></div>
+                <div class="petal p10"></div>
+                <div class="petal p11"></div>
+                <div class="petal p12"></div>
             </div>
             <div class="stem"></div>
         </div>
 
-        <!-- The Realistic 3D Box & Lid -->
+        <!-- The Box & Lid -->
         <div class="lid-container">
             <div class="bow"></div>
             <div class="lid"></div>
