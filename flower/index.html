@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Gift For You</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #ffe3e8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        /* The Gift Box Container */
+        .gift-box {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            background: #ff4a6b;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+
+        /* Ribbon Lid */
+        .lid {
+            position: absolute;
+            width: 170px;
+            height: 40px;
+            background: #ff3356;
+            top: -40px;
+            left: -5px;
+            border-radius: 5px 5px 0 0;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 3;
+        }
+
+        /* Ribbons (Cross) */
+        .gift-box::before, .lid::before {
+            content: '';
+            position: absolute;
+            background: #fff;
+            width: 30px;
+            height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .gift-box::after {
+            content: '';
+            position: absolute;
+            background: #fff;
+            width: 100%;
+            height: 30px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        /* The Flower (Hidden inside initially) */
+        .flower {
+            position: absolute;
+            font-size: 80px;
+            left: 50%;
+            top: 40px;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.8s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Text Message */
+        .message {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            color: #d63352;
+            font-weight: bold;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        /* OPEN STATE ANIMATIONS */
+        .container.open .lid {
+            transform: translateY(-120px) rotate(-15deg);
+        }
+
+        .container.open .flower {
+            transform: translate(-50%, -50%) scale(1.5) rotate(360deg);
+            top: -100px; /* Pops out of the box */
+        }
+
+        .container.open .message {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .container:hover .gift-box {
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" onclick="openBox()">
+        <div class="flower">🌸</div>
+        <div class="lid"></div>
+        <div class="gift-box"></div>
+        <div class="message">Press me!</div>
+    </div>
+
+    <script>
+        function openBox() {
+            const container = document.querySelector('.container');
+            const message = document.querySelector('.message');
+            
+            // Toggle the open class
+            container.classList.toggle('open');
+            
+            // Update text based on state
+            if (container.classList.contains('open')) {
+                message.innerText = "Surprise! 🌸";
+            } else {
+                message.innerText = "Press me!";
+            }
+        }
+    </script>
+</body>
+</html>
