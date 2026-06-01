@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A flower for my FAAAAAHHHHHHHHH</title>
+    <title>The Ultimate Blooming Dahlia for my FAAAAAAAAHHHHHHHH</title>
+    <!-- Import diverse romantic fonts from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Pacifico&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    
     <style>
         * {
             box-sizing: border-box;
@@ -17,50 +20,79 @@
             margin: 0;
             font-family: 'Segoe UI', Arial, sans-serif;
             overflow: hidden;
+            position: relative;
         }
 
+        /* --- BACKGROUND SCATTERED ROMANTIC TEXT & HEARTS --- */
+        .bg-element {
+            position: absolute;
+            color: rgba(230, 46, 82, 0.15); /* Soft, subtle blend */
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatGently 4s ease-in-out infinite alternate;
+        }
+        
+        @keyframes floatGently {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-10px) rotate(3deg); }
+        }
+
+        /* Specific positions, sizes, and fonts for scattered look */
+        .bg1 { top: 10%; left: 10%; font-family: 'Great Vibes', cursive; font-size: 2.5rem; }
+        .bg2 { top: 15%; right: 15%; font-family: 'Pacifico', cursive; font-size: 1.8rem; }
+        .bg3 { bottom: 20%; left: 12%; font-family: 'Dancing Script', cursive; font-size: 2.2rem; }
+        .bg4 { bottom: 15%; right: 10%; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.5rem; }
+        .bg5 { top: 40%; left: 5%; font-size: 1.5rem; } /* Heart */
+        .bg6 { top: 60%; right: 6%; font-size: 2rem; } /* Heart */
+        .bg7 { top: 25%; left: 45%; font-family: 'Dancing Script', cursive; font-size: 1.6rem; }
+        .bg8 { bottom: 40%; left: 20%; font-size: 1.2rem; } /* Heart */
+        .bg9 { bottom: 35%; right: 25%; font-family: 'Great Vibes', cursive; font-size: 2.8rem; }
+
+        /* --- THE INTERACTIVE BOX CONTAINER --- */
         .container {
             position: relative;
             text-align: center;
             cursor: pointer;
-            width: 300px;
-            height: 480px;
+            width: 320px;
+            height: 500px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             align-items: center;
+            z-index: 10;
         }
 
-        /* --- THE BOX (REALISTIC 3D LOOK) --- */
+        /* --- THE BOX BASE (3D LOOK) --- */
         .gift-box {
             position: relative;
-            width: 180px;
+            width: 190px;
             height: 160px;
             background: linear-gradient(135deg, #ff4a6b 0%, #e62e52 100%);
-            border-radius: 0 0 8px 8px;
-            box-shadow: 0 15px 30px rgba(230, 46, 82, 0.25), inset 0 -10px 20px rgba(0,0,0,0.1);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 20px 40px rgba(230, 46, 82, 0.25), inset 0 -10px 20px rgba(0,0,0,0.1);
             z-index: 4;
             transition: transform 0.3s ease;
         }
 
-        /* 3D Inner Rim of the Box */
+        /* 3D Inner Rim inside Box opening */
         .gift-box::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 15px;
+            height: 16px;
             background: #b31937;
-            border-radius: 0 0 4px 4px;
+            border-radius: 0 0 6px 6px;
             z-index: 5;
         }
 
-        /* Vertical Satin Ribbon */
+        /* Centered Vertical Silk Ribbon */
         .box-ribbon {
             position: absolute;
-            background: linear-gradient(to right, #fff, #f0f0f0, #fff);
-            width: 34px;
+            background: linear-gradient(to right, #fff, #f6f6f6, #fff);
+            width: 36px;
             height: 100%;
             left: 50%;
             transform: translateX(-50%);
@@ -68,61 +100,64 @@
             z-index: 6;
         }
 
-        /* --- THE LID & BOW --- */
+        /* --- THE PROPER SYMMETRICAL LID & BOW --- */
         .lid-container {
             position: absolute;
-            width: 194px;
-            height: 40px;
-            bottom: 155px;
-            z-index: 10;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.2);
-            transform-origin: bottom left;
+            width: 206px; /* Slightly wider than the box so it sits properly */
+            height: 42px;
+            bottom: 156px; /* Perfect flush fit directly on box top */
+            z-index: 12;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
+            transform-origin: center bottom;
         }
 
         .lid {
             width: 100%;
             height: 100%;
             background: linear-gradient(135deg, #ff5777 0%, #f03d61 100%);
-            border-radius: 6px 6px 3px 3px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            border-radius: 8px 8px 4px 4px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
             position: relative;
         }
 
+        /* Horizontal/Vertical ribbon layouts on the proper lid */
         .lid::before {
             content: '';
             position: absolute;
-            background: linear-gradient(to right, #fff, #e6e6e6, #fff);
-            width: 34px;
+            background: linear-gradient(to right, #fff, #efefef, #fff);
+            width: 36px;
             height: 100%;
             left: 50%;
             transform: translateX(-50%);
         }
 
+        /* Elegant Loop Bow on top */
         .bow {
             position: absolute;
-            top: -20px;
+            top: -22px;
             left: 50%;
             transform: translateX(-50%);
-            width: 50px;
-            height: 20px;
-            z-index: 11;
+            width: 60px;
+            height: 22px;
+            z-index: 13;
         }
         .bow::before, .bow::after {
             content: '';
             position: absolute;
-            width: 30px;
-            height: 25px;
+            width: 34px;
+            height: 26px;
             border: 6px solid #fff;
             border-radius: 50%;
             top: -5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .bow::before { left: -18px; transform: rotate(-25deg); }
-        .bow::after { right: -18px; transform: rotate(25deg); }
+        .bow::before { left: -22px; transform: rotate(-20deg); }
+        .bow::after { right: -22px; transform: rotate(20deg); }
 
-        /* --- THE FLOWER & STEM --- */
+        /* --- THE DAHLIA FLOWER & STEM STRUCTURE --- */
         .flower-structure {
             position: absolute;
-            bottom: 80px;
+            bottom: 60px;
             left: 50%;
             transform: translateX(-50%) scale(0);
             transform-origin: bottom center;
@@ -136,14 +171,14 @@
         /* LONG GREEN STEM (ডাল) */
         .stem {
             width: 12px;
-            height: 200px;
+            height: 210px;
             background: linear-gradient(to right, #4CAF50, #388E3C);
             border-radius: 6px;
             position: relative;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.12);
         }
 
-        /* Sturdy Green Leaves */
+        /* Leaves */
         .stem::before, .stem::after {
             content: '';
             position: absolute;
@@ -151,16 +186,15 @@
             height: 25px;
             background: linear-gradient(135deg, #66bb6a, #388E3C);
             border-radius: 30px 0 30px 0;
-            top: 60px;
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            top: 70px;
         }
         .stem::before { left: -42px; transform: rotate(-15deg); }
-        .stem::after { right: -42px; transform: rotate(65deg); border-radius: 0 30px 0 30px; top: 110px; }
+        .stem::after { right: -42px; transform: rotate(65deg); border-radius: 0 30px 0 30px; top: 120px; }
 
-        /* --- LUSH DAHLIA FLOWER HEAD --- */
+        /* LUSH DAHLIA HEAD */
         .flower-head {
             position: relative;
-            width: 160px; /* Made it much bigger and well-fed */
+            width: 160px;
             height: 160px;
             margin-bottom: -10px;
             display: flex;
@@ -168,7 +202,7 @@
             align-items: center;
         }
 
-        /* Central Gold Circle */
+        /* Gold center */
         .center-circle {
             position: absolute;
             width: 44px;
@@ -180,19 +214,19 @@
             border: 2px solid #FFD54F;
         }
 
-        /* Roundish Dahlia Petals */
+        /* Plump roundish Dahlia Petals */
         .petal {
             position: absolute;
             background: linear-gradient(to bottom, #ff8da1 0%, #ff4081 50%, #d81b60 100%);
             width: 46px;
             height: 65px;
-            border-radius: 50% 50% 40% 40%; /* Roundish, full shape */
+            border-radius: 50% 50% 42% 42%;
             transform-origin: center bottom;
-            bottom: 50%; /* Anchor to center */
+            bottom: 50%;
             box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
 
-        /* 12-Petal Rotations for a full Dahlia look */
+        /* 12 Petal Matrix */
         .p1 { transform: rotate(0deg); }
         .p2 { transform: rotate(30deg); }
         .p3 { transform: rotate(60deg); }
@@ -206,15 +240,18 @@
         .p11 { transform: rotate(300deg); }
         .p12 { transform: rotate(330deg); }
 
-        /* --- ANIMATION TRIGGERS --- */
+        /* --- THE INTERACTIVE ANIMATION STATES --- */
+        
+        /* 1. LID VANISHES COMPLETELY */
         .container.open .lid-container {
-            transform: translateY(-200px) rotate(-45deg) scale(0.9);
-            opacity: 0.9;
+            transform: translateY(-220px) scale(0.7);
+            opacity: 0; /* Fully invisible! */
         }
 
+        /* 2. DAHLIA GROWS HIGH OUT OF BOX */
         .container.open .flower-structure {
             transform: translateX(-50%) scale(1);
-            bottom: 145px; /* Rises up high out of the box */
+            bottom: 150px;
         }
 
         .message {
@@ -223,6 +260,7 @@
             color: #e62e52;
             font-weight: bold;
             text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 15;
         }
 
         .container:hover .gift-box {
@@ -232,12 +270,23 @@
 </head>
 <body>
 
+    <!-- Scattered Romantic Ambient Background Layout -->
+    <div class="bg-element bg1">I love you</div>
+    <div class="bg-element bg2">ily</div>
+    <div class="bg-element bg3">I love you</div>
+    <div class="bg-element bg4">ily</div>
+    <div class="bg-element bg5">💖</div>
+    <div class="bg-element bg6">❤️</div>
+    <div class="bg-element bg7">I love you</div>
+    <div class="bg-element bg8">💖</div>
+    <div class="bg-element bg9">ily</div>
+
+    <!-- Main Active Element -->
     <div class="container" onclick="openBox()">
-        <!-- The Complete Well-Fed Dahlia Structure -->
+        <!-- Fully Loaded Dahlia Structure -->
         <div class="flower-structure">
             <div class="flower-head">
                 <div class="center-circle"></div>
-                <!-- 12 Roundish Beautiful Petals -->
                 <div class="petal p1"></div>
                 <div class="petal p2"></div>
                 <div class="petal p3"></div>
@@ -254,11 +303,13 @@
             <div class="stem"></div>
         </div>
 
-        <!-- The Box & Lid -->
+        <!-- Sleek, Properly Fitted Box Lid -->
         <div class="lid-container">
             <div class="bow"></div>
             <div class="lid"></div>
         </div>
+        
+        <!-- Box Core -->
         <div class="gift-box">
             <div class="box-ribbon"></div>
         </div>
@@ -271,6 +322,7 @@
             const container = document.querySelector('.container');
             const msgText = document.getElementById('msg-text');
             
+            // Toggle open state
             container.classList.toggle('open');
             
             if (container.classList.contains('open')) {
