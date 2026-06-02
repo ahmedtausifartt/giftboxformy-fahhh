@@ -14,7 +14,17 @@
     }
 
     body {
-      background: #2B3B8A;
+      /* 📷 CHOOSE YOUR BACKGROUND OPTION BELOW: */
+      /* Option A: Nice solid blue tint (Current) */
+      background: linear-gradient(rgba(43, 59, 138, 0.6), rgba(43, 59, 138, 0.6)), #2B3B8A;
+      
+      /* Option B: To use her picture, upload "bg.jpg" to GitHub and uncomment the line below! */
+      /* background-image: linear-gradient(rgba(43, 59, 138, 0.5), rgba(43, 59, 138, 0.5)), url("bg.jpg"); */
+      
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
       font-family: 'Quicksand', 'Segoe UI', system-ui, sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
@@ -22,12 +32,16 @@
       color: #1e1e2a;
     }
 
+    /* 🔥 FIXED: Added explicit size, positioning adjustments, and absolute click protection */
     .deco {
       position: fixed;
-      pointer-events: none;
-      z-index: 1;
-      font-size: 1.6rem;
+      pointer-events: none !important;
+      z-index: 0;
       opacity: 0.3;
+      width: auto;
+      height: auto;
+      display: inline-block;
+      user-select: none;
       animation: floatAround 18s infinite ease-in-out;
     }
 
@@ -39,26 +53,32 @@
 
     .app-container {
       display: flex;
-      flex-direction: row;
+      justify-content: center;
+      align-items: center;
       min-height: 100vh;
+      width: 100%;
       position: relative;
       z-index: 2;
     }
 
+    /* 🔥 FIXED: Redesigned the container limits so it wraps perfectly and is fully clickable on phone & PC */
     .main-content {
-      flex: 1;
-      padding: 2rem 2rem 2rem 2rem;
+      width: 100%;
+      max-width: 500px;
+      padding: 2rem 1.5rem;
       transition: all 0.3s ease;
-      max-width: calc(100% - 380px);
+      position: relative;
+      z-index: 3;
     }
 
     .player-card {
-      background: rgba(255, 245, 240, 0.1);
-      backdrop-filter: blur(8px);
+      background: rgba(255, 245, 240, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-radius: 2rem;
-      padding: 1.2rem;
-      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 200, 0.25);
+      padding: 1.5rem;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       margin-bottom: 2rem;
     }
 
@@ -75,29 +95,31 @@
 
     .sub-love {
       color: #FFD966;
-      margin-bottom: 1rem;
+      margin-bottom: 1.2rem;
       font-weight: 500;
       border-left: 4px solid #ff99cc;
       padding-left: 0.8rem;
+      font-size: 0.9rem;
     }
 
     iframe {
       border-radius: 1.2rem;
       transition: all 0.2s;
       width: 100%;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
 
-    /* DRAWER */
+    /* DRAWER LAYERING OVERHAUL */
     .drawer {
       position: fixed;
       top: 0;
       right: -420px;
       width: 400px;
       height: 100vh;
-      background: rgba(255, 248, 245, 0.97);
+      background: rgba(255, 248, 245, 0.98);
       backdrop-filter: blur(12px);
-      box-shadow: -8px 0 30px rgba(0, 0, 0, 0.3);
-      z-index: 1000;
+      box-shadow: -8px 0 30px rgba(0, 0, 0, 0.4);
+      z-index: 5000; /* Pushed way out in front */
       transition: right 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
       display: flex;
       flex-direction: column;
@@ -120,7 +142,7 @@
       border-bottom: 2px solid #ffb3c6;
       position: sticky;
       top: 0;
-      z-index: 5;
+      z-index: 5100;
     }
 
     .drawer-header h3 {
@@ -178,7 +200,7 @@
     }
 
     .thumb-img:hover {
-      transform: scale(1.03) rotate(1deg);
+      transform: scale(1.05) rotate(1deg);
       box-shadow: 0 12px 22px rgba(0, 0, 0, 0.3);
       border-color: #ffb347;
     }
@@ -204,19 +226,10 @@
       padding-right: 6px;
     }
 
-    .love-text::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .love-text::-webkit-scrollbar-track {
-      background: #ffcdb0;
-      border-radius: 10px;
-    }
-
-    .love-text::-webkit-scrollbar-thumb {
-      background: #ff8a5c;
-      border-radius: 10px;
-    }
+    /* Custom scrollbars */
+    .love-text::-webkit-scrollbar { width: 4px; }
+    .love-text::-webkit-scrollbar-track { background: #ffcdb0; border-radius: 10px; }
+    .love-text::-webkit-scrollbar-thumb { background: #ff8a5c; border-radius: 10px; }
 
     .close-drawer-btn-bottom {
       display: flex;
@@ -240,15 +253,15 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(255,153,187,0.3);
     }
 
     .close-drawer-bottom:hover {
       background: #ff7aa8;
-      transform: scale(0.98);
       color: white;
     }
 
+    /* 🔥 FIXED: Upgraded z-index so the pink button stays clickable and safe above background decor */
     .drawer-toggle-btn {
       position: fixed;
       top: 24px;
@@ -260,17 +273,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 25px rgba(255,107,158,0.4);
       cursor: pointer;
-      z-index: 1100;
+      z-index: 4000;
       border: 2px solid #fff3c9;
       transition: 0.2s;
     }
 
     .drawer-toggle-btn i {
-      font-size: 2rem;
+      font-size: 1.5rem;
       color: white;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
 
     .drawer-toggle-btn:hover {
@@ -286,7 +298,7 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.85);
-      z-index: 2000;
+      z-index: 9000;
       justify-content: center;
       align-items: center;
       backdrop-filter: blur(8px);
@@ -335,18 +347,11 @@
         padding: 1rem;
       }
       .drawer {
-        width: 90%;
-        right: -95%;
+        width: 85%;
+        right: -90%;
       }
       .drawer.open {
         right: 0;
-      }
-      .photo-scatter {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-      }
-      .greeting {
-        font-size: 1.3rem;
       }
     }
 
@@ -354,10 +359,11 @@
       background: #ffe2b5;
       border-radius: 40px;
       padding: 0.7rem 1rem;
-      margin-top: 1rem;
+      margin-top: 1.2rem;
       font-size: 0.75rem;
       text-align: center;
       color: #5a3e1b;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
 
     .heart-animation {
@@ -372,15 +378,16 @@
 
     .footer-credit {
       margin-top: 1rem;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       color: #f9e0c0;
       text-align: center;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
   </style>
 </head>
 <body>
 
-<div id="decorContainer"></div>
+<div id="decorContainer" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1;"></div>
 
 <div class="app-container">
   <div class="main-content">
@@ -391,14 +398,16 @@
           <i class="fas fa-headphones"></i> a melody shaped by us — press play, feel every note 🌙
         </div>
       </div>
-  <iframe 
-  src="https://open.spotify.com/embed/playlist/3DV4FehAr8B2eNxrnxKfFm" 
-  width="100%" 
-  height="352" 
-  style="border-radius: 20px;" 
-  frameborder="0" 
-  allow="encrypted-media">
-</iframe>
+      
+      <iframe 
+        src="https://open.spotify.com/embed/playlist/3DV4FehAr8B2eNxrnxKfFm" 
+        width="100%" 
+        height="352" 
+        frameborder="0" 
+        allow="encrypted-media"
+        loading="lazy">
+      </iframe>
+
       <div class="extra-note">
         <i class="fas fa-heart heart-animation" style="color:#ff5e8e;"></i> every song whispers your name <i class="fas fa-feather-alt"></i>
       </div>
@@ -408,7 +417,6 @@
     </div>
   </div>
 
-  <!-- DRAWER -->
   <div id="loveDrawer" class="drawer">
     <div class="drawer-header">
       <h3><i class="fas fa-envelope-open-text"></i> diary of us</h3>
@@ -440,7 +448,7 @@
 </div>
 
 <div id="imageModal" class="modal">
-  <span class="close-modal">&times;</span>
+  <span class="close-modal">×</span>
   <div class="modal-content">
     <img id="modalImage" src="" alt="enlarged memory">
   </div>
@@ -448,7 +456,6 @@
 
 <script>
 (function() {
-  // Wait for DOM to be fully loaded
   document.addEventListener('DOMContentLoaded', function() {
     
     const photoUrls = [
@@ -467,127 +474,4 @@
     ];
 
     const loveLetter = `Hey, wsg??? um are you still thinking about ur previous quiz game? lolz its time to move on bro KARON UR BF IS BACK WITH SOME NEW COOL SHIT WHICH MIGHT STICK WITH YOU FOR THE REST OF YOUR LIFE. and i hope that it's once again, one of the finest gifts u have ever received.. Does it hold more value than the quiz game? In long term, yes but let's not compare em.. Both are different in their own way lol.
-Thank you for being there for me. it's been a month huh.. feels like it has been forever. i really feel like tomar shathe onekdhone asi and onekdi dhone chini abr at the same time, i feel like eito 2din agei to chinlam oke .. but then again.. those eyes, those hands, those texts, those tears, i love em. i love every single thing about you. your kindness, your love, your warmth and everything. im sorry if konodin koshto diye thaki, im sorry for all the sufferings, im sorry for what u went thru amar jonno. Sorry for all the trouble I have caused you, sorry for all the trouble and chaos I might cause in the near future and lifelong all issues :3.. DEAL WITH IT lolz.. 
-
-jano paragraph likhsi ettar ageo but bhule 2bar tab e press marsi and all gone ☺️ so im having to type it out again lol.. the emotions wont be the same but I hope they'll hit the spot. Sorry in advance and ill try to keep as it is… here enjoy:
-
-
-I love you, I love my dear wife, I love my dear girlfriend. I love everything about you, I love you from the bottom of my heart. I love your eyes, your hands, which I held that day, it was beautiful, you are beautiful. You are special. I know ami tomar first but sadly u are not my first but I know for a fact that youll be my last karon I can already feel what we both have for eachother, I love you. I L O V E      Y O U   !!!!!! I love this pure soul, those kind words, that mirrored carbon copy of mine. Thanks to you, I have a new aim in life, u have given me what I have been missing for all these days, a place to call home, a chest where I can lay my head and cry all I want, a new life, a new beginning. Oneday Insha'Allah we'll reach the end… the end of the new beginning(djo)… the new beginning where we both hold eachother like the way I promised you to, ill hold that hand.. not in a general or normal way… but in a special way for my special person.. ill hold that hand forever and will never let it go. It'll be close to me, like it has always been but the closure will be even closer than it always has been, ill wake up to see your face, well love eachother the way we wanted to, we'll kiss eachother the way we told we'll.  To reach that end, I need your help, yes YOUR. I want you to have faith in me, so that I can move forward  with sheer confidence and with a pure heart who only thinks about how he can succeed and how he can make her happy. Oneday somerandom girl dmed me for a few stickers and now she's all I could ever ask for. Her efforts, her love, her warmth, her skin, her texts, her promsies, everything about her screamed as if she was made for me in heaven  and surely  that's true cz Allah said "﴿وَخَلَقْنَاكُمْ أَزْوَاجًا﴾" (Surah An-Naba (78:8)) which stands for  " And we've created you in pairs" . oh my love, such beautiful love found me and now that's all I want in my life and I wish this love to grow.
-
-I know this deep ocean, the ocean of love, the ocean in which I have dived deeper than I thought I'd. oneday ada said "bhalobashake jibon banais na" and that's when I realized that nah man I have already done it, she's all I ever wanted and after many years, I have found her (JVKE). Ill dive even deeper as we go thru many stuff, good days and the bad days and I promise you, at the end of the each day, you'll be left with only 1 problem and THAT'S ME HAHAHAHAHHAHHA BEAR WITH IT . thank you lol ily my girl mwah 
-
-Im proud of you my girl, I really am, proud of all the thing u went thru and u still didn't give up. Mwah. Hats off to you shona. I love you. Im really happy je I got someone like you in my life. Thank you. Btw is it enough? Is it  romantic enough? Is it cool enough? Did it hit the spot? Did I manage to hit my arrow right where I wanted it to go? Ifdk im not satisfied with it SOOOOOOOOOOOOOOOO im gonna do something even crazier..coding e jeye paragraph e ill add new stuff always jaate u ever get bored and  ill make it like a diary. New gan shunte ashle hopefully paba new kichu :3. Keep it safe girl. Keep it close to your heart
-
-LASTLY, I LOVE YOU I LOVE MY NAJIFAH I LOVE MY F A H H H H H H H IRWEALLY DO I ALWAYS DID AND I ALWAYS WILL. THANK YOU MY GIFT youre my best gift and youre everything I wished for. Mwahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh nao a longggggggggggggggggggggggggggggg one :3 I  love you mwahwmahwmahwmahwah I love you shona.. ill be updating this always  jaate tomar new diary eta hoy hehe
-      also um new added stuff on 2nd june: 
-      ok so about "Idts amr lagena je words enough to explain how much i love u" that's true and not just you, eta shobar khetrei same je just words diye bujhano possible na how much they love the other person. its true je ami hoyto janina je how much u acctually love me but as a human who has been spending the past few months with you tao not just 1 2hr but whole time e tomar shathe katacche i do have a rough idea and true je fully na  e jante pari but based on how much i know and what i know.. i know je how broad ur love for me is. i know je ekta meye kotoa deeply in love and kotota devoted hoile eemon act kore, eibhabe time spend korte chay, kisukhon porpor call dey and allat stuff. i have been noticing you since the beginning and your efforts and ur genuineness is what attracted me even more. the stuff u say all of em are so kind ,so real,so loveable.. you are the blessing of my life, you are what my heart yearns for.. a small talk, ektu hi hello, ektu moja is what my heart desires..i cannot explain it to you je ami kottoa miss kori tomake ar topar touch.. i miss everything that we are not doing and i absolutely miss your eyes, your hands and YOU. ami khubi bhalomoto jani je you only want me and want nobody else in your life and ami etao jani je tumi amake diyei khushi and amio jani je tomake ami chara  ar kew eto khushi dite prbena doesnt really matter who he is,what he wants to do w you.. you're mine and MINE ONLY.. thank you for being honest w me always, ty for loving me shona also THANK YOU FOR CHOOSING SOMEONE LIKE ME... IF U WANT ME TO GET BETTER JUST TELL ME, COMMUNICATE WITH ME BECAUSE COMMUNICATION TASTES BETTER THAN KEY :speaking_head::speaking_head::speaking_head::speaking_head::fire::fire::fire:.. also ily my beautiful babygirl. i love how u were so sad and angry at me tao amake reel diccho omg i fell for u again eto egoless kemne amar shona ta ` ;
-
-    // Render photo gallery
-    function renderGallery() {
-      const galleryDiv = document.getElementById('photoGallery');
-      if (!galleryDiv) return;
-      galleryDiv.innerHTML = '';
-      photoUrls.forEach((url, idx) => {
-        const img = document.createElement('img');
-        img.src = url;
-        img.classList.add('thumb-img');
-        img.alt = `memory ${idx+1}`;
-        img.loading = 'lazy';
-        img.onerror = function() { this.style.opacity = '0.5'; this.alt = 'Image unavailable'; };
-        img.addEventListener('click', (e) => {
-          e.stopPropagation();
-          openModal(url);
-        });
-        galleryDiv.appendChild(img);
-      });
-    }
-
-    // Modal logic
-    const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImage');
-    const closeModalSpan = document.querySelector('.close-modal');
-    
-    function openModal(imgUrl) {
-      if (!modal || !modalImg) return;
-      modal.style.display = 'flex';
-      modalImg.src = imgUrl;
-    }
-    
-    function closeModal() {
-      if (!modal) return;
-      modal.style.display = 'none';
-      if (modalImg) modalImg.src = '';
-    }
-    
-    if (closeModalSpan) closeModalSpan.addEventListener('click', closeModal);
-    if (modal) modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeModal();
-    });
-
-    // Drawer controls
-    const drawer = document.getElementById('loveDrawer');
-    const openBtn = document.getElementById('openDrawerBtn');
-    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
-    const closeDrawerBottomBtn = document.getElementById('closeDrawerBottomBtn');
-    
-    function openDrawer() { if (drawer) drawer.classList.add('open'); }
-    function closeDrawer() { if (drawer) drawer.classList.remove('open'); }
-    
-    if (openBtn) openBtn.addEventListener('click', openDrawer);
-    if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
-    if (closeDrawerBottomBtn) closeDrawerBottomBtn.addEventListener('click', closeDrawer);
-
-    // Insert love letter
-    const loveTextContainer = document.getElementById('loveTextContainer');
-    if (loveTextContainer) loveTextContainer.innerText = loveLetter;
-
-    // Floating decorations
-    const decorations = ['❤️', '🌸', '🍃', '🌿', '🌲', '🌳', '👼', '✨', '🍂', '💖', '🕊️', '🍁', '🌺', '⭐'];
-    const decorContainer = document.getElementById('decorContainer');
-    if (decorContainer) {
-      for (let i = 0; i < 55; i++) {
-        const el = document.createElement('div');
-        el.className = 'deco';
-        const randomIcon = decorations[Math.floor(Math.random() * decorations.length)];
-        el.innerHTML = randomIcon;
-        const size = Math.floor(Math.random() * 28 + 16);
-        el.style.fontSize = size + 'px';
-        el.style.left = Math.random() * 100 + '%';
-        el.style.top = Math.random() * 100 + '%';
-        const duration = Math.random() * 20 + 10;
-        el.style.animationDuration = duration + 's';
-        el.style.animationDelay = Math.random() * 8 + 's';
-        el.style.opacity = Math.random() * 0.3 + 0.12;
-        decorContainer.appendChild(el);
-      }
-    }
-
-    // Floating hearts on click (anywhere)
-    document.body.addEventListener('click', (e) => {
-      if (e.target.classList && e.target.classList.contains('thumb-img')) return;
-      const heart = document.createElement('div');
-      heart.innerHTML = '💗';
-      heart.style.position = 'fixed';
-      heart.style.left = e.clientX + 'px';
-      heart.style.top = e.clientY + 'px';
-      heart.style.fontSize = '1.6rem';
-      heart.style.pointerEvents = 'none';
-      heart.style.zIndex = '9999';
-      heart.style.opacity = '0.8';
-      heart.style.transition = 'transform 0.6s ease, opacity 0.8s';
-      heart.style.transform = 'translateY(0px)';
-      document.body.appendChild(heart);
-      setTimeout(() => {
-        heart.style.transform = 'translateY(-80px)';
-        heart.style.opacity = '0';
-      }, 10);
-      setTimeout(() => heart.remove(), 900);
-    });
-
-    // Initialize gallery
-    renderGallery();
-  });
-})();
-</script>
-</body>
-</html>
+Thank you for being there
