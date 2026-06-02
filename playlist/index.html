@@ -14,17 +14,7 @@
     }
 
     body {
-      /* 📷 CHOOSE YOUR BACKGROUND OPTION BELOW: */
-      /* Option A: Nice solid blue tint (Current) */
-      background: linear-gradient(rgba(43, 59, 138, 0.6), rgba(43, 59, 138, 0.6)), #2B3B8A;
-      
-      /* Option B: To use her picture, upload "bg.jpg" to GitHub and uncomment the line below! */
-      /* background-image: linear-gradient(rgba(43, 59, 138, 0.5), rgba(43, 59, 138, 0.5)), url("bg.jpg"); */
-      
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
+      background: #2B3B8A;
       font-family: 'Quicksand', 'Segoe UI', system-ui, sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
@@ -32,15 +22,12 @@
       color: #1e1e2a;
     }
 
-    /* 🔥 FIXED: Added explicit size, positioning adjustments, and absolute click protection */
+    /* ⭐ FIXED: Restored full floating decoration sizing and visibility rules */
     .deco {
       position: fixed;
       pointer-events: none !important;
-      z-index: 0;
+      z-index: 1;
       opacity: 0.3;
-      width: auto;
-      height: auto;
-      display: inline-block;
       user-select: none;
       animation: floatAround 18s infinite ease-in-out;
     }
@@ -51,35 +38,36 @@
       100% { transform: translateY(0px) rotate(0deg); }
     }
 
+    /* ⭐ FIXED: Returned layout structural configuration to full width row setup */
     .app-container {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: row;
       min-height: 100vh;
-      width: 100%;
       position: relative;
       z-index: 2;
+      width: 100%;
     }
 
-    /* 🔥 FIXED: Redesigned the container limits so it wraps perfectly and is fully clickable on phone & PC */
+    /* ⭐ FIXED: Keeps layout flexible while allocating correct desktop padding space */
     .main-content {
-      width: 100%;
-      max-width: 500px;
-      padding: 2rem 1.5rem;
+      flex: 1;
+      padding: 2rem;
       transition: all 0.3s ease;
-      position: relative;
-      z-index: 3;
+      width: 100%;
     }
 
     .player-card {
-      background: rgba(255, 245, 240, 0.15);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 245, 240, 0.1);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border-radius: 2rem;
-      padding: 1.5rem;
-      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 1.2rem;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 200, 0.25);
       margin-bottom: 2rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .greeting {
@@ -95,31 +83,29 @@
 
     .sub-love {
       color: #FFD966;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1rem;
       font-weight: 500;
       border-left: 4px solid #ff99cc;
       padding-left: 0.8rem;
-      font-size: 0.9rem;
     }
 
     iframe {
       border-radius: 1.2rem;
       transition: all 0.2s;
       width: 100%;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
 
-    /* DRAWER LAYERING OVERHAUL */
+    /* DRAWER LAYER STYLING */
     .drawer {
       position: fixed;
       top: 0;
       right: -420px;
       width: 400px;
       height: 100vh;
-      background: rgba(255, 248, 245, 0.98);
+      background: rgba(255, 248, 245, 0.97);
       backdrop-filter: blur(12px);
-      box-shadow: -8px 0 30px rgba(0, 0, 0, 0.4);
-      z-index: 5000; /* Pushed way out in front */
+      box-shadow: -8px 0 30px rgba(0, 0, 0, 0.3);
+      z-index: 5000;
       transition: right 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
       display: flex;
       flex-direction: column;
@@ -200,7 +186,7 @@
     }
 
     .thumb-img:hover {
-      transform: scale(1.05) rotate(1deg);
+      transform: scale(1.03) rotate(1deg);
       box-shadow: 0 12px 22px rgba(0, 0, 0, 0.3);
       border-color: #ffb347;
     }
@@ -226,7 +212,6 @@
       padding-right: 6px;
     }
 
-    /* Custom scrollbars */
     .love-text::-webkit-scrollbar { width: 4px; }
     .love-text::-webkit-scrollbar-track { background: #ffcdb0; border-radius: 10px; }
     .love-text::-webkit-scrollbar-thumb { background: #ff8a5c; border-radius: 10px; }
@@ -253,15 +238,16 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 12px rgba(255,153,187,0.3);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     .close-drawer-bottom:hover {
       background: #ff7aa8;
+      transform: scale(0.98);
       color: white;
     }
 
-    /* 🔥 FIXED: Upgraded z-index so the pink button stays clickable and safe above background decor */
+    /* ⭐ FIXED: Positioned safely relative to full layout window with absolute topmost overlay prioritization */
     .drawer-toggle-btn {
       position: fixed;
       top: 24px;
@@ -273,7 +259,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 25px rgba(255,107,158,0.4);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
       cursor: pointer;
       z-index: 4000;
       border: 2px solid #fff3c9;
@@ -298,7 +284,7 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.85);
-      z-index: 9000;
+      z-index: 6000;
       justify-content: center;
       align-items: center;
       backdrop-filter: blur(8px);
@@ -347,11 +333,18 @@
         padding: 1rem;
       }
       .drawer {
-        width: 85%;
-        right: -90%;
+        width: 90%;
+        right: -95%;
       }
       .drawer.open {
         right: 0;
+      }
+      .photo-scatter {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .greeting {
+        font-size: 1.3rem;
       }
     }
 
@@ -359,11 +352,10 @@
       background: #ffe2b5;
       border-radius: 40px;
       padding: 0.7rem 1rem;
-      margin-top: 1.2rem;
+      margin-top: 1rem;
       font-size: 0.75rem;
       text-align: center;
       color: #5a3e1b;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
 
     .heart-animation {
@@ -378,16 +370,15 @@
 
     .footer-credit {
       margin-top: 1rem;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: #f9e0c0;
       text-align: center;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
   </style>
 </head>
 <body>
 
-<div id="decorContainer" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1;"></div>
+<div id="decorContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></div>
 
 <div class="app-container">
   <div class="main-content">
@@ -403,9 +394,9 @@
         src="https://open.spotify.com/embed/playlist/3DV4FehAr8B2eNxrnxKfFm" 
         width="100%" 
         height="352" 
+        style="border-radius: 20px;" 
         frameborder="0" 
-        allow="encrypted-media"
-        loading="lazy">
+        allow="encrypted-media">
       </iframe>
 
       <div class="extra-note">
@@ -474,4 +465,9 @@
     ];
 
     const loveLetter = `Hey, wsg??? um are you still thinking about ur previous quiz game? lolz its time to move on bro KARON UR BF IS BACK WITH SOME NEW COOL SHIT WHICH MIGHT STICK WITH YOU FOR THE REST OF YOUR LIFE. and i hope that it's once again, one of the finest gifts u have ever received.. Does it hold more value than the quiz game? In long term, yes but let's not compare em.. Both are different in their own way lol.
-Thank you for being there
+Thank you for being there for me. it's been a month huh.. feels like it has been forever. i really feel like tomar shathe onekdhone asi and onekdi dhone chini abr at the same time, i feel like eito 2din agei to chinlam oke .. but then again.. those eyes, those hands, those texts, those tears, i love em. i love every single thing about you. your kindness, your love, your warmth and everything. im sorry if konodin koshto diye thaki, im sorry for all the sufferings, im sorry for what u went thru amar jonno. Sorry for all the trouble I have caused you, sorry for all the trouble and chaos I might cause in the near future and lifelong all issues :3.. DEAL WITH IT lolz.. 
+
+jano paragraph likhsi ettar ageo but bhule 2bar tab e press marsi and all gone ☺️ so im having to type it out again lol.. the emotions wont be the same but I hope they'll hit the spot. Sorry in advance and ill try to keep as it is… here enjoy:
+
+
+I love you, I love my dear wife, I love my dear girlfriend. I love everything about you, I love you from the bottom of my heart. I love your eyes, your hands, which I held that day, it was beautiful, you are beautiful. You are special. I know ami tomar first but sadly u are not my first but I know for a fact that youll be my last karon I can already feel what we both have for eachother, I love you. I L O V E     Y O U      !!!!!! I love this pure soul, those kind words, that mirrored carbon copy of mine. Thanks to you, I have a new aim in life, u have given me what I have been missing for all these days, a place to call home, a chest where I can lay my head and cry all I want, a new life, a new beginning. Oneday Insha'Allah we'll reach the end… the end of the new beginning(djo)… the new beginning where we both hold eachother like the way I promised you to, ill hold that hand.. not in a general or normal way… but in a special way for my special person.. ill hold that hand forever and will never let it go. It'll be close to me, like it has always been but the closure will be even closer than it always has been, ill wake up to see your face, well love eachother the way we wanted to, we'll kiss eachother the way we told we'll.  To reach that end, I need your help, yes YOUR. I want you to have faith in me, so that I can move forward  with sheer confidence and with a pure heart who only thinks about how he can succeed and how he can make her happy. Oneday somerandom girl dmed me for a few stickers and now she's all I could ever ask for. Her efforts, her love, her warmth, her skin, her texts, her promsies, everything about her screamed as if she was made for
