@@ -2,158 +2,163 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Ludo Royale - Two Player (RED vs GREEN)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Ludo King Classic – Two Player (RED vs GREEN)</title>
     <style>
         * {
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
         }
 
         body {
-            background: linear-gradient(145deg, #1e3c2c 0%, #0a2a1a 100%);
+            background: linear-gradient(145deg, #1e4a2f 0%, #0a2e1a 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 16px;
         }
 
-        .game-wrapper {
-            background: #d9a066;
-            border-radius: 56px;
+        .game-container {
+            background: #c88a4a;
+            border-radius: 64px;
             padding: 20px 24px 24px 24px;
-            box-shadow: 0 25px 35px rgba(0, 0, 0, 0.5), inset 0 1px 4px rgba(255, 245, 200, 0.8);
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.6), inset 0 1px 4px rgba(255, 245, 200, 0.8);
         }
 
         canvas {
             display: block;
             margin: 0 auto;
-            border-radius: 32px;
+            border-radius: 36px;
             box-shadow: 0 12px 28px black;
             cursor: pointer;
-            background-color: #f7e9c3;
+            background-color: #f9eac3;
+            width: 100%;
+            height: auto;
         }
 
-        .controls {
+        .ui-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 20px;
-            gap: 16px;
+            margin-top: 22px;
+            gap: 15px;
             flex-wrap: wrap;
         }
 
         .turn-card {
-            background: #2a1e14;
-            padding: 6px 24px;
+            background: #2b211a;
+            padding: 8px 24px;
             border-radius: 60px;
             color: #ffdf8c;
             font-weight: bold;
-            font-size: 1.3rem;
-            box-shadow: inset 0 -2px 0 #6b4c2c, 0 6px 12px black;
+            font-size: 1.2rem;
+            box-shadow: inset 0 -2px 0 #674e32, 0 6px 12px black;
             display: flex;
             align-items: center;
             gap: 14px;
         }
 
         .turn-led {
-            width: 36px;
-            height: 36px;
-            border-radius: 36px;
-            background: gray;
-            box-shadow: 0 0 0 2px #ffd966;
+            width: 34px;
+            height: 34px;
+            border-radius: 34px;
+            background: #888;
+            box-shadow: 0 0 0 2px #ffcd7e;
         }
 
-        .dice-panel {
-            background: #fef0cf;
-            border-radius: 48px;
-            padding: 6px 20px;
+        .dice-king {
+            background: #fff2df;
+            border-radius: 70px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 20px;
-            box-shadow: inset 0 0 0 2px #fff6e0, 0 7px 0 #9b5e2c;
+            padding: 8px 18px;
+            box-shadow: inset 0 0 0 2px #fffae8, 0 8px 0 #8b5a2b;
+            cursor: pointer;
+            transition: all 0.07s linear;
         }
-
-        .dice {
-            width: 72px;
-            height: 72px;
+        .dice-king:active {
+            transform: translateY(4px);
+            box-shadow: inset 0 0 0 2px #fffae8, 0 4px 0 #8b5a2b;
+        }
+        .dice-face {
+            width: 75px;
+            height: 75px;
             background: white;
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3.3rem;
+            font-size: 3.4rem;
             font-weight: 800;
             font-family: monospace;
-            box-shadow: inset 0 -2px 0 #bbb, 0 5px 12px black;
-            background: #fff6e8;
+            background: #fffaf0;
+            box-shadow: inset 0 -1px 0 #ccc, 0 5px 12px rgba(0,0,0,0.2);
+            margin-bottom: 8px;
+        }
+        .dice-label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            background: #e09d32;
+            padding: 5px 14px;
+            border-radius: 40px;
+            color: #2c1a0c;
+            letter-spacing: 1px;
+        }
+
+        .message-box {
+            background: #1f2a1b;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #ffeaad;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            max-width: 230px;
+            box-shadow: inset 0 0 0 1px #5d7842;
         }
 
         button {
-            background: #ffaa44;
+            background: none;
             border: none;
-            font-size: 1.2rem;
-            font-weight: bold;
-            padding: 8px 28px;
-            border-radius: 60px;
-            color: #2d2418;
-            cursor: pointer;
-            transition: 0.07s linear;
-            box-shadow: 0 5px 0 #b45f1b;
-            font-family: inherit;
         }
 
-        button:active {
-            transform: translateY(3px);
-            box-shadow: 0 2px 0 #b45f1b;
-        }
-
-        .msg-area {
-            background: #1f2a18;
-            padding: 6px 20px;
-            border-radius: 40px;
-            color: #ffeaac;
-            font-weight: 600;
-            font-size: 0.9rem;
-            max-width: 210px;
-            text-align: center;
-        }
-
-        @media (max-width: 680px) {
-            .game-wrapper { padding: 12px 16px 18px; }
-            .dice { width: 55px; height: 55px; font-size: 2.2rem; }
-            .turn-card { font-size: 1rem; padding: 4px 18px; }
-            button { padding: 6px 20px; font-size: 1rem; }
+        @media (max-width: 700px) {
+            .game-container { padding: 12px 16px 18px; }
+            .dice-face { width: 58px; height: 58px; font-size: 2.4rem; }
+            .turn-card { font-size: 1rem; padding: 5px 16px; }
+            .dice-label { font-size: 0.7rem; }
         }
     </style>
 </head>
 <body>
 <div>
-    <div class="game-wrapper">
+    <div class="game-container">
         <canvas id="ludoCanvas" width="750" height="750"></canvas>
-        <div class="controls">
+        <div class="ui-bar">
             <div class="turn-card">
                 <div class="turn-led" id="turnLed"></div>
                 <span id="turnText">RED's Turn</span>
             </div>
-            <div class="dice-panel">
-                <div class="dice" id="diceValue">⚀</div>
-                <button id="rollBtn">🎲 ROLL</button>
+            <div id="diceTapArea" class="dice-king">
+                <div class="dice-face" id="diceValue">⚀</div>
+                <div class="dice-label">👇 TAP HERE TO ROLL</div>
             </div>
-            <div class="msg-area" id="gameMsg">Roll to begin!</div>
+            <div class="message-box" id="gameMsg">Roll the dice!</div>
         </div>
     </div>
 </div>
 
 <script>
-    (function() {
-        // ------------------- TWO-PLAYER LUDO (CLASSIC RULES) -------------------
+    (function(){
+        // ---------- TWO-PLAYER LUDO KING (RED vs GREEN) ----------
         const canvas = document.getElementById('ludoCanvas');
         const ctx = canvas.getContext('2d');
-
+        
         // Game state
         let currentPlayer = 'RED';      // RED starts
         let diceValue = 0;
@@ -161,272 +166,225 @@
         let extraTurn = false;
         let consecutiveSixes = 0;
         let gameWinner = null;
-
-        // ---------- TRACK: 52 cells + home stretch (5 steps per player) ----------
-        // cell indices: RED start = 0, GREEN start = 13, YELLOW=26, BLUE=39 (only RED/GREEN used)
-        let trackPoints = [];  // array of {x, y} for each global cell 0..51
-
-        // Precompute beautiful Ludo track positions (classic cross shape)
-        function buildTrackPoints() {
-            const w = 750, h = 750;
-            const centerX = w/2, centerY = h/2;
-            const outerRadius = 310;
-            const innerRadius = 190;
-            const points = [];
-            
-            // helper to add points along an arc from angleStart to angleEnd, steps
-            function addArc(cx, cy, radius, startDeg, endDeg, steps) {
-                for (let i = 0; i <= steps; i++) {
-                    let t = i / steps;
-                    let deg = startDeg + t * (endDeg - startDeg);
-                    let rad = deg * Math.PI / 180;
-                    points.push({ x: cx + radius * Math.cos(rad), y: cy + radius * Math.sin(rad) });
-                }
-            }
-            
-            // We'll create 52 points following a rounded square / outer track ring
-            // Standard path: from RED start (bottom right corner) go clockwise
-            // Define 4 sides each with 13 cells (including corners)
-            let pts = [];
-            // bottom edge (right -> left) 13 cells
-            for (let i = 0; i <= 12; i++) {
-                let x = centerX + 280 - (i * (560/12));
-                let y = centerY + 280;
-                pts.push({ x, y });
-            }
-            // left edge (bottom -> top) 13 cells excluding bottom corner already added
-            for (let i = 1; i <= 12; i++) {
-                let x = centerX - 280;
-                let y = centerY + 280 - (i * (560/12));
-                pts.push({ x, y });
-            }
-            // top edge (left -> right)
-            for (let i = 1; i <= 12; i++) {
-                let x = centerX - 280 + (i * (560/12));
-                let y = centerY - 280;
-                pts.push({ x, y });
-            }
-            // right edge (top -> bottom)
-            for (let i = 1; i <= 12; i++) {
-                let x = centerX + 280;
-                let y = centerY - 280 + (i * (560/12));
-                pts.push({ x, y });
-            }
-            // now pts length = 13+12+12+12 = 49, we need 52, add extra 3 to smooth start? but classic ludo needs 52
-            // Actually classic is 52 cells: each arm 6 cells + corner start cell = 7 per side => 28? Wait i fix with standard indexing.
-            // Better: I'll generate exact 52 by using proper step + known ludo layout.
-            // Let's use a reliable table of 52 positions manually crafted for clean look.
-            // To avoid misalignment, I hardcode a well-proportioned set derived from geometric calculation.
-            // I'll generate using parametric angles to ensure perfect symmetry.
-            const angleOffset = -45; // align start at bottom right
-            const points52 = [];
-            const radius = 305;
-            for (let i = 0; i < 52; i++) {
-                let angle = (angleOffset + (i / 52) * 360) * Math.PI / 180;
-                let x = centerX + radius * Math.cos(angle);
-                let y = centerY + radius * Math.sin(angle);
-                points52.push({ x, y });
-            }
-            // rotate so that index 0 sits at bottom-right (RED start visually)
-            let redStartIdx = 0;
-            let bestDist = Infinity;
-            for (let i = 0; i < points52.length; i++) {
-                let dist = Math.hypot(points52[i].x - (centerX+270), points52[i].y - (centerY+270));
-                if (dist < bestDist) {
-                    bestDist = dist;
-                    redStartIdx = i;
-                }
-            }
-            const rotated = [];
-            for (let i = 0; i < points52.length; i++) {
-                rotated.push(points52[(redStartIdx + i) % points52.length]);
-            }
-            return rotated;
-        }
-
-        trackPoints = buildTrackPoints();
         
-        // Safe cells (start cells + star cells)
+        // ---------- TRACK SYSTEM: 52 global cells + home stretch (4 steps + crown) ----------
+        let trackPoints = []; // array of {x,y} for cells 0..51
+        
+        // Build a perfect circular / rounded track (looks like Ludo King)
+        function buildLudoTrack() {
+            const w = 750, h = 750;
+            const cx = w/2, cy = h/2;
+            const radius = 310;
+            const points = [];
+            // start angle offset so that index 0 is bottom-right (red start)
+            for (let i = 0; i < 52; i++) {
+                let angle = ( (i / 52) * 360 - 48 ) * Math.PI / 180;
+                let x = cx + radius * Math.cos(angle);
+                let y = cy + radius * Math.sin(angle);
+                points.push({ x, y });
+            }
+            // manually ensure red start (index0) looks good on bottom right
+            return points;
+        }
+        
+        trackPoints = buildLudoTrack();
+        
+        // Safe spots: start cells + star cells (classic)
         const startCells = new Set([0, 13, 26, 39]);
         const starCells = new Set([0, 8, 13, 21, 26, 34, 39, 47]);
-        function isSafeCell(cell) {
-            return startCells.has(cell) || starCells.has(cell);
+        function isSafeCell(cellIdx) {
+            return startCells.has(cellIdx) || starCells.has(cellIdx);
         }
-
-        // Player data
+        
+        // Player data structures
         const players = {
             RED: {
-                color: '#dc3545',
-                light: '#ff6b6b',
+                color: '#e3342f',
+                light: '#ff6b5e',
                 startCell: 0,
-                homeCorner: { x: 30, y: 570 },  // bottom-left of red home area (adjusted)
-                yardPositions: [{x:45,y:595},{x:85,y:595},{x:45,y:645},{x:85,y:645}],
-                homePathPositions: [
-                    {x: 670, y: 620}, {x: 690, y: 600}, {x: 710, y: 580}, {x: 725, y: 565}, {x: 735, y: 555}
+                homeCorner: { x: 20, y: 570 },
+                yardPositions: [
+                    { x: 45, y: 610 }, { x: 85, y: 610 },
+                    { x: 45, y: 660 }, { x: 85, y: 660 }
                 ],
-                finishedPos: { x: 680, y: 660 },
+                homePath: [   // 4 steps before victory (step0 -> step3, then final)
+                    { x: 660, y: 600 }, { x: 680, y: 580 },
+                    { x: 700, y: 560 }, { x: 715, y: 545 }
+                ],
+                finishSpot: { x: 680, y: 670 },
                 pieces: [],
                 finishedCount: 0
             },
             GREEN: {
-                color: '#28a745',
+                color: '#38a169',
                 light: '#6fdc7a',
                 startCell: 13,
-                homeCorner: { x: 630, y: 30 },
-                yardPositions: [{x:645,y:55},{x:685,y:55},{x:645,y:105},{x:685,y:105}],
-                homePathPositions: [
-                    {x: 70, y: 120}, {x: 55, y: 140}, {x: 40, y: 160}, {x: 28, y: 178}, {x: 18, y: 192}
+                homeCorner: { x: 620, y: 20 },
+                yardPositions: [
+                    { x: 645, y: 55 }, { x: 685, y: 55 },
+                    { x: 645, y: 105 }, { x: 685, y: 105 }
                 ],
-                finishedPos: { x: 20, y: 60 },
+                homePath: [
+                    { x: 80, y: 130 }, { x: 60, y: 150 },
+                    { x: 40, y: 170 }, { x: 25, y: 185 }
+                ],
+                finishSpot: { x: 20, y: 70 },
                 pieces: [],
                 finishedCount: 0
             }
         };
-
+        
         // Initialize pieces
-        function initPieces() {
-            for (let p of ['RED', 'GREEN']) {
-                players[p].pieces = [];
-                players[p].finishedCount = 0;
+        function initGameState() {
+            for (let pl of ['RED', 'GREEN']) {
+                players[pl].pieces = [];
+                players[pl].finishedCount = 0;
                 for (let i = 0; i < 4; i++) {
-                    players[p].pieces.push({
-                        state: 'yard',   // yard, track, home, finished
-                        trackCell: null, // if state=track
-                        homeStep: null   // 0..4 if state=home
+                    players[pl].pieces.push({
+                        state: 'yard',     // yard, track, home, finished
+                        trackCell: null,
+                        homeStep: null      // 0,1,2,3 (4 steps to finish)
                     });
                 }
             }
+            currentPlayer = 'RED';
+            diceValue = 0;
+            diceRolled = false;
+            extraTurn = false;
+            consecutiveSixes = 0;
+            gameWinner = null;
         }
-        initPieces();
-
-        // Helper: get current position of a piece (x,y) for drawing
+        initGameState();
+        
+        // Helper: get piece position (x,y) for drawing
         function getPiecePosition(player, pieceIdx) {
-            const piece = players[player].pieces[pieceIdx];
-            const data = players[player];
-            if (piece.state === 'yard') {
-                return data.yardPositions[pieceIdx];
-            } else if (piece.state === 'track') {
-                let cell = piece.trackCell;
-                if (cell !== null && trackPoints[cell]) return trackPoints[cell];
-                return { x: 0, y: 0 };
-            } else if (piece.state === 'home') {
+            const p = players[player];
+            const piece = p.pieces[pieceIdx];
+            if (piece.state === 'yard') return p.yardPositions[pieceIdx];
+            if (piece.state === 'track') {
+                if (piece.trackCell !== null && trackPoints[piece.trackCell])
+                    return trackPoints[piece.trackCell];
+                return p.yardPositions[0];
+            }
+            if (piece.state === 'home') {
                 let step = piece.homeStep;
-                if (step >= 0 && step <= 4) return data.homePathPositions[step];
-                return data.homePathPositions[0];
-            } else if (piece.state === 'finished') {
-                return { x: data.finishedPos.x + (pieceIdx * 14), y: data.finishedPos.y };
+                if (step >= 0 && step <= 3) return p.homePath[step];
+                return p.homePath[0];
+            }
+            if (piece.state === 'finished') {
+                return { x: p.finishSpot.x + (pieceIdx * 14), y: p.finishSpot.y };
             }
             return { x: 0, y: 0 };
         }
-
-        // Check if player has any valid move with given dice
+        
+        // ---- VALIDATION AND MOVE LOGIC ----
         function hasAnyValidMove(player, dice) {
             for (let i = 0; i < 4; i++) {
                 if (isValidMove(player, i, dice)) return true;
             }
             return false;
         }
-
-        // Validate move for specific piece
+        
         function isValidMove(player, pieceIdx, dice) {
             const piece = players[player].pieces[pieceIdx];
             const pData = players[player];
             if (piece.state === 'finished') return false;
-            
-            // Yard -> need 6 to bring out
-            if (piece.state === 'yard') {
-                if (dice === 6) return true;
-                return false;
-            }
-            
-            // On main track
+            // Yard: only with 6
+            if (piece.state === 'yard') return dice === 6;
+            // Track
             if (piece.state === 'track') {
-                let currentCell = piece.trackCell;
                 let start = pData.startCell;
+                let currentCell = piece.trackCell;
                 let progress = (currentCell - start + 52) % 52;
                 let newProgress = progress + dice;
-                if (newProgress < 52) {
-                    // still on main track -> move always possible, but capture logic later
-                    return true;
-                } else {
-                    let overshoot = newProgress - 52; // 0..5 (max dice 6)
-                    if (overshoot <= 4) {
-                        return true; // can enter home stretch
-                    } else return false;
+                if (newProgress < 52) return true;  // on main track
+                else {
+                    let overshoot = newProgress - 52; // 0..5
+                    return overshoot <= 3; // home stretch has 4 steps (0,1,2,3)
                 }
             }
-            
             // Home stretch
             if (piece.state === 'home') {
                 let newStep = piece.homeStep + dice;
-                return newStep <= 4;
+                return newStep <= 3;   // finishing allowed exactly at step3
             }
             return false;
         }
-
-        // Execute move (assumes valid)
+        
+        // get opponent pieces on a specific global cell
+        function getOpponentsOnCell(cell, currentPlayer) {
+            let result = [];
+            for (let pl of ['RED', 'GREEN']) {
+                if (pl === currentPlayer) continue;
+                for (let i = 0; i < players[pl].pieces.length; i++) {
+                    let pc = players[pl].pieces[i];
+                    if (pc.state === 'track' && pc.trackCell === cell) {
+                        result.push({ player: pl, idx: i });
+                    }
+                }
+            }
+            return result;
+        }
+        
+        // Execute move (returns { captured, wasSix })
         function executeMove(player, pieceIdx, dice) {
             const piece = players[player].pieces[pieceIdx];
             const pData = players[player];
             let captured = false;
-            let movedWithSix = (dice === 6);
+            let wasSix = (dice === 6);
             
-            // Case 1: yard -> open
+            // Case YARD -> open
             if (piece.state === 'yard' && dice === 6) {
                 piece.state = 'track';
                 piece.trackCell = pData.startCell;
                 piece.homeStep = null;
-                // check if start cell is occupied by opponent? capture them!
-                let opponents = getPiecesOnCell(piece.trackCell, player);
-                for (let opp of opponents) {
-                    let oppPiece = players[opp.player].pieces[opp.idx];
+                // capture opponent on start cell
+                let enemies = getOpponentsOnCell(piece.trackCell, player);
+                for (let e of enemies) {
+                    let oppPiece = players[e.player].pieces[e.idx];
                     oppPiece.state = 'yard';
                     oppPiece.trackCell = null;
                     oppPiece.homeStep = null;
                     captured = true;
-                    // update finished count
-                    players[opp.player].finishedCount = players[opp.player].pieces.filter(p => p.state === 'finished').length;
                 }
-                return { captured, movedWithSix };
+                updateFinishedCounts();
+                return { captured, wasSix };
             }
             
-            // Case 2: main track movement
+            // Case TRACK movement
             if (piece.state === 'track') {
-                let current = piece.trackCell;
                 let start = pData.startCell;
+                let current = piece.trackCell;
                 let progress = (current - start + 52) % 52;
                 let newProgress = progress + dice;
                 if (newProgress < 52) {
                     let newCell = (start + newProgress) % 52;
-                    // capture enemies on new cell (if not safe)
                     if (!isSafeCell(newCell)) {
-                        let enemies = getPiecesOnCell(newCell, player);
+                        let enemies = getOpponentsOnCell(newCell, player);
                         for (let e of enemies) {
-                            let ep = players[e.player].pieces[e.idx];
-                            ep.state = 'yard';
-                            ep.trackCell = null;
-                            ep.homeStep = null;
+                            let oppPiece = players[e.player].pieces[e.idx];
+                            oppPiece.state = 'yard';
+                            oppPiece.trackCell = null;
+                            oppPiece.homeStep = null;
                             captured = true;
                         }
-                        players.GREEN.finishedCount = players.GREEN.pieces.filter(p => p.state === 'finished').length;
-                        players.RED.finishedCount = players.RED.pieces.filter(p => p.state === 'finished').length;
+                        updateFinishedCounts();
                     }
                     piece.trackCell = newCell;
-                    return { captured, movedWithSix };
+                    return { captured, wasSix };
                 } else {
-                    // enter home stretch
-                    let overshoot = newProgress - 52; // 0 to 4
+                    let overshoot = newProgress - 52; // 0 to 3
                     piece.state = 'home';
                     piece.homeStep = overshoot;
                     piece.trackCell = null;
-                    return { captured, movedWithSix };
+                    return { captured, wasSix };
                 }
             }
             
-            // Case 3: home stretch
+            // Case HOME stretch
             if (piece.state === 'home') {
                 let newStep = piece.homeStep + dice;
-                if (newStep === 4) {
+                if (newStep === 3) {
                     piece.state = 'finished';
                     piece.homeStep = null;
                     players[player].finishedCount++;
@@ -434,31 +392,20 @@
                 } else {
                     piece.homeStep = newStep;
                 }
-                return { captured, movedWithSix };
+                return { captured, wasSix };
             }
-            return { captured: false, movedWithSix: false };
+            return { captured: false, wasSix: false };
         }
-
-        // get opponent pieces on a given global cell
-        function getPiecesOnCell(cell, currentPlayer) {
-            let result = [];
-            for (let p of ['RED', 'GREEN']) {
-                if (p === currentPlayer) continue;
-                for (let i = 0; i < players[p].pieces.length; i++) {
-                    let pc = players[p].pieces[i];
-                    if (pc.state === 'track' && pc.trackCell === cell) {
-                        result.push({ player: p, idx: i });
-                    }
-                }
-            }
-            return result;
+        
+        function updateFinishedCounts() {
+            players.RED.finishedCount = players.RED.pieces.filter(p => p.state === 'finished').length;
+            players.GREEN.finishedCount = players.GREEN.pieces.filter(p => p.state === 'finished').length;
         }
-
-        // --- turn management ---
+        
+        // ---- TURN MANAGEMENT (Ludo King rules) ----
         function endTurn() {
             if (gameWinner) return;
             if (extraTurn && diceValue === 6) {
-                // keep same player, extra turn already flagged, reset extra flag after move
                 extraTurn = false;
                 consecutiveSixes = 0;
                 diceRolled = false;
@@ -471,26 +418,26 @@
             }
             diceRolled = false;
             extraTurn = false;
-            document.getElementById('gameMsg').innerText = `${currentPlayer}'s turn. Roll dice!`;
+            document.getElementById('gameMsg').innerText = `${currentPlayer}'s turn — tap the dice!`;
             drawBoard();
         }
-
-        function afterMove(captured, wasSix) {
+        
+        function afterMove(capturedFlag, wasSixMove) {
             if (gameWinner) {
                 drawBoard();
-                document.getElementById('gameMsg').innerText = `🏆 ${gameWinner} WINS! 🏆`;
+                document.getElementById('gameMsg').innerHTML = `🏆🏆 ${gameWinner} WINS! 🏆🏆`;
                 return;
             }
-            if (wasSix && diceValue === 6) {
+            if (wasSixMove && diceValue === 6) {
                 consecutiveSixes++;
                 if (consecutiveSixes === 3) {
-                    document.getElementById('gameMsg').innerText = `⚠️ Three sixes! Turn ends.`;
+                    document.getElementById('gameMsg').innerText = '⚠️ Three sixes! Turn ends.';
                     extraTurn = false;
                     consecutiveSixes = 0;
                     endTurn();
                 } else {
                     extraTurn = true;
-                    document.getElementById('gameMsg').innerText = `🎲 ${currentPlayer} gets another turn! (6)`;
+                    document.getElementById('gameMsg').innerText = `🎲 ${currentPlayer} gets ANOTHER turn! (6)`;
                     diceRolled = false;
                     drawBoard();
                 }
@@ -501,23 +448,25 @@
             }
             drawBoard();
         }
-
-        function tryMove(pieceIdx) {
+        
+        // Try to move a piece (called after click on piece)
+        function attemptMove(pieceIdx) {
             if (!diceRolled) {
-                document.getElementById('gameMsg').innerText = `Roll the dice first!`;
+                document.getElementById('gameMsg').innerText = `Tap the dice to roll first!`;
                 return false;
             }
             if (gameWinner) return false;
             if (!isValidMove(currentPlayer, pieceIdx, diceValue)) {
-                document.getElementById('gameMsg').innerText = `Can't move that piece!`;
+                document.getElementById('gameMsg').innerText = `❌ Can't move this piece.`;
                 return false;
             }
             let result = executeMove(currentPlayer, pieceIdx, diceValue);
             diceRolled = false;
-            afterMove(result.captured, result.movedWithSix);
+            afterMove(result.captured, result.wasSix);
             return true;
         }
-
+        
+        // Roll dice (triggered by tapping the dice area)
         function rollDice() {
             if (gameWinner) {
                 document.getElementById('gameMsg').innerText = `Game over! ${gameWinner} won.`;
@@ -530,128 +479,136 @@
             let roll = Math.floor(Math.random() * 6) + 1;
             diceValue = roll;
             diceRolled = true;
-            document.getElementById('diceValue').innerHTML = roll;
-            // check for any possible moves
+            document.getElementById('diceValue').innerHTML = diceValue;
+            // check if any move exists
             if (!hasAnyValidMove(currentPlayer, diceValue)) {
-                document.getElementById('gameMsg').innerText = `No moves! Turn ends.`;
-                // end turn automatically
+                document.getElementById('gameMsg').innerText = `😞 No moves! Turn ends.`;
                 diceRolled = false;
                 endTurn();
                 drawBoard();
             } else {
-                document.getElementById('gameMsg').innerText = `${currentPlayer} rolled ${roll}. Choose a piece to move.`;
+                document.getElementById('gameMsg').innerText = `${currentPlayer} rolled ${roll}. Tap a piece to move.`;
                 drawBoard();
             }
         }
-
-        // ---------- DRAWING ENGINE ----------
-        function drawLudoBackground() {
-            // Classic board drawing
+        
+        // ---------- DRAW EVERYTHING (Ludo King Style) ----------
+        function drawBackground() {
             ctx.fillStyle = '#f7e3b2';
             ctx.fillRect(0, 0, 750, 750);
-            // home triangles / large squares
-            const corners = [
-                { x: 10, y: 10, w: 160, h: 160, col: '#dc3545' },   // red
-                { x: 580, y: 10, w: 160, h: 160, col: '#28a745' },   // green
-                { x: 10, y: 580, w: 160, h: 160, col: '#ffc107' },   // yellow (inactive)
-                { x: 580, y: 580, w: 160, h: 160, col: '#0d6efd' }    // blue (inactive)
+            // home squares
+            const homes = [
+                { x: 15, y: 15, w: 150, h: 150, col: '#e3342f' },   // red
+                { x: 585, y: 15, w: 150, h: 150, col: '#38a169' },   // green
+                { x: 15, y: 585, w: 150, h: 150, col: '#f4c542' },   // yellow dummy
+                { x: 585, y: 585, w: 150, h: 150, col: '#4a7db5' }
             ];
-            for (let c of corners) {
-                ctx.fillStyle = c.col;
-                ctx.fillRect(c.x, c.y, c.w, c.h);
-                ctx.strokeStyle = '#a05e2c';
+            for (let h of homes) {
+                ctx.fillStyle = h.col;
+                ctx.fillRect(h.x, h.y, h.w, h.w);
+                ctx.strokeStyle = '#a5672e';
                 ctx.lineWidth = 3;
-                ctx.strokeRect(c.x, c.y, c.w, c.h);
+                ctx.strokeRect(h.x, h.y, h.w, h.w);
                 ctx.fillStyle = 'rgba(255,245,190,0.3)';
-                ctx.fillRect(c.x+8, c.y+8, c.w-16, c.h-16);
+                ctx.fillRect(h.x+6, h.y+6, h.w-12, h.w-12);
             }
             // center square
-            ctx.fillStyle = '#e2b87a';
+            ctx.fillStyle = '#dcb572';
             ctx.fillRect(260, 260, 230, 230);
-            ctx.fillStyle = '#c48f4a';
-            for (let i = 0; i < 4; i++) ctx.fillRect(300+i*30, 300, 20, 120);
+            ctx.fillStyle = '#ba8742';
+            for (let i = 0; i < 4; i++) ctx.fillRect(300 + i*30, 300, 20, 120);
             // stars
-            ctx.font = '28px "Segoe UI"';
-            ctx.fillStyle = '#f7c56e';
-            ctx.fillText('★', 680, 680);
-            ctx.fillText('★', 45, 50);
-            ctx.fillText('★', 55, 690);
+            ctx.font = '30px "Segoe UI"';
+            ctx.fillStyle = '#ffcd7a';
+            ctx.fillText('★', 680, 685);
+            ctx.fillText('★', 45, 45);
+            ctx.fillText('★', 55, 695);
             ctx.fillText('★', 685, 55);
         }
-
-        function drawPathCells() {
+        
+        function drawTrack() {
             for (let i = 0; i < trackPoints.length; i++) {
                 let pt = trackPoints[i];
                 ctx.beginPath();
-                ctx.arc(pt.x, pt.y, 14, 0, 2 * Math.PI);
-                ctx.fillStyle = '#fff2df';
+                ctx.arc(pt.x, pt.y, 14, 0, 2*Math.PI);
+                ctx.fillStyle = '#FFF3df';
                 ctx.fill();
-                ctx.strokeStyle = '#bd8242';
+                ctx.strokeStyle = '#bd7a3a';
                 ctx.lineWidth = 1.8;
                 ctx.stroke();
                 if (isSafeCell(i)) {
                     ctx.beginPath();
-                    ctx.arc(pt.x, pt.y, 8, 0, 2 * Math.PI);
-                    ctx.fillStyle = '#ffcd7e';
+                    ctx.arc(pt.x, pt.y, 8, 0, 2*Math.PI);
+                    ctx.fillStyle = '#ffce80';
                     ctx.fill();
-                    ctx.fillStyle = '#a55d2a';
-                    ctx.font = 'bold 16px monospace';
-                    ctx.fillText('✪', pt.x-6, pt.y+6);
+                    ctx.fillStyle = '#b4642a';
+                    ctx.font = 'bold 14px monospace';
+                    ctx.fillText('✦', pt.x-5, pt.y+5);
                 }
             }
         }
-
+        
         function drawPieces() {
             for (let player of ['RED', 'GREEN']) {
-                for (let idx = 0; idx < 4; idx++) {
-                    let pos = getPiecePosition(player, idx);
-                    let piece = players[player].pieces[idx];
+                for (let i = 0; i < 4; i++) {
+                    let pos = getPiecePosition(player, i);
                     let color = players[player].color;
                     ctx.beginPath();
-                    ctx.arc(pos.x, pos.y, 13, 0, 2 * Math.PI);
+                    ctx.arc(pos.x, pos.y, 14, 0, 2*Math.PI);
                     ctx.fillStyle = color;
                     ctx.fill();
-                    ctx.strokeStyle = '#ffecb3';
-                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = '#ffefb5';
+                    ctx.lineWidth = 2.5;
                     ctx.stroke();
                     ctx.fillStyle = 'white';
                     ctx.font = 'bold 18px "Segoe UI"';
-                    ctx.fillText(idx+1, pos.x-6, pos.y+7);
-                    // highlight selected piece (if any and dice rolled and it's turn)
-                    if (diceRolled && currentPlayer === player && !gameWinner && players[player].pieces[idx] === piece) {
-                        ctx.beginPath();
-                        ctx.arc(pos.x, pos.y, 17, 0, 2 * Math.PI);
-                        ctx.strokeStyle = 'gold';
-                        ctx.lineWidth = 3.5;
-                        ctx.stroke();
+                    ctx.fillText(i+1, pos.x-6, pos.y+7);
+                    // highlight if it's selectable and dice rolled
+                    if (diceRolled && currentPlayer === player && !gameWinner) {
+                        if (isValidMove(currentPlayer, i, diceValue)) {
+                            ctx.beginPath();
+                            ctx.arc(pos.x, pos.y, 18, 0, 2*Math.PI);
+                            ctx.strokeStyle = '#FFD966';
+                            ctx.lineWidth = 3.5;
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(pos.x, pos.y, 21, 0, 2*Math.PI);
+                            ctx.strokeStyle = '#ffb347';
+                            ctx.lineWidth = 1.8;
+                            ctx.stroke();
+                        }
                     }
                 }
             }
         }
-
-        function drawTurnInfo() {
-            document.getElementById('turnLed').style.backgroundColor = currentPlayer === 'RED' ? '#dc3545' : '#28a745';
-            document.getElementById('turnText').innerText = currentPlayer === 'RED' ? "🔴 RED's Turn" : "🟢 GREEN's Turn";
-            if (!diceRolled) document.getElementById('diceValue').innerHTML = diceValue || '⚀';
-            else document.getElementById('diceValue').innerHTML = diceValue;
+        
+        function drawUIinfo() {
+            document.getElementById('turnLed').style.backgroundColor = currentPlayer === 'RED' ? '#e3342f' : '#38a169';
+            document.getElementById('turnText').innerHTML = currentPlayer === 'RED' ? '🔴 RED\'s TURN' : '🟢 GREEN\'s TURN';
+            if (!diceRolled) {
+                if(diceValue===0) document.getElementById('diceValue').innerHTML = '⚀';
+                else document.getElementById('diceValue').innerHTML = diceValue;
+            } else {
+                document.getElementById('diceValue').innerHTML = diceValue;
+            }
         }
-
+        
         function drawBoard() {
-            drawLudoBackground();
-            drawPathCells();
+            drawBackground();
+            drawTrack();
             drawPieces();
-            drawTurnInfo();
+            drawUIinfo();
             if (gameWinner) {
-                ctx.font = 'bold 40px "Segoe UI"';
-                ctx.shadowBlur = 4;
-                ctx.fillStyle = '#FFD966';
+                ctx.font = 'bold 42px "Segoe UI"';
+                ctx.shadowBlur = 5;
+                ctx.fillStyle = '#FFE484';
                 ctx.shadowColor = 'black';
-                ctx.fillText(`${gameWinner} VICTORY!`, 230, 100);
+                ctx.fillText(`${gameWinner} VICTORY!`, 210, 95);
                 ctx.shadowBlur = 0;
             }
         }
-
-        // ----- Piece selection via canvas click -----
+        
+        // ---- CLICK HANDLER (select pieces) ----
         function handleCanvasClick(e) {
             if (gameWinner) return;
             const rect = canvas.getBoundingClientRect();
@@ -660,39 +617,36 @@
             let mouseX = (e.clientX - rect.left) * scaleX;
             let mouseY = (e.clientY - rect.top) * scaleY;
             
-            // check pieces of current player
-            for (let idx = 0; idx < 4; idx++) {
-                let pos = getPiecePosition(currentPlayer, idx);
+            // iterate through current player's pieces
+            for (let i = 0; i < 4; i++) {
+                let pos = getPiecePosition(currentPlayer, i);
                 let dx = mouseX - pos.x;
                 let dy = mouseY - pos.y;
-                if (Math.hypot(dx, dy) < 18) {
-                    tryMove(idx);
+                if (Math.hypot(dx, dy) < 20) {
+                    attemptMove(i);
                     return;
                 }
             }
-            document.getElementById('gameMsg').innerText = `Click on your piece to move!`;
+            // if nothing clicked, just a reminder
+            if (diceRolled) document.getElementById('gameMsg').innerText = 'Tap on your piece to move!';
+            else document.getElementById('gameMsg').innerText = 'Tap the dice first!';
         }
-
-        // Reset game function (optional but nice)
+        
+        // optional reset (not needed for normal play but robust)
         function resetGame() {
-            initPieces();
-            currentPlayer = 'RED';
-            diceValue = 0;
-            diceRolled = false;
-            extraTurn = false;
-            consecutiveSixes = 0;
-            gameWinner = null;
+            initGameState();
             drawBoard();
-            document.getElementById('gameMsg').innerText = "Game restarted! RED rolls first.";
+            document.getElementById('gameMsg').innerText = "Game restarted! RED's turn.";
         }
-
-        // Event bindings
-        document.getElementById('rollBtn').addEventListener('click', rollDice);
+        
+        // Event listeners
+        const diceTap = document.getElementById('diceTapArea');
+        diceTap.addEventListener('click', rollDice);
         canvas.addEventListener('click', handleCanvasClick);
         
         // initial draw
         drawBoard();
-        document.getElementById('gameMsg').innerText = "RED's turn. Roll the dice!";
+        document.getElementById('gameMsg').innerText = "🎲 Tap the dice to roll! 🎲";
     })();
 </script>
 </body>
