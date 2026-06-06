@@ -2,652 +2,345 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Ludo King Classic – Two Player (RED vs GREEN)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Two-Player Ludo</title>
     <style>
-        * {
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            box-sizing: border-box;
+        :root {
+            --green: #2ecc71; --yellow: #f1c40f; --red: #e74c3c; --blue: #3498db;
         }
-
         body {
-            background: linear-gradient(145deg, #1e4a2f 0%, #0a2e1a 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 16px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #2c3e50; color: white; display: flex;
+            flex-direction: column; align-items: center; margin: 0; padding: 20px;
         }
+        h1 { margin: 5px 0; font-size: 24px; }
+        #setup, #game-container {
+            background: #34495e; padding: 20px; border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center;
+        }
+        #game-container { display: none; margin-top: 10px; }
+        .btn {
+            background: #e67e22; border: none; padding: 10px 20px;
+            color: white; font-size: 16px; border-radius: 5px; cursor: pointer; margin: 5px;
+        }
+        .btn:hover { background: #d35400; }
+        #status { font-size: 18px; margin: 10px 0; font-weight: bold; min-height: 27px;}
+        
+        /* Simplified Ludo Board Grid */
+        #board {
+            display: grid; grid-template-columns: repeat(15, 30px);
+            grid-template-rows: repeat(15, 30px); gap: 1px;
+            background: #7f8c8d; border: 5px solid #fff; margin: 10px auto;
+            width: 464px; height: 464px;
+        }
+        .cell { background: white; display: flex; justify-content: center; align-items: center; position: relative; }
+        
+        /* Home Bases */
+        .red-home { grid-column: 1 / 7; grid-row: 10 / 16; background: var(--red); }
+        .green-home { grid-column: 1 / 7; grid-row: 1 / 7; background: var(--green); }
+        .yellow-home { grid-column: 10 / 16; grid-row: 1 / 7; background: var(--yellow); }
+        .blue-home { grid-column: 10 / 16; grid-row: 10 / 16; background: var(--blue); }
+        
+        /* Center Goal */
+        .center-home { grid-column: 7 / 10; grid-row: 7 / 10; background: #ecf0f1; font-weight: bold; font-size: 12px;}
+        
+        /* Paths colored to match traditional track highlights */
+        .g-path { background: #a3e4d7; }
+        .y-path { background: #f9e79f; }
+        .b-path { background: #aed6f1; }
+        .r-path { background: #f9e79f; } /* Using simplified shared tracks for presentation */
+        .home-lane-red { background: var(--red); }
+        .home-lane-yellow { background: var(--yellow); }
 
-        .game-container {
-            background: #c88a4a;
-            border-radius: 64px;
-            padding: 20px 24px 24px 24px;
-            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.6), inset 0 1px 4px rgba(255, 245, 200, 0.8);
+        /* Tokens */
+        .token {
+            width: 22px; height: 22px; border-radius: 50%;
+            border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            cursor: pointer; position: absolute; z-index: 10;
+            transition: all 0.2s ease;
         }
-
-        canvas {
-            display: block;
-            margin: 0 auto;
-            border-radius: 36px;
-            box-shadow: 0 12px 28px black;
-            cursor: pointer;
-            background-color: #f9eac3;
-            width: 100%;
-            height: auto;
-        }
-
-        .ui-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 22px;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .turn-card {
-            background: #2b211a;
-            padding: 8px 24px;
-            border-radius: 60px;
-            color: #ffdf8c;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: inset 0 -2px 0 #674e32, 0 6px 12px black;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .turn-led {
-            width: 34px;
-            height: 34px;
-            border-radius: 34px;
-            background: #888;
-            box-shadow: 0 0 0 2px #ffcd7e;
-        }
-
-        .dice-king {
-            background: #fff2df;
-            border-radius: 70px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 8px 18px;
-            box-shadow: inset 0 0 0 2px #fffae8, 0 8px 0 #8b5a2b;
-            cursor: pointer;
-            transition: all 0.07s linear;
-        }
-        .dice-king:active {
-            transform: translateY(4px);
-            box-shadow: inset 0 0 0 2px #fffae8, 0 4px 0 #8b5a2b;
-        }
-        .dice-face {
-            width: 75px;
-            height: 75px;
-            background: white;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.4rem;
-            font-weight: 800;
-            font-family: monospace;
-            background: #fffaf0;
-            box-shadow: inset 0 -1px 0 #ccc, 0 5px 12px rgba(0,0,0,0.2);
-            margin-bottom: 8px;
-        }
-        .dice-label {
-            font-size: 0.85rem;
-            font-weight: bold;
-            background: #e09d32;
-            padding: 5px 14px;
-            border-radius: 40px;
-            color: #2c1a0c;
-            letter-spacing: 1px;
-        }
-
-        .message-box {
-            background: #1f2a1b;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #ffeaad;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-align: center;
-            max-width: 230px;
-            box-shadow: inset 0 0 0 1px #5d7842;
-        }
-
-        button {
-            background: none;
-            border: none;
-        }
-
-        @media (max-width: 700px) {
-            .game-container { padding: 12px 16px 18px; }
-            .dice-face { width: 58px; height: 58px; font-size: 2.4rem; }
-            .turn-card { font-size: 1rem; padding: 5px 16px; }
-            .dice-label { font-size: 0.7rem; }
+        .token.red { background: var(--red); }
+        .token.yellow { background: var(--yellow); }
+        .token.playable { animation: bounce 0.5s infinite alternate; box-shadow: 0 0 10px #fff; }
+        
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+        #dice-area { margin: 15px 0; display: flex; justify-content: center; align-items: center; gap: 15px; }
+        #dice-view {
+            width: 45px; height: 45px; background: white; color: black;
+            border-radius: 8px; display: flex; justify-content: center;
+            align-items: center; font-size: 24px; font-weight: bold; box-shadow: 0 3px 6px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
-<div>
-    <div class="game-container">
-        <canvas id="ludoCanvas" width="750" height="750"></canvas>
-        <div class="ui-bar">
-            <div class="turn-card">
-                <div class="turn-led" id="turnLed"></div>
-                <span id="turnText">RED's Turn</span>
-            </div>
-            <div id="diceTapArea" class="dice-king">
-                <div class="dice-face" id="diceValue">⚀</div>
-                <div class="dice-label">👇 TAP HERE TO ROLL</div>
-            </div>
-            <div class="message-box" id="gameMsg">Roll the dice!</div>
+
+    <h1>🏆 Real-Time Ludo (2 Players) 🏆</h1>
+    
+    <div id="setup">
+        <p>Enter a Room Name to play with a friend:</p>
+        <input type="text" id="room-input" placeholder="e.g., epic-battle" style="padding: 10px; font-size: 16px; border-radius: 5px; border: none; width: 200px;"><br><br>
+        <button class="btn" onclick="joinRoom('Red')">Join as RED (Player 1)</button>
+        <button class="btn" onclick="joinRoom('Yellow')">Join as YELLOW (Player 2)</button>
+    </div>
+
+    <div id="game-container">
+        <h3 id="room-display">Room: Unique</h3>
+        <div id="status">Waiting for players...</div>
+        
+        <div id="dice-area">
+            <button id="roll-btn" class="btn" onclick="rollDice()">Roll Dice</button>
+            <div id="dice-view">-</div>
+        </div>
+
+        <div id="board">
+            <div class="green-home"></div>
+            <div class="cell" id="c-0-6"></div><div class="cell y-path" id="c-0-7"></div><div class="cell" id="c-0-8"></div>
+            <div class="cell" id="c-1-6"></div><div class="cell home-lane-yellow" id="c-1-7"></div><div class="cell" id="c-1-8"></div>
+            <div class="cell" id="c-2-6"></div><div class="cell home-lane-yellow" id="c-2-7"></div><div class="cell" id="c-2-8"></div>
+            <div class="cell" id="c-3-6"></div><div class="cell home-lane-yellow" id="c-3-7"></div><div class="cell" id="c-3-8"></div>
+            <div class="cell" id="c-4-6"></div><div class="cell home-lane-yellow" id="c-4-7"></div><div class="cell" id="c-4-8"></div>
+            <div class="cell" id="c-5-6"></div><div class="cell home-lane-yellow" id="c-5-7"></div><div class="cell" id="c-5-8"></div>
+            <div class="yellow-home"></div>
+
+            <div class="cell" id="c-6-0"></div><div class="cell" id="c-6-1"></div><div class="cell" id="c-6-2"></div><div class="cell" id="c-6-3"></div><div class="cell" id="c-6-4"></div><div class="cell" id="c-6-5"></div>
+            <div class="center-home">HOME</div>
+            <div class="cell" id="c-6-9"></div><div class="cell" id="c-6-10"></div><div class="cell" id="c-6-11"></div><div class="cell" id="c-6-12"></div><div class="cell" id="c-6-13"></div><div class="cell" id="c-6-14"></div>
+            
+            <div class="cell" id="c-7-0"></div>
+            <div class="cell home-lane-red" id="c-7-1"></div><div class="cell home-lane-red" id="c-7-2"></div><div class="cell home-lane-red" id="c-7-3"></div><div class="cell home-lane-red" id="c-7-4"></div><div class="cell home-lane-red" id="c-7-5"></div>
+            <div class="cell" id="c-7-9"></div><div class="cell" id="c-7-10"></div><div class="cell" id="c-7-11"></div><div class="cell" id="c-7-12"></div><div class="cell" id="c-7-13"></div><div class="cell" id="c-7-14"></div>
+            
+            <div class="cell" id="c-8-0"></div><div class="cell" id="c-8-1"></div><div class="cell" id="c-8-2"></div><div class="cell" id="c-8-3"></div><div class="cell" id="c-8-4"></div><div class="cell" id="c-8-5"></div>
+            <div class="cell" id="c-8-9"></div><div class="cell" id="c-8-10"></div><div class="cell" id="c-8-11"></div><div class="cell" id="c-8-12"></div><div class="cell" id="c-8-13"></div><div class="cell" id="c-8-14"></div>
+
+            <div class="red-home"></div>
+            <div class="cell" id="c-9-6"></div><div class="cell" id="c-9-7"></div><div class="cell" id="c-9-8"></div>
+            <div class="cell" id="c-10-6"></div><div class="cell" id="c-10-7"></div><div class="cell" id="c-10-8"></div>
+            <div class="cell" id="c-11-6"></div><div class="cell" id="c-11-7"></div><div class="cell" id="c-11-8"></div>
+            <div class="cell" id="c-12-6"></div><div class="cell" id="c-12-7"></div><div class="cell" id="c-12-8"></div>
+            <div class="cell" id="c-13-6"></div><div class="cell" id="c-13-7"></div><div class="cell" id="c-13-8"></div>
+            <div class="cell" id="c-14-6"></div><div class="cell" id="c-14-7"></div><div class="cell" id="c-14-8"></div>
+            <div class="blue-home"></div>
         </div>
     </div>
-</div>
 
-<script>
-    (function(){
-        // ---------- TWO-PLAYER LUDO KING (RED vs GREEN) ----------
-        const canvas = document.getElementById('ludoCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Game state
-        let currentPlayer = 'RED';      // RED starts
-        let diceValue = 0;
-        let diceRolled = false;
-        let extraTurn = false;
-        let consecutiveSixes = 0;
-        let gameWinner = null;
-        
-        // ---------- TRACK SYSTEM: 52 global cells + home stretch (4 steps + crown) ----------
-        let trackPoints = []; // array of {x,y} for cells 0..51
-        
-        // Build a perfect circular / rounded track (looks like Ludo King)
-        function buildLudoTrack() {
-            const w = 750, h = 750;
-            const cx = w/2, cy = h/2;
-            const radius = 310;
-            const points = [];
-            // start angle offset so that index 0 is bottom-right (red start)
-            for (let i = 0; i < 52; i++) {
-                let angle = ( (i / 52) * 360 - 48 ) * Math.PI / 180;
-                let x = cx + radius * Math.cos(angle);
-                let y = cy + radius * Math.sin(angle);
-                points.push({ x, y });
-            }
-            // manually ensure red start (index0) looks good on bottom right
-            return points;
-        }
-        
-        trackPoints = buildLudoTrack();
-        
-        // Safe spots: start cells + star cells (classic)
-        const startCells = new Set([0, 13, 26, 39]);
-        const starCells = new Set([0, 8, 13, 21, 26, 34, 39, 47]);
-        function isSafeCell(cellIdx) {
-            return startCells.has(cellIdx) || starCells.has(cellIdx);
-        }
-        
-        // Player data structures
-        const players = {
-            RED: {
-                color: '#e3342f',
-                light: '#ff6b5e',
-                startCell: 0,
-                homeCorner: { x: 20, y: 570 },
-                yardPositions: [
-                    { x: 45, y: 610 }, { x: 85, y: 610 },
-                    { x: 45, y: 660 }, { x: 85, y: 660 }
-                ],
-                homePath: [   // 4 steps before victory (step0 -> step3, then final)
-                    { x: 660, y: 600 }, { x: 680, y: 580 },
-                    { x: 700, y: 560 }, { x: 715, y: 545 }
-                ],
-                finishSpot: { x: 680, y: 670 },
-                pieces: [],
-                finishedCount: 0
-            },
-            GREEN: {
-                color: '#38a169',
-                light: '#6fdc7a',
-                startCell: 13,
-                homeCorner: { x: 620, y: 20 },
-                yardPositions: [
-                    { x: 645, y: 55 }, { x: 685, y: 55 },
-                    { x: 645, y: 105 }, { x: 685, y: 105 }
-                ],
-                homePath: [
-                    { x: 80, y: 130 }, { x: 60, y: 150 },
-                    { x: 40, y: 170 }, { x: 25, y: 185 }
-                ],
-                finishSpot: { x: 20, y: 70 },
-                pieces: [],
-                finishedCount: 0
-            }
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // --- 1. FIREBASE CONFIGURATION ---
+        // Replace the placeholder values below with your real Firebase Project credentials.
+        const firebaseConfig = {
+            apiKey: "YOUR_FIREBASE_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
         
-        // Initialize pieces
-        function initGameState() {
-            for (let pl of ['RED', 'GREEN']) {
-                players[pl].pieces = [];
-                players[pl].finishedCount = 0;
-                for (let i = 0; i < 4; i++) {
-                    players[pl].pieces.push({
-                        state: 'yard',     // yard, track, home, finished
-                        trackCell: null,
-                        homeStep: null      // 0,1,2,3 (4 steps to finish)
-                    });
-                }
-            }
-            currentPlayer = 'RED';
-            diceValue = 0;
-            diceRolled = false;
-            extraTurn = false;
-            consecutiveSixes = 0;
-            gameWinner = null;
-        }
-        initGameState();
-        
-        // Helper: get piece position (x,y) for drawing
-        function getPiecePosition(player, pieceIdx) {
-            const p = players[player];
-            const piece = p.pieces[pieceIdx];
-            if (piece.state === 'yard') return p.yardPositions[pieceIdx];
-            if (piece.state === 'track') {
-                if (piece.trackCell !== null && trackPoints[piece.trackCell])
-                    return trackPoints[piece.trackCell];
-                return p.yardPositions[0];
-            }
-            if (piece.state === 'home') {
-                let step = piece.homeStep;
-                if (step >= 0 && step <= 3) return p.homePath[step];
-                return p.homePath[0];
-            }
-            if (piece.state === 'finished') {
-                return { x: p.finishSpot.x + (pieceIdx * 14), y: p.finishSpot.y };
-            }
-            return { x: 0, y: 0 };
-        }
-        
-        // ---- VALIDATION AND MOVE LOGIC ----
-        function hasAnyValidMove(player, dice) {
-            for (let i = 0; i < 4; i++) {
-                if (isValidMove(player, i, dice)) return true;
-            }
-            return false;
-        }
-        
-        function isValidMove(player, pieceIdx, dice) {
-            const piece = players[player].pieces[pieceIdx];
-            const pData = players[player];
-            if (piece.state === 'finished') return false;
-            // Yard: only with 6
-            if (piece.state === 'yard') return dice === 6;
-            // Track
-            if (piece.state === 'track') {
-                let start = pData.startCell;
-                let currentCell = piece.trackCell;
-                let progress = (currentCell - start + 52) % 52;
-                let newProgress = progress + dice;
-                if (newProgress < 52) return true;  // on main track
-                else {
-                    let overshoot = newProgress - 52; // 0..5
-                    return overshoot <= 3; // home stretch has 4 steps (0,1,2,3)
-                }
-            }
-            // Home stretch
-            if (piece.state === 'home') {
-                let newStep = piece.homeStep + dice;
-                return newStep <= 3;   // finishing allowed exactly at step3
-            }
-            return false;
-        }
-        
-        // get opponent pieces on a specific global cell
-        function getOpponentsOnCell(cell, currentPlayer) {
-            let result = [];
-            for (let pl of ['RED', 'GREEN']) {
-                if (pl === currentPlayer) continue;
-                for (let i = 0; i < players[pl].pieces.length; i++) {
-                    let pc = players[pl].pieces[i];
-                    if (pc.state === 'track' && pc.trackCell === cell) {
-                        result.push({ player: pl, idx: i });
-                    }
-                }
-            }
-            return result;
-        }
-        
-        // Execute move (returns { captured, wasSix })
-        function executeMove(player, pieceIdx, dice) {
-            const piece = players[player].pieces[pieceIdx];
-            const pData = players[player];
-            let captured = false;
-            let wasSix = (dice === 6);
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // --- 2. GAME VARIABLES & PATHS ---
+        let roomName = "";
+        let playerColor = ""; // 'Red' or 'Yellow'
+        let gameState = {};
+
+        // Track path mapping coordinates for both players
+        const redPath = [
+            "c-6-1", "c-6-2", "c-6-3", "c-6-4", "c-6-5",
+            "c-5-6", "c-4-6", "c-3-6", "c-2-6", "c-1-6", "c-0-6", "c-0-7", "c-0-8",
+            "c-1-8", "c-2-8", "c-3-8", "c-4-8", "c-5-8",
+            "c-6-9", "c-6-10", "c-6-11", "c-6-12", "c-6-13", "c-6-14", "c-7-14", "c-8-14",
+            "c-8-13", "c-8-12", "c-8-11", "c-8-10", "c-8-9",
+            "c-9-8", "c-10-8", "c-11-8", "c-12-8", "c-13-8", "c-14-8", "c-14-7", "c-14-6",
+            "c-13-6", "c-12-6", "c-11-6", "c-10-6", "c-9-6",
+            "c-8-5", "c-8-4", "c-8-3", "c-8-2", "c-8-1", "c-8-0", "c-7-0",
+            "c-7-1", "c-7-2", "c-7-3", "c-7-4", "c-7-5", "HOME"
+        ];
+
+        const yellowPath = [
+            "c-1-8", "c-2-8", "c-3-8", "c-4-8", "c-5-8",
+            "c-6-9", "c-6-10", "c-6-11", "c-6-12", "c-6-13", "c-6-14", "c-7-14", "c-8-14",
+            "c-8-13", "c-8-12", "c-8-11", "c-8-10", "c-8-9",
+            "c-9-8", "c-10-8", "c-11-8", "c-12-8", "c-13-8", "c-14-8", "c-14-7", "c-14-6",
+            "c-13-6", "c-12-6", "c-11-6", "c-10-6", "c-9-6",
+            "c-8-5", "c-8-4", "c-8-3", "c-8-2", "c-8-1", "c-8-0", "c-7-0", "c-6-0",
+            "c-6-1", "c-6-2", "c-6-3", "c-6-4", "c-6-5",
+            "c-5-6", "c-4-6", "c-3-6", "c-2-6", "c-1-6", "c-0-6", "c-0-7",
+            "c-1-7", "c-2-7", "c-3-7", "c-4-7", "c-5-7", "HOME"
+        ];
+
+        // --- 3. JOINING ROOM ---
+        function joinRoom(color) {
+            const input = document.getElementById('room-input').value.trim();
+            if (!input) { alert("Please type a room name first!"); return; }
             
-            // Case YARD -> open
-            if (piece.state === 'yard' && dice === 6) {
-                piece.state = 'track';
-                piece.trackCell = pData.startCell;
-                piece.homeStep = null;
-                // capture opponent on start cell
-                let enemies = getOpponentsOnCell(piece.trackCell, player);
-                for (let e of enemies) {
-                    let oppPiece = players[e.player].pieces[e.idx];
-                    oppPiece.state = 'yard';
-                    oppPiece.trackCell = null;
-                    oppPiece.homeStep = null;
-                    captured = true;
-                }
-                updateFinishedCounts();
-                return { captured, wasSix };
-            }
+            roomName = input;
+            playerColor = color;
             
-            // Case TRACK movement
-            if (piece.state === 'track') {
-                let start = pData.startCell;
-                let current = piece.trackCell;
-                let progress = (current - start + 52) % 52;
-                let newProgress = progress + dice;
-                if (newProgress < 52) {
-                    let newCell = (start + newProgress) % 52;
-                    if (!isSafeCell(newCell)) {
-                        let enemies = getOpponentsOnCell(newCell, player);
-                        for (let e of enemies) {
-                            let oppPiece = players[e.player].pieces[e.idx];
-                            oppPiece.state = 'yard';
-                            oppPiece.trackCell = null;
-                            oppPiece.homeStep = null;
-                            captured = true;
-                        }
-                        updateFinishedCounts();
-                    }
-                    piece.trackCell = newCell;
-                    return { captured, wasSix };
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            document.getElementById('room-display').innerText = `Room: ${roomName} | You Are: ${color.toUpperCase()}`;
+
+            // Sync with Firebase node matching the room name
+            database.ref('rooms/' + roomName).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) {
+                    // Initialize new room data if it doesn't exist
+                    initializeRoom();
                 } else {
-                    let overshoot = newProgress - 52; // 0 to 3
-                    piece.state = 'home';
-                    piece.homeStep = overshoot;
-                    piece.trackCell = null;
-                    return { captured, wasSix };
+                    gameState = data;
+                    renderGame();
                 }
-            }
+            });
+        }
+
+        function initializeRoom() {
+            const initialData = {
+                turn: "Red",
+                diceValue: "-",
+                hasRolled: false,
+                redPos: -1,     // -1 means inside Home Base Yard
+                yellowPos: -1   // -1 means inside Home Base Yard
+            };
+            database.ref('rooms/' + roomName).set(initialData);
+        }
+
+        // --- 4. GAME RENDERING ---
+        function renderGame() {
+            // Remove any old tokens from the screen
+            document.querySelectorAll('.token').forEach(el => el.remove());
             
-            // Case HOME stretch
-            if (piece.state === 'home') {
-                let newStep = piece.homeStep + dice;
-                if (newStep === 3) {
-                    piece.state = 'finished';
-                    piece.homeStep = null;
-                    players[player].finishedCount++;
-                    if (players[player].finishedCount === 4) gameWinner = player;
-                } else {
-                    piece.homeStep = newStep;
-                }
-                return { captured, wasSix };
-            }
-            return { captured: false, wasSix: false };
-        }
-        
-        function updateFinishedCounts() {
-            players.RED.finishedCount = players.RED.pieces.filter(p => p.state === 'finished').length;
-            players.GREEN.finishedCount = players.GREEN.pieces.filter(p => p.state === 'finished').length;
-        }
-        
-        // ---- TURN MANAGEMENT (Ludo King rules) ----
-        function endTurn() {
-            if (gameWinner) return;
-            if (extraTurn && diceValue === 6) {
-                extraTurn = false;
-                consecutiveSixes = 0;
-                diceRolled = false;
-                drawBoard();
+            // Render Status info
+            const statusEl = document.getElementById('status');
+            document.getElementById('dice-view').innerText = gameState.diceValue;
+
+            if (gameState.winner) {
+                statusEl.innerText = `🎉 ${gameState.winner} Wins the Game!`;
+                document.getElementById('roll-btn').disabled = true;
                 return;
             }
-            if (!extraTurn) {
-                currentPlayer = currentPlayer === 'RED' ? 'GREEN' : 'RED';
-                consecutiveSixes = 0;
-            }
-            diceRolled = false;
-            extraTurn = false;
-            document.getElementById('gameMsg').innerText = `${currentPlayer}'s turn — tap the dice!`;
-            drawBoard();
-        }
-        
-        function afterMove(capturedFlag, wasSixMove) {
-            if (gameWinner) {
-                drawBoard();
-                document.getElementById('gameMsg').innerHTML = `🏆🏆 ${gameWinner} WINS! 🏆🏆`;
-                return;
-            }
-            if (wasSixMove && diceValue === 6) {
-                consecutiveSixes++;
-                if (consecutiveSixes === 3) {
-                    document.getElementById('gameMsg').innerText = '⚠️ Three sixes! Turn ends.';
-                    extraTurn = false;
-                    consecutiveSixes = 0;
-                    endTurn();
-                } else {
-                    extraTurn = true;
-                    document.getElementById('gameMsg').innerText = `🎲 ${currentPlayer} gets ANOTHER turn! (6)`;
-                    diceRolled = false;
-                    drawBoard();
-                }
+
+            statusEl.innerText = `${gameState.turn}'s Turn`;
+            
+            // Manage dice rolling permissions
+            const isMyTurn = (gameState.turn === playerColor);
+            document.getElementById('roll-btn').disabled = !(isMyTurn && !gameState.hasRolled);
+
+            // Render Red Token
+            let redToken = createTokenElement('red', 'Red');
+            if (gameState.redPos === -1) {
+                document.querySelector('.red-home').appendChild(redToken);
+            } else if (gameState.redPos === "HOME") {
+                document.querySelector('.center-home').appendChild(redToken);
             } else {
-                consecutiveSixes = 0;
-                extraTurn = false;
-                endTurn();
+                document.getElementById(redPath[gameState.redPos]).appendChild(redToken);
             }
-            drawBoard();
+
+            // Render Yellow Token
+            let yellowToken = createTokenElement('yellow', 'Yellow');
+            if (gameState.yellowPos === -1) {
+                document.querySelector('.yellow-home').appendChild(yellowToken);
+            } else if (gameState.yellowPos === "HOME") {
+                document.querySelector('.center-home').appendChild(yellowToken);
+            } else {
+                document.getElementById(yellowPath[gameState.yellowPos]).appendChild(yellowToken);
+            }
+
+            // Add bouncing animations to moveable tokens
+            if (isMyTurn && gameState.hasRolled) {
+                let rolledVal = parseInt(gameState.diceValue);
+                if (playerColor === 'Red') {
+                    if (canMove('Red', gameState.redPos, rolledVal)) redToken.classList.add('playable');
+                } else {
+                    if (canMove('Yellow', gameState.yellowPos, rolledVal)) yellowToken.classList.add('playable');
+                }
+            }
         }
-        
-        // Try to move a piece (called after click on piece)
-        function attemptMove(pieceIdx) {
-            if (!diceRolled) {
-                document.getElementById('gameMsg').innerText = `Tap the dice to roll first!`;
-                return false;
+
+        function createTokenElement(className, colorName) {
+            let token = document.createElement('div');
+            token.className = `token ${className}`;
+            token.onclick = () => handleTokenClick(colorName);
+            return token;
+        }
+
+        // --- 5. GAME ACTIONS ---
+        function rollDice() {
+            let rolled = Math.floor(Math.random() * 6) + 1;
+            
+            let updates = {
+                diceValue: rolled,
+                hasRolled: true
+            };
+
+            // Fast-forward Turn auto-switch if player rolled and can't make a move
+            let currentPos = (playerColor === 'Red') ? gameState.redPos : gameState.yellowPos;
+            if (!canMove(playerColor, currentPos, rolled)) {
+                updates.turn = (playerColor === 'Red') ? 'Yellow' : 'Red';
+                updates.hasRolled = false;
+                alert(`Rolled a ${rolled}! No legal moves available. Turn passes.`);
             }
-            if (gameWinner) return false;
-            if (!isValidMove(currentPlayer, pieceIdx, diceValue)) {
-                document.getElementById('gameMsg').innerText = `❌ Can't move this piece.`;
-                return false;
-            }
-            let result = executeMove(currentPlayer, pieceIdx, diceValue);
-            diceRolled = false;
-            afterMove(result.captured, result.wasSix);
+
+            database.ref('rooms/' + roomName).update(updates);
+        }
+
+        function canMove(color, currentPos, roll) {
+            if (currentPos === -1 && roll !== 6) return false; // Needs a 6 to deploy
+            if (currentPos === "HOME") return false;
+            
+            let pathLength = (color === 'Red') ? redPath.length : yellowPath.length;
+            if (currentPos !== -1 && (currentPos + roll) >= pathLength) return false; // Oversal rule
+            
             return true;
         }
-        
-        // Roll dice (triggered by tapping the dice area)
-        function rollDice() {
-            if (gameWinner) {
-                document.getElementById('gameMsg').innerText = `Game over! ${gameWinner} won.`;
-                return;
-            }
-            if (diceRolled) {
-                document.getElementById('gameMsg').innerText = `Already rolled! Move a piece.`;
-                return;
-            }
-            let roll = Math.floor(Math.random() * 6) + 1;
-            diceValue = roll;
-            diceRolled = true;
-            document.getElementById('diceValue').innerHTML = diceValue;
-            // check if any move exists
-            if (!hasAnyValidMove(currentPlayer, diceValue)) {
-                document.getElementById('gameMsg').innerText = `😞 No moves! Turn ends.`;
-                diceRolled = false;
-                endTurn();
-                drawBoard();
-            } else {
-                document.getElementById('gameMsg').innerText = `${currentPlayer} rolled ${roll}. Tap a piece to move.`;
-                drawBoard();
-            }
-        }
-        
-        // ---------- DRAW EVERYTHING (Ludo King Style) ----------
-        function drawBackground() {
-            ctx.fillStyle = '#f7e3b2';
-            ctx.fillRect(0, 0, 750, 750);
-            // home squares
-            const homes = [
-                { x: 15, y: 15, w: 150, h: 150, col: '#e3342f' },   // red
-                { x: 585, y: 15, w: 150, h: 150, col: '#38a169' },   // green
-                { x: 15, y: 585, w: 150, h: 150, col: '#f4c542' },   // yellow dummy
-                { x: 585, y: 585, w: 150, h: 150, col: '#4a7db5' }
-            ];
-            for (let h of homes) {
-                ctx.fillStyle = h.col;
-                ctx.fillRect(h.x, h.y, h.w, h.w);
-                ctx.strokeStyle = '#a5672e';
-                ctx.lineWidth = 3;
-                ctx.strokeRect(h.x, h.y, h.w, h.w);
-                ctx.fillStyle = 'rgba(255,245,190,0.3)';
-                ctx.fillRect(h.x+6, h.y+6, h.w-12, h.w-12);
-            }
-            // center square
-            ctx.fillStyle = '#dcb572';
-            ctx.fillRect(260, 260, 230, 230);
-            ctx.fillStyle = '#ba8742';
-            for (let i = 0; i < 4; i++) ctx.fillRect(300 + i*30, 300, 20, 120);
-            // stars
-            ctx.font = '30px "Segoe UI"';
-            ctx.fillStyle = '#ffcd7a';
-            ctx.fillText('★', 680, 685);
-            ctx.fillText('★', 45, 45);
-            ctx.fillText('★', 55, 695);
-            ctx.fillText('★', 685, 55);
-        }
-        
-        function drawTrack() {
-            for (let i = 0; i < trackPoints.length; i++) {
-                let pt = trackPoints[i];
-                ctx.beginPath();
-                ctx.arc(pt.x, pt.y, 14, 0, 2*Math.PI);
-                ctx.fillStyle = '#FFF3df';
-                ctx.fill();
-                ctx.strokeStyle = '#bd7a3a';
-                ctx.lineWidth = 1.8;
-                ctx.stroke();
-                if (isSafeCell(i)) {
-                    ctx.beginPath();
-                    ctx.arc(pt.x, pt.y, 8, 0, 2*Math.PI);
-                    ctx.fillStyle = '#ffce80';
-                    ctx.fill();
-                    ctx.fillStyle = '#b4642a';
-                    ctx.font = 'bold 14px monospace';
-                    ctx.fillText('✦', pt.x-5, pt.y+5);
-                }
-            }
-        }
-        
-        function drawPieces() {
-            for (let player of ['RED', 'GREEN']) {
-                for (let i = 0; i < 4; i++) {
-                    let pos = getPiecePosition(player, i);
-                    let color = players[player].color;
-                    ctx.beginPath();
-                    ctx.arc(pos.x, pos.y, 14, 0, 2*Math.PI);
-                    ctx.fillStyle = color;
-                    ctx.fill();
-                    ctx.strokeStyle = '#ffefb5';
-                    ctx.lineWidth = 2.5;
-                    ctx.stroke();
-                    ctx.fillStyle = 'white';
-                    ctx.font = 'bold 18px "Segoe UI"';
-                    ctx.fillText(i+1, pos.x-6, pos.y+7);
-                    // highlight if it's selectable and dice rolled
-                    if (diceRolled && currentPlayer === player && !gameWinner) {
-                        if (isValidMove(currentPlayer, i, diceValue)) {
-                            ctx.beginPath();
-                            ctx.arc(pos.x, pos.y, 18, 0, 2*Math.PI);
-                            ctx.strokeStyle = '#FFD966';
-                            ctx.lineWidth = 3.5;
-                            ctx.stroke();
-                            ctx.beginPath();
-                            ctx.arc(pos.x, pos.y, 21, 0, 2*Math.PI);
-                            ctx.strokeStyle = '#ffb347';
-                            ctx.lineWidth = 1.8;
-                            ctx.stroke();
-                        }
-                    }
-                }
-            }
-        }
-        
-        function drawUIinfo() {
-            document.getElementById('turnLed').style.backgroundColor = currentPlayer === 'RED' ? '#e3342f' : '#38a169';
-            document.getElementById('turnText').innerHTML = currentPlayer === 'RED' ? '🔴 RED\'s TURN' : '🟢 GREEN\'s TURN';
-            if (!diceRolled) {
-                if(diceValue===0) document.getElementById('diceValue').innerHTML = '⚀';
-                else document.getElementById('diceValue').innerHTML = diceValue;
-            } else {
-                document.getElementById('diceValue').innerHTML = diceValue;
-            }
-        }
-        
-        function drawBoard() {
-            drawBackground();
-            drawTrack();
-            drawPieces();
-            drawUIinfo();
-            if (gameWinner) {
-                ctx.font = 'bold 42px "Segoe UI"';
-                ctx.shadowBlur = 5;
-                ctx.fillStyle = '#FFE484';
-                ctx.shadowColor = 'black';
-                ctx.fillText(`${gameWinner} VICTORY!`, 210, 95);
-                ctx.shadowBlur = 0;
-            }
-        }
-        
-        // ---- CLICK HANDLER (select pieces) ----
-        function handleCanvasClick(e) {
-            if (gameWinner) return;
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            let mouseX = (e.clientX - rect.left) * scaleX;
-            let mouseY = (e.clientY - rect.top) * scaleY;
+
+        function handleTokenClick(clickedColor) {
+            if (clickedColor !== playerColor || !gameState.hasRolled || gameState.turn !== playerColor) return;
             
-            // iterate through current player's pieces
-            for (let i = 0; i < 4; i++) {
-                let pos = getPiecePosition(currentPlayer, i);
-                let dx = mouseX - pos.x;
-                let dy = mouseY - pos.y;
-                if (Math.hypot(dx, dy) < 20) {
-                    attemptMove(i);
-                    return;
+            let roll = parseInt(gameState.diceValue);
+            let currentPos = (playerColor === 'Red') ? gameState.redPos : gameState.yellowPos;
+            
+            if (!canMove(playerColor, currentPos, roll)) return;
+
+            let nextPos;
+            if (currentPos === -1 && roll === 6) {
+                nextPos = 0; // Exit home onto index 0
+            } else {
+                nextPos = currentPos + roll;
+            }
+
+            let updates = {};
+            let pathArray = (playerColor === 'Red') ? redPath : yellowPath;
+            
+            // Check if final tile destination reached
+            if (pathArray[nextPos] === "HOME") {
+                updates[playerColor === 'Red' ? 'redPos' : 'yellowPos'] = "HOME";
+                updates.winner = playerColor; // Sets Victory
+            } else {
+                updates[playerColor === 'Red' ? 'redPos' : 'yellowPos'] = nextPos;
+                
+                // --- CAPTURING MECHANIC ---
+                let destinationId = pathArray[nextPos];
+                if (playerColor === 'Red' && gameState.yellowPos !== -1 && yellowPath[gameState.yellowPos] === destinationId) {
+                    updates.yellowPos = -1; // Send Yellow back to base yard
+                    alert("💥 Red captured Yellow!");
+                } else if (playerColor === 'Yellow' && gameState.redPos !== -1 && redPath[gameState.redPos] === destinationId) {
+                    updates.redPos = -1; // Send Red back to base yard
+                    alert("💥 Yellow captured Red!");
                 }
             }
-            // if nothing clicked, just a reminder
-            if (diceRolled) document.getElementById('gameMsg').innerText = 'Tap on your piece to move!';
-            else document.getElementById('gameMsg').innerText = 'Tap the dice first!';
+
+            // Clean state & hand over active turn designation
+            updates.hasRolled = false;
+            updates.turn = (playerColor === 'Red') ? 'Yellow' : 'Red';
+            
+            database.ref('rooms/' + roomName).update(updates);
         }
-        
-        // optional reset (not needed for normal play but robust)
-        function resetGame() {
-            initGameState();
-            drawBoard();
-            document.getElementById('gameMsg').innerText = "Game restarted! RED's turn.";
-        }
-        
-        // Event listeners
-        const diceTap = document.getElementById('diceTapArea');
-        diceTap.addEventListener('click', rollDice);
-        canvas.addEventListener('click', handleCanvasClick);
-        
-        // initial draw
-        drawBoard();
-        document.getElementById('gameMsg').innerText = "🎲 Tap the dice to roll! 🎲";
-    })();
-</script>
+    </script>
 </body>
 </html>
