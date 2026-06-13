@@ -338,17 +338,17 @@
             osc.stop(ctxAudio.currentTime + 0.7);
         }
         
-        function playCustomOrSynth(action) {
-            // special case: smooch with custom upload
-            if (action.type === 'kiss' && action.kissStyle === 'smooch' && customSmoochUrl) {
-                const audio = new Audio(customSmoochUrl);
-                audio.play().catch(e => console.log("autoplay error, but user clicked so should work", e));
-                return;
-            }
-            // default synth
-            if (action.type === 'hug') playSynthTone('hug', action.intensity);
-            else if (action.type === 'kiss') playSynthTone('kiss', action.kissStyle);
-        }
+       function playCustomOrSynth(action) {
+    // For smooches: use your permanent kiss.mp3 file
+    if (action.type === 'kiss' && action.kissStyle === 'smooch') {
+        const audio = new Audio('kiss.mp3');
+        audio.play().catch(e => console.log("Audio play error:", e));
+        return;
+    }
+    // Default synth for hugs and other kisses
+    if (action.type === 'hug') playSynthTone('hug', action.intensity);
+    else if (action.type === 'kiss') playSynthTone('kiss', action.kissStyle);
+}
         
         // ---------- DIALOGUE with BOY LINES ----------
         function getGirlLine(action) {
