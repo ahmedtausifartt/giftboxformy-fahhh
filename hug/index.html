@@ -338,11 +338,18 @@
             osc.stop(ctxAudio.currentTime + 0.7);
         }
         
-       function playCustomOrSynth(action) {
+     function playCustomOrSynth(action) {
     // For smooches: use your permanent kiss.mp3 file
     if (action.type === 'kiss' && action.kissStyle === 'smooch') {
         const audio = new Audio('kiss.mp3');
-        audio.play().catch(e => console.log("Audio play error:", e));
+        audio.play().then(() => {
+            console.log("✅ Custom smooch sound played successfully");
+        }).catch(err => {
+            console.warn("❌ Failed to play kiss.mp3:", err);
+            console.log("Falling back to synth beep for smooches");
+            // Fallback to synth so it doesn't stay silent
+            playSynthTone('kiss', 'smooch');
+        });
         return;
     }
     // Default synth for hugs and other kisses
