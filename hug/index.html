@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>✨ Queen's Desire - Cuddle Court ✨</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>👑 Royal Desire – with your voice & boy lines 👑</title>
     <style>
         * {
             margin: 0;
@@ -18,13 +18,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Quicksand', 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Comic Neue', sans-serif;
+            font-family: 'Quicksand', 'Segoe UI', 'Poppins', system-ui, sans-serif;
             padding: 1.5rem;
         }
 
-        /* main royal card */
         .royal-card {
-            max-width: 700px;
+            max-width: 750px;
             width: 100%;
             background: rgba(255, 248, 250, 0.95);
             backdrop-filter: blur(2px);
@@ -35,7 +34,6 @@
             padding: 1.8rem 1.8rem 2rem;
         }
 
-        /* header zone */
         .crown-area {
             text-align: center;
             margin-bottom: 1.5rem;
@@ -53,7 +51,6 @@
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            letter-spacing: -0.3px;
             margin: 0.3rem 0 0.2rem;
         }
         .sub {
@@ -66,18 +63,17 @@
             border-radius: 40px;
         }
 
-        /* question block */
         .question-bubble {
             background: #fffbee;
             border-radius: 3rem;
-            padding: 1rem 1rem;
+            padding: 1rem;
             text-align: center;
             margin: 15px 0 20px;
             border: 1px solid #ffd9e4;
             box-shadow: 0 8px 14px #ffd9e466;
         }
         .question-text {
-            font-size: 1.7rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: #a13e5c;
             display: flex;
@@ -86,11 +82,7 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-        .queen-emoji {
-            font-size: 2.2rem;
-        }
 
-        /* buttons container */
         .buttons-panel {
             display: flex;
             flex-wrap: wrap;
@@ -102,7 +94,7 @@
             background: #ffe2eb;
             border: none;
             padding: 0.7rem 1.5rem;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             font-family: inherit;
             border-radius: 100px;
@@ -116,7 +108,6 @@
         }
         .cute-btn:active {
             transform: scale(0.95);
-            background: #ffd0df;
         }
         .cute-btn.primary {
             background: #fec5d4;
@@ -132,10 +123,14 @@
             background: #efcdda;
             color: #6c3c4e;
             font-size: 0.9rem;
-            margin-top: 8px;
+        }
+        .upload-btn {
+            background: #d9e6f5;
+            color: #2d5f7e;
+            box-shadow: 0 2px 6px #bdd4e8;
+            font-size: 0.85rem;
         }
 
-        /* canvas avatar area */
         .avatar-stage {
             background: #fff4f7;
             border-radius: 48px;
@@ -149,10 +144,8 @@
             background: #fef0f4;
             border-radius: 32px;
             margin: 0 auto;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
         }
 
-        /* speech bubble & text */
         .dialogue-box {
             background: #fff2e6;
             border-radius: 2rem;
@@ -164,46 +157,36 @@
             font-size: 1rem;
             box-shadow: 0 5px 10px #ffd0dd;
             word-break: break-word;
-            min-height: 85px;
+            min-height: 110px;
         }
         .action-label {
             font-size: 0.85rem;
             color: #b15173;
-            letter-spacing: 0.5px;
-            margin-top: 5px;
             text-align: center;
+            margin-top: 5px;
         }
-
         footer {
             font-size: 0.7rem;
             text-align: center;
             margin-top: 1rem;
             color: #dc9aae;
         }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
-            100% { transform: translateY(0px); }
-        }
         hr {
             margin: 12px 0;
             border: 1px solid #ffe1ea;
         }
-        .flex-col {
-            display: flex;
-            flex-direction: column;
-        }
         .hidden {
             display: none;
         }
-        .suboption-title {
-            font-weight: 700;
-            margin: 10px 0 5px;
-            color: #b45a79;
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-6px); }
         }
-        button {
-            background: none;
-            border: none;
+        .file-info {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            color: #b66884;
+            text-align: center;
         }
     </style>
 </head>
@@ -231,11 +214,8 @@
         </div>
     </div>
 
-    <!-- hug selection menu (dynamic) -->
     <div id="hugTypePanel" class="hidden">
-        <div class="question-bubble">
-            <div class="question-text">🌸 choose a hug style 🌸</div>
-        </div>
+        <div class="question-bubble"><div class="question-text">🌸 choose a hug style 🌸</div></div>
         <div class="buttons-panel">
             <button data-hug="front" class="cute-btn">🤝 Front Hug</button>
             <button data-hug="side" class="cute-btn">🧸 Side Hug</button>
@@ -244,11 +224,8 @@
         <button id="backToMainFromHug" class="cute-btn back-btn">🔙 back to queen</button>
     </div>
 
-    <!-- hug intensity panel (tight/light) -->
     <div id="hugIntensityPanel" class="hidden">
-        <div class="question-bubble">
-            <div class="question-text">💪 how intense? 🤗</div>
-        </div>
+        <div class="question-bubble"><div class="question-text">💪 how intense? 🤗</div></div>
         <div class="buttons-panel">
             <button id="tightHugBtn" class="cute-btn">⚠️ TIGHT HUG ⚠️</button>
             <button id="lightHugBtn" class="cute-btn">🍃 LIGHT HUG 🍃</button>
@@ -256,11 +233,8 @@
         <button id="backToHugTypes" class="cute-btn back-btn">← back to hug styles</button>
     </div>
 
-    <!-- kiss selection panel -->
     <div id="kissTypePanel" class="hidden">
-        <div class="question-bubble">
-            <div class="question-text">💋 royal kiss menu 💋</div>
-        </div>
+        <div class="question-bubble"><div class="question-text">💋 royal kiss menu 💋</div></div>
         <div class="buttons-panel">
             <button data-kiss="smooch" class="cute-btn">💏 smooches norm</button>
             <button data-kiss="french" class="cute-btn">🇫🇷 french kiss</button>
@@ -269,7 +243,7 @@
         <button id="backToMainFromKiss" class="cute-btn back-btn">🔙 back to queen</button>
     </div>
 
-    <!-- canvas + dialogue area (always visible) -->
+    <!-- avatar canvas -->
     <div class="avatar-stage">
         <canvas id="avatarCanvas" width="550" height="240" style="width:100%; height:auto; max-width:550px; aspect-ratio:550/240"></canvas>
     </div>
@@ -277,10 +251,17 @@
         💭✨ My queen, make a wish... ✨💭
     </div>
     <div class="action-label" id="actionHint">👑 select hug or kiss above 👑</div>
-    
+
+    <!-- Upload area for custom smooch sound -->
+    <div style="background:#fff0f5; border-radius: 60px; padding: 8px 12px; margin: 12px 0 5px; text-align:center;">
+        <label for="smoochUpload" class="cute-btn upload-btn" style="display:inline-flex;">📁 Upload my smooch sound (MP3)</label>
+        <input type="file" id="smoochUpload" accept="audio/mpeg,audio/wav,audio/ogg" style="display:none;" />
+        <div id="uploadStatus" class="file-info">💾 No custom kiss sound yet. 'smooches' will use default beep.</div>
+    </div>
+
     <hr />
     <button id="globalResetBtn" class="cute-btn back-btn" style="width:100%;">🏰 new royal desire 🏰</button>
-    <footer>💖 every choice makes sound & unique reaction 💖</footer>
+    <footer>💖 your voice note will play when you choose 'smooches norm' 💖</footer>
 </div>
 
 <script>
@@ -305,11 +286,16 @@
         const dialogueDiv = document.getElementById('dialogueText');
         const actionHint = document.getElementById('actionHint');
         
-        // ---------- state ----------
-        let selectedHugStyle = null;   // 'front', 'side', 'back'
-        let currentAction = null;       // for drawing & sound : object {type, style, intensity/kissStyle}
+        // upload elements
+        const smoochUpload = document.getElementById('smoochUpload');
+        const uploadStatus = document.getElementById('uploadStatus');
+        let customSmoochUrl = null;
         
-        // ---------- AUDIO (Web Audio with cute synthesized effects) ----------
+        // state
+        let selectedHugStyle = null;
+        let currentAction = null;
+        
+        // ---------- AUDIO helper ----------
         let audioCtx = null;
         function getAudioContext() {
             if (!audioCtx) {
@@ -318,93 +304,106 @@
             return audioCtx;
         }
         
-        // play sound effect based on final action
-        function playRoyalSound(action) {
+        // fallback synth sound
+        function playSynthTone(type, subtype) {
             const ctxAudio = getAudioContext();
-            // resume if suspended (user interaction)
-            if (ctxAudio.state === 'suspended') {
-                ctxAudio.resume();
-            }
-            const now = ctxAudio.currentTime;
+            if (ctxAudio.state === 'suspended') ctxAudio.resume();
             const osc = ctxAudio.createOscillator();
             const gain = ctxAudio.createGain();
             osc.connect(gain);
             gain.connect(ctxAudio.destination);
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+            gain.gain.setValueAtTime(0.2, ctxAudio.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, ctxAudio.currentTime + 0.7);
             
-            // different sounds per combination
-            if (action.type === 'hug') {
-                if (action.intensity === 'tight') {
-                    // aggressive low buzz & distortion-like
-                    osc.type = 'sawtooth';
-                    osc.frequency.value = 130;
-                    osc.frequency.exponentialRampToValueAtTime(90, now + 0.4);
-                    gain.gain.setValueAtTime(0.28, now);
-                } else {
-                    // light hug: soft bell
-                    osc.type = 'sine';
-                    osc.frequency.value = 880;
-                    osc.frequency.exponentialRampToValueAtTime(660, now + 0.3);
-                    gain.gain.setValueAtTime(0.18, now);
-                }
-            } 
-            else if (action.type === 'kiss') {
-                if (action.kissStyle === 'smooch') {
+            if (type === 'hug') {
+                osc.type = (subtype === 'tight') ? 'sawtooth' : 'sine';
+                osc.frequency.value = (subtype === 'tight') ? 130 : 880;
+                osc.frequency.exponentialRampToValueAtTime((subtype === 'tight') ? 90 : 660, ctxAudio.currentTime + 0.4);
+            } else if (type === 'kiss') {
+                if (subtype === 'smooch') {
                     osc.type = 'triangle';
                     osc.frequency.value = 1200;
-                    gain.gain.setValueAtTime(0.12, now);
-                    osc.frequency.exponentialRampToValueAtTime(400, now + 0.2);
-                } else if (action.kissStyle === 'french') {
+                    osc.frequency.exponentialRampToValueAtTime(400, ctxAudio.currentTime + 0.2);
+                } else if (subtype === 'french') {
                     osc.type = 'sine';
                     osc.frequency.value = 600;
-                    osc.frequency.linearRampToValueAtTime(900, now + 0.25);
-                    osc.frequency.linearRampToValueAtTime(500, now + 0.5);
-                    gain.gain.setValueAtTime(0.2, now);
-                } else { // american kiss - "smack" like noise with fast pitch
+                    osc.frequency.linearRampToValueAtTime(900, ctxAudio.currentTime + 0.25);
+                } else {
                     osc.type = 'square';
                     osc.frequency.value = 300;
-                    osc.frequency.exponentialRampToValueAtTime(80, now + 0.15);
-                    gain.gain.setValueAtTime(0.24, now);
+                    osc.frequency.exponentialRampToValueAtTime(80, ctxAudio.currentTime + 0.15);
                 }
             }
             osc.start();
-            osc.stop(now + 0.7);
+            osc.stop(ctxAudio.currentTime + 0.7);
         }
         
-        // ----- AVATAR DRAWING: two cute characters doing all actions (hug variations + kiss variations) -----
-        function drawAvatars(action) {
-            if (!action) {
-                // default idle cute
-                drawIdleAvatars();
+        function playCustomOrSynth(action) {
+            // special case: smooch with custom upload
+            if (action.type === 'kiss' && action.kissStyle === 'smooch' && customSmoochUrl) {
+                const audio = new Audio(customSmoochUrl);
+                audio.play().catch(e => console.log("autoplay error, but user clicked so should work", e));
                 return;
             }
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // default synth
+            if (action.type === 'hug') playSynthTone('hug', action.intensity);
+            else if (action.type === 'kiss') playSynthTone('kiss', action.kissStyle);
+        }
+        
+        // ---------- DIALOGUE with BOY LINES ----------
+        function getGirlLine(action) {
             if (action.type === 'hug') {
-                drawHug(action.hugStyle, action.intensity);
-            } else if (action.type === 'kiss') {
-                drawKiss(action.kissStyle);
-            } else {
-                drawIdleAvatars();
+                if (action.intensity === 'tight') {
+                    return "👸🏻 Girl: Shitttt it's too tight... help meeeeeee! 😫💢";
+                } else {
+                    if (action.hugStyle === 'front') return "👸🏻 Girl: Aww... front hug feels like a cloud~ 🥺🌸";
+                    if (action.hugStyle === 'side') return "👸🏻 Girl: side hug is so caring and soft 🧸💖";
+                    return "👸🏻 Girl: backhug makes me feel so protected and warm 🍂✨";
+                }
+            } else { // kiss
+                if (action.kissStyle === 'smooch') return "👸🏻 Girl: Hehe! That little smooch gave me butterflies 💕💋";
+                if (action.kissStyle === 'french') return "👸🏻 Girl: Ooh la la~ mon dieu! That french kiss is dreamy 💋🇫🇷💘";
+                return "👸🏻 Girl: WHOA! That american kiss is strong & confident! 🦅💋✨";
             }
         }
         
+        function getBoyLine(action) {
+            if (action.type === 'hug') {
+                if (action.intensity === 'tight') {
+                    return "🤴 Boy: OKAYY NAH THAT AIN'T GONNA HAPPEN (but it's happening) 😤";
+                } else { // light hug
+                    return "🤴 Boy: Do you want me to hold you even tighter? 😏💪";
+                }
+            }
+            // kisses - playful boy reaction
+            if (action.type === 'kiss') {
+                if (action.kissStyle === 'smooch') return "🤴 Boy: Mwah~ you liked that, didn't you? 😘";
+                if (action.kissStyle === 'french') return "🤴 Boy: Sacré bleu! That was intense~ 💘";
+                return "🤴 Boy: 'Murica! firm and proud kiss 🦅";
+            }
+            return "";
+        }
+        
+        function setDialogueAndSound(action) {
+            const girlMsg = getGirlLine(action);
+            const boyMsg = getBoyLine(action);
+            dialogueDiv.innerHTML = `${girlMsg}<br><span style="color:#966c7e;">${boyMsg}</span>`;
+            playCustomOrSynth(action);
+            actionHint.innerText = `✨ ${action.type === 'hug' ? `${action.hugStyle} hug - ${action.intensity}` : `${action.kissStyle} kiss`} performed ✨`;
+        }
+        
+        // ---------- AVATAR DRAWING (same as before but kept clean) ----------
         function drawIdleAvatars() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // left girl (queen) , right knight
             drawCharacter(140, 120, '#FFB7C5', '#F57C8C', '👸', 'idle');
             drawCharacter(400, 120, '#BDE0FE', '#7F9DB5', '🤴', 'idle');
             ctx.font = "bold 16px 'Segoe UI Emoji'";
             ctx.fillStyle = "#b35d7a";
-            ctx.shadowBlur = 0;
-            ctx.fillText("✨ waiting ✨", canvas.width/2-50, 200);
+            ctx.fillText("✨ awaiting command ✨", canvas.width/2-70, 200);
         }
         
-        // helper: draw base character (x,y, bodyColor, blushColor, emoji, expression)
-        function drawCharacter(x, y, bodyColor, cheekColor, emoji, state, extraParams = {}) {
+        function drawCharacter(x, y, bodyColor, cheekColor, emoji, state) {
             ctx.save();
-            ctx.shadowBlur = 0;
-            // body (circle)
             ctx.beginPath();
             ctx.arc(x, y, 32, 0, Math.PI*2);
             ctx.fillStyle = bodyColor;
@@ -412,7 +411,6 @@
             ctx.strokeStyle = "#b96f86";
             ctx.lineWidth = 1.5;
             ctx.stroke();
-            // eyes
             ctx.fillStyle = "#2F1B21";
             ctx.beginPath();
             ctx.arc(x-12, y-8, 4, 0, Math.PI*2);
@@ -423,35 +421,27 @@
             ctx.arc(x-14, y-10, 1.5, 0, Math.PI*2);
             ctx.arc(x+10, y-10, 1.5, 0, Math.PI*2);
             ctx.fill();
-            // blush
             ctx.fillStyle = cheekColor;
             ctx.beginPath();
             ctx.ellipse(x-18, y+2, 6, 4, 0, 0, Math.PI*2);
             ctx.ellipse(x+18, y+2, 6, 4, 0, 0, Math.PI*2);
             ctx.fill();
-            // mouth (cute)
             ctx.beginPath();
             ctx.arc(x, y+8, 8, 0.05, Math.PI - 0.05);
             ctx.strokeStyle = "#ad5a77";
             ctx.lineWidth = 2;
             ctx.stroke();
-            // emoji on top
             ctx.font = "28px 'Segoe UI Emoji'";
             ctx.fillStyle = "#3f212e";
             ctx.fillText(emoji, x-15, y-38);
-            return {x,y};
+            ctx.restore();
         }
         
-        // hug drawing based on style
         function drawHug(style, intensity) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const girlPos = {x: 160, y: 130};
-            const partnerPos = {x: 380, y: 130};
-            
             if (style === 'front') {
-                drawCharacter(160, 130, '#FFC0D0', '#F5A9B8', '👸🏻', 'happy');
-                drawCharacter(380, 130, '#C5D9FF', '#A2B7DE', '🤴🏼', 'happy');
-                // arms hugging front (overlap)
+                drawCharacter(160, 130, '#FFC0D0', '#F5A9B8', '👸🏻');
+                drawCharacter(380, 130, '#C5D9FF', '#A2B7DE', '🤴🏼');
                 ctx.beginPath();
                 ctx.moveTo(185, 115);
                 ctx.quadraticCurveTo(270, 90, 355, 115);
@@ -462,142 +452,75 @@
                 ctx.moveTo(355, 145);
                 ctx.quadraticCurveTo(270, 170, 185, 145);
                 ctx.stroke();
-                if(intensity === 'tight') {
-                    ctx.fillStyle = "#ff9494";
-                    ctx.font = "bold 18px sans-serif";
-                    ctx.fillText("💢 TOO TIGHT 💢", canvas.width/2-70, 55);
-                } else {
-                    ctx.fillStyle = "#d48b9f";
-                    ctx.font = "italic 16px sans-serif";
-                    ctx.fillText("⊹ gentle embrace ⊹", canvas.width/2-70, 55);
-                }
+                if(intensity === 'tight') ctx.fillText("💢 TOO TIGHT 💢", canvas.width/2-70, 55);
+                else ctx.fillText("⊹ gentle embrace ⊹", canvas.width/2-70, 55);
             } 
             else if (style === 'side') {
-                drawCharacter(180, 130, '#FFC0D0', '#F5A9B8', '👸🏻', 'blush');
-                drawCharacter(360, 130, '#C5D9FF', '#A2B7DE', '🤴🏼', 'smile');
-                // side arm around shoulder
+                drawCharacter(180, 130, '#FFC0D0', '#F5A9B8', '👸🏻');
+                drawCharacter(360, 130, '#C5D9FF', '#A2B7DE', '🤴🏼');
                 ctx.beginPath();
                 ctx.moveTo(345, 105);
                 ctx.quadraticCurveTo(290, 85, 220, 105);
                 ctx.lineWidth = intensity === 'tight' ? 6 : 3;
-                ctx.strokeStyle = "#b75679";
                 ctx.stroke();
-                if(intensity === 'tight') {
-                    ctx.fillStyle = "#cc6f8c";
-                    ctx.font = "bold 15px monospace";
-                    ctx.fillText("💢 side crush! too tight! 💢", canvas.width/2-100, 50);
-                } else {
-                    ctx.fillText("🌸 side snug 🌸", canvas.width/2-60, 50);
-                }
+                if(intensity === 'tight') ctx.fillText("💢 side crush! 💢", canvas.width/2-90, 50);
+                else ctx.fillText("🌸 side snug 🌸", canvas.width/2-60, 50);
             }
             else if (style === 'back') {
-                drawCharacter(220, 130, '#FFC0D0', '#F5A9B8', '👸🏻', 'surprise');
-                drawCharacter(290, 115, '#C5D9FF', '#A2B7DE', '🤴🏼', 'loving');
-                // arms from behind wrapping
+                drawCharacter(220, 130, '#FFC0D0', '#F5A9B8', '👸🏻');
+                drawCharacter(290, 115, '#C5D9FF', '#A2B7DE', '🤴🏼');
                 ctx.beginPath();
                 ctx.moveTo(270, 130);
                 ctx.quadraticCurveTo(250, 150, 220, 140);
                 ctx.lineWidth = intensity === 'tight' ? 7 : 3.5;
-                ctx.strokeStyle = "#ba6985";
                 ctx.stroke();
                 ctx.beginPath();
                 ctx.moveTo(270, 105);
                 ctx.quadraticCurveTo(245, 90, 215, 100);
                 ctx.stroke();
-                if(intensity === 'tight') {
-                    ctx.fillStyle = "#e68aa8";
-                    ctx.font = "bold 13px sans-serif";
-                    ctx.fillText("💢 backhug SQUEEZE! 💢", 170, 45);
-                } else {
-                    ctx.fillStyle = "#bb7d92";
-                    ctx.fillText("🍃 soft backhug 🍃", 210, 45);
-                }
+                if(intensity === 'tight') ctx.fillText("💢 backhug SQUEEZE! 💢", 170, 45);
+                else ctx.fillText("🍃 soft backhug 🍃", 210, 45);
             }
         }
         
         function drawKiss(kissStyle) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawCharacter(200, 130, '#FFB7C5', '#F57C8C', '👸🏻');
+            drawCharacter(340, 130, '#C5D9FF', '#A2B7DE', '🤴🏼');
             if (kissStyle === 'smooch') {
-                drawCharacter(200, 130, '#FFB7C5', '#F57C8C', '👸🏻', 'kiss');
-                drawCharacter(340, 130, '#C5D9FF', '#A2B7DE', '🤴🏼', 'kiss');
                 ctx.fillStyle = "#e66785";
                 ctx.font = "26px 'Segoe UI Emoji'";
                 ctx.fillText("💋💕", 260, 115);
-                ctx.fillStyle = "#c25375";
-                ctx.font = "italic 14px";
                 ctx.fillText("~ smooch ~", 250, 190);
-            } 
-            else if (kissStyle === 'french') {
-                drawCharacter(195, 130, '#FFB7C5', '#F57C8C', '👸🏻', 'dreamy');
-                drawCharacter(345, 130, '#C5D9FF', '#A2B7DE', '🤴🏼', 'dreamy');
+            } else if (kissStyle === 'french') {
                 ctx.fillStyle = "#c4456e";
                 ctx.font = "28px 'Segoe UI Emoji'";
                 ctx.fillText("💋💗💋", 245, 105);
-                ctx.fillStyle = "#aa4c6e";
-                ctx.font = "bold 14px";
                 ctx.fillText("💞 French passion 💞", 220, 195);
-                // extra hearts
-                for(let i=0;i<3;i++) ctx.fillText("❤️", 270+i*20, 70);
-            } 
-            else if (kissStyle === 'american') {
-                drawCharacter(190, 130, '#FFB7C5', '#F57C8C', '👸🏻', 'wink');
-                drawCharacter(360, 130, '#C5D9FF', '#A2B7DE', '🤴🏼', 'cheeky');
+            } else {
                 ctx.fillStyle = "#b6466b";
                 ctx.font = "26px 'Segoe UI Emoji'";
                 ctx.fillText("🇺🇸💋🤠", 235, 100);
-                ctx.fillStyle = "#b55f7b";
-                ctx.font = "italic 15px";
                 ctx.fillText("firm american smooch!", 200, 200);
             }
         }
         
-        // ---- text & reaction ----
-        function setDialogueAndSound(action) {
-            let message = "";
-            if (action.type === 'hug') {
-                if (action.intensity === 'tight') {
-                    message = "👸🏻 Girl: Shitttt it's too tight... help meeeeeee! 😫💢";
-                    if (action.hugStyle === 'front') message = "👸🏻 Girl: AAGH front hug crushing me! 'shitttt its too tight help meeeeeee' 😭";
-                    if (action.hugStyle === 'side') message = "👸🏻 Girl: Side squeeze! 'shitttt its too tight help meeeeeee' 🆘💢";
-                    if (action.hugStyle === 'back') message = "👸🏻 Girl: Backhug choking!! 'shitttt its too tight help meeeeeee' 😵💕";
-                } else {
-                    if (action.hugStyle === 'front') message = "👸🏻 Girl: Aww... front hug feels like a cloud~ 🥺🌸";
-                    else if (action.hugStyle === 'side') message = "👸🏻 Girl: side hug is so caring and soft 🧸💖";
-                    else message = "👸🏻 Girl: backhug makes me feel so protected and warm 🍂✨";
-                }
-            } 
-            else if (action.type === 'kiss') {
-                if (action.kissStyle === 'smooch') message = "👸🏻 Girl: Hehe! That little smooch gave me butterflies 💕💋";
-                else if (action.kissStyle === 'french') message = "👸🏻 Girl: Ooh la la~ mon dieu! That french kiss is dreamy 💋🇫🇷💘";
-                else message = "👸🏻 Girl: WHOA! That american kiss is strong & confident! 🦅💋✨";
-            }
-            dialogueDiv.innerHTML = `💬 ${message}`;
-            playRoyalSound(action);
-            actionHint.innerText = `✨ ${action.type === 'hug' ? `[${action.hugStyle} hug - ${action.intensity}]` : `[${action.kissStyle} kiss]`} performed ✨`;
+        function drawAvatars(action) {
+            if (!action) return drawIdleAvatars();
+            if (action.type === 'hug') drawHug(action.hugStyle, action.intensity);
+            else if (action.type === 'kiss') drawKiss(action.kissStyle);
+            else drawIdleAvatars();
         }
         
-        // final trigger: draw + text + sound
         function performFinalAction(action) {
             currentAction = action;
             drawAvatars(action);
             setDialogueAndSound(action);
         }
         
-        // ---- hug flow logic ----
-        function showHugTypePanel() {
-            initialPanel.classList.add('hidden');
-            hugTypePanel.classList.remove('hidden');
-            hugIntensityPanel.classList.add('hidden');
-            kissTypePanel.classList.add('hidden');
-        }
-        
-        function showKissTypePanel() {
-            initialPanel.classList.add('hidden');
-            kissTypePanel.classList.remove('hidden');
-            hugTypePanel.classList.add('hidden');
-            hugIntensityPanel.classList.add('hidden');
-        }
-        
+        // ---- UI flows ----
+        function showHugTypePanel() { initialPanel.classList.add('hidden'); hugTypePanel.classList.remove('hidden'); hugIntensityPanel.classList.add('hidden'); kissTypePanel.classList.add('hidden'); }
+        function showKissTypePanel() { initialPanel.classList.add('hidden'); kissTypePanel.classList.remove('hidden'); hugTypePanel.classList.add('hidden'); hugIntensityPanel.classList.add('hidden'); }
         function showInitial() {
             initialPanel.classList.remove('hidden');
             hugTypePanel.classList.add('hidden');
@@ -610,68 +533,37 @@
             actionHint.innerText = "👑 select hug or kiss above 👑";
         }
         
-        function onHugStyleSelected(style) {
-            selectedHugStyle = style;
-            hugTypePanel.classList.add('hidden');
-            hugIntensityPanel.classList.remove('hidden');
-        }
+        function onHugStyleSelected(style) { selectedHugStyle = style; hugTypePanel.classList.add('hidden'); hugIntensityPanel.classList.remove('hidden'); }
+        function onIntensitySelected(intensity) { if(selectedHugStyle) performFinalAction({ type:'hug', hugStyle:selectedHugStyle, intensity:intensity }); }
+        function onKissSelected(kissType) { performFinalAction({ type:'kiss', kissStyle:kissType }); }
         
-        function onIntensitySelected(intensity) {
-            if (!selectedHugStyle) return;
-            const finalAction = {
-                type: 'hug',
-                hugStyle: selectedHugStyle,
-                intensity: intensity
-            };
-            performFinalAction(finalAction);
-            // after performing, keep showing but can reset later
-        }
-        
-        function onKissSelected(kissType) {
-            const finalAction = {
-                type: 'kiss',
-                kissStyle: kissType
-            };
-            performFinalAction(finalAction);
-        }
-        
-        // ---- event binding ----
-        desireHugBtn.addEventListener('click', () => { showHugTypePanel(); });
-        desireKissBtn.addEventListener('click', () => { showKissTypePanel(); });
-        
-        document.querySelectorAll('[data-hug]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const style = e.currentTarget.getAttribute('data-hug');
-                onHugStyleSelected(style);
-            });
-        });
-        
-        tightHugBtn.addEventListener('click', () => { onIntensitySelected('tight'); });
-        lightHugBtn.addEventListener('click', () => { onIntensitySelected('light'); });
-        
-        document.querySelectorAll('[data-kiss]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const kissVal = e.currentTarget.getAttribute('data-kiss');
-                onKissSelected(kissVal);
-            });
-        });
-        
-        backToMainFromHug.addEventListener('click', showInitial);
-        backToMainFromKiss.addEventListener('click', showInitial);
-        backToHugTypes.addEventListener('click', () => {
-            hugIntensityPanel.classList.add('hidden');
-            hugTypePanel.classList.remove('hidden');
-        });
-        globalResetBtn.addEventListener('click', () => {
-            showInitial();
-            if(audioCtx && audioCtx.state !== 'closed') {
-                // just reset nothing else
+        // ---- FILE UPLOAD LOGIC ----
+        smoochUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.includes('audio')) {
+                if (customSmoochUrl) URL.revokeObjectURL(customSmoochUrl);
+                customSmoochUrl = URL.createObjectURL(file);
+                uploadStatus.innerHTML = `✅ Custom smooch sound loaded: ${file.name} (will play on 'smooches')`;
+                uploadStatus.style.color = "#2c6e4f";
+            } else {
+                uploadStatus.innerHTML = "❌ Please select a valid audio file (MP3, WAV, OGG).";
+                uploadStatus.style.color = "#b34b5e";
             }
         });
         
-        // draw idle at start
+        // ---- EVENT BINDINGS ----
+        desireHugBtn.addEventListener('click', showHugTypePanel);
+        desireKissBtn.addEventListener('click', showKissTypePanel);
+        document.querySelectorAll('[data-hug]').forEach(btn => btn.addEventListener('click', (e) => onHugStyleSelected(e.currentTarget.getAttribute('data-hug'))));
+        tightHugBtn.addEventListener('click', () => onIntensitySelected('tight'));
+        lightHugBtn.addEventListener('click', () => onIntensitySelected('light'));
+        document.querySelectorAll('[data-kiss]').forEach(btn => btn.addEventListener('click', (e) => onKissSelected(e.currentTarget.getAttribute('data-kiss'))));
+        backToMainFromHug.addEventListener('click', showInitial);
+        backToMainFromKiss.addEventListener('click', showInitial);
+        backToHugTypes.addEventListener('click', () => { hugIntensityPanel.classList.add('hidden'); hugTypePanel.classList.remove('hidden'); });
+        globalResetBtn.addEventListener('click', showInitial);
+        
         drawIdleAvatars();
-        // ensure audio context is created on first interaction (but any button triggers playSound anyway)
     })();
 </script>
 </body>
