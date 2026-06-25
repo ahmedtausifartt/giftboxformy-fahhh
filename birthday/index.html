@@ -22,7 +22,6 @@
       position: relative;
       touch-action: manipulation;
     }
-    /* all screens full-screen */
     .screen {
       position: absolute;
       top: 0;
@@ -127,7 +126,7 @@
       z-index: 10;
       overflow: hidden;
     }
-    /* night sky – stars */
+    /* Stars background (enhanced) */
     .stars {
       position: absolute;
       top: 0;
@@ -151,7 +150,11 @@
         radial-gradient(2px 2px at 550px 80px, #eee, transparent),
         radial-gradient(1px 1px at 600px 40px, #fff, transparent),
         radial-gradient(2px 2px at 650px 20px, #ddd, transparent),
-        radial-gradient(1px 1px at 700px 60px, rgba(255,255,255,0.4), transparent);
+        radial-gradient(2px 2px at 700px 60px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 750px 10px, #fff, transparent),
+        radial-gradient(1px 1px at 800px 50px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(2px 2px at 850px 80px, #eee, transparent),
+        radial-gradient(1px 1px at 900px 20px, #fff, transparent);
       background-size: 200px 200px;
       opacity: 0.6;
       animation: twinkle 4s infinite alternate;
@@ -161,42 +164,69 @@
       100% { opacity: 0.9; }
     }
 
-    /* clouds */
-    .cloud {
+    /* ----- DECORATIVE CLOUDS (non-interactive) ----- */
+    .cloud-deco {
       position: absolute;
-      background: rgba(255,255,255,0.08);
-      border-radius: 80px;
-      filter: blur(2px);
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 120px;
+      filter: blur(3px);
       pointer-events: none;
-      animation: cloudDrift 20s infinite alternate ease-in-out;
+      animation: cloudDrift 25s infinite alternate ease-in-out;
+      z-index: 2;
     }
+    .cloud-deco:nth-child(2) { animation-duration: 30s; animation-delay: 3s; }
+    .cloud-deco:nth-child(3) { animation-duration: 20s; animation-delay: 6s; }
+    .cloud-deco:nth-child(4) { animation-duration: 35s; animation-delay: 0s; }
+
     @keyframes cloudDrift {
-      0% { transform: translateX(0px); }
-      100% { transform: translateX(60px); }
+      0% { transform: translateX(0px) scale(1); }
+      100% { transform: translateX(80px) scale(1.05); }
     }
 
-    /* highlighted cloud – clickable */
+    /* ----- SPECIAL HIGHLIGHTED CLOUD (FIXED & VISIBLE) ----- */
     .cloud-highlight {
       position: absolute;
-      background: rgba(255,215,0,0.15);
-      border-radius: 100px;
-      border: 2px solid rgba(255,215,0,0.4);
-      box-shadow: 0 0 40px rgba(255,215,0,0.2);
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 120px;
+      border: 2px solid rgba(255, 215, 0, 0.7);
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.25), inset 0 0 40px rgba(255, 215, 0, 0.05);
       cursor: pointer;
       pointer-events: auto;
-      animation: cloudGlow 3s infinite alternate;
-      backdrop-filter: blur(1px);
+      animation: cloudPulse 3s infinite alternate ease-in-out;
+      backdrop-filter: blur(2px);
+      z-index: 20;
       transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: rgba(255, 215, 0, 0.3);
     }
     .cloud-highlight:active {
-      transform: scale(0.95);
+      transform: scale(0.94);
     }
-    @keyframes cloudGlow {
-      0% { box-shadow: 0 0 20px rgba(255,215,0,0.2); border-color: rgba(255,215,0,0.3); }
-      100% { box-shadow: 0 0 60px rgba(255,215,0,0.6); border-color: #ffd700; }
+    .cloud-highlight .cloud-label {
+      position: absolute;
+      bottom: -26px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.6);
+      color: #ffd700;
+      font-size: 0.6rem;
+      padding: 2px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,215,0,0.3);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    @keyframes cloudPulse {
+      0% { box-shadow: 0 0 20px rgba(255,215,0,0.2); border-color: rgba(255,215,0,0.4); transform: scale(1) translateY(0px); }
+      100% { box-shadow: 0 0 60px rgba(255,215,0,0.5); border-color: #ffd700; transform: scale(1.02) translateY(-5px); }
     }
 
-    /* easter egg objects */
+    /* ----- EASTER EGG OBJECTS (interactable) ----- */
     .egg-object {
       position: absolute;
       cursor: pointer;
@@ -205,7 +235,7 @@
       z-index: 20;
     }
     .egg-object:active {
-      transform: scale(0.92);
+      transform: scale(0.90);
     }
     .egg-object .label {
       position: absolute;
@@ -221,28 +251,29 @@
       opacity: 0;
       transition: opacity 0.3s;
       pointer-events: none;
+      backdrop-filter: blur(2px);
     }
     .egg-object:hover .label {
       opacity: 1;
     }
 
-    /* dragon */
+    /* Dragon */
     .dragon {
       width: 100px;
       height: 100px;
       background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoJmcLOlWtWYO4vCrtZmILL57R0gN-AE_6J1bBbo_MLA&s=10') center/contain no-repeat;
       animation: dragonFly 3s infinite alternate ease-in-out;
-      filter: drop-shadow(0 0 20px rgba(255,100,50,0.3));
+      filter: drop-shadow(0 0 30px rgba(255,100,50,0.3));
     }
     @keyframes dragonFly {
       0% { transform: translateY(0px) rotate(-2deg); }
       100% { transform: translateY(-15px) rotate(2deg); }
     }
 
-    /* star */
+    /* Star (clickable) */
     .star-egg {
-      width: 60px;
-      height: 60px;
+      width: 55px;
+      height: 55px;
       background: #ffd700;
       clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
       animation: starSpin 6s linear infinite;
@@ -254,57 +285,134 @@
       100% { transform: rotate(360deg) scale(1); }
     }
 
-    /* bush & chest */
-    .bush {
-      width: 80px;
-      height: 60px;
-      background: radial-gradient(circle at 30% 20%, #2d7d2d, #1a4a1a);
-      border-radius: 80% 80% 50% 50% / 100% 100% 50% 50%;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-      transition: all 0.4s;
+    /* ----- DECORATIVE NORMAL STARS (non-clickable) ----- */
+    .star-deco {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.15);
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      animation: twinkleDeco 3s infinite alternate;
+      pointer-events: none;
+      z-index: 3;
+    }
+    @keyframes twinkleDeco {
+      0% { opacity: 0.2; transform: scale(0.8); }
+      100% { opacity: 0.8; transform: scale(1.2); }
+    }
+
+    /* ----- DECORATIVE BUSHES/TREES (non-interactive) ----- */
+    .tree-deco {
+      position: absolute;
+      pointer-events: none;
+      z-index: 4;
+    }
+    .tree-deco .trunk {
+      width: 8px;
+      height: 20px;
+      background: #3d2a1a;
+      margin: 0 auto;
+    }
+    .tree-deco .canopy {
+      width: 50px;
+      height: 50px;
+      background: radial-gradient(circle at 30% 30%, #2a5a2a, #0f2f0f);
+      border-radius: 50%;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .tree-deco.small .canopy { width: 30px; height: 30px; }
+    .tree-deco.small .trunk { height: 12px; width: 6px; }
+
+    /* Rock deco */
+    .rock-deco {
+      position: absolute;
+      background: radial-gradient(circle at 30% 20%, #5a5a5a, #2a2a2a);
+      border-radius: 50% 50% 40% 40%;
+      pointer-events: none;
+      z-index: 4;
+      box-shadow: inset -5px -5px 15px rgba(0,0,0,0.5);
+    }
+
+    /* ----- BUSH & CHEST (FIXED GLITCH) ----- */
+    #bush-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
       cursor: pointer;
+      min-width: 80px;
+      min-height: 70px;
+      position: relative;
+    }
+    .bush-normal {
+      width: 80px;
+      height: 55px;
+      background: radial-gradient(circle at 30% 20%, #3a8a3a, #1a4a1a);
+      border-radius: 80% 80% 50% 50% / 100% 100% 50% 50%;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+      transition: all 0.4s;
     }
     .bush-split {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       transition: all 0.4s;
     }
     .bush-split .bush-half {
       width: 35px;
-      height: 50px;
-      background: radial-gradient(circle at 30% 20%, #2d7d2d, #1a4a1a);
+      height: 45px;
+      background: radial-gradient(circle at 30% 20%, #3a8a3a, #1a4a1a);
       border-radius: 80% 80% 50% 50% / 100% 100% 50% 50%;
       box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      animation: bushSplitAnim 0.4s ease-out;
     }
-    .chest {
-      width: 50px;
+    @keyframes bushSplitAnim {
+      0% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(0.7) rotate(10deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .chest-object {
+      width: 55px;
       height: 40px;
       background: #8b5a2b;
-      border-radius: 6px 6px 4px 4px;
-      box-shadow: inset 0 -8px 0 #5a3a1a, 0 8px 20px rgba(0,0,0,0.6);
+      border-radius: 8px 8px 4px 4px;
+      box-shadow: inset 0 -10px 0 #5a3a1a, 0 8px 25px rgba(0,0,0,0.7);
       position: relative;
       cursor: pointer;
+      margin-top: 5px;
+      transition: 0.3s;
+      animation: chestPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .chest::before {
+    @keyframes chestPop {
+      0% { transform: scale(0) rotate(-30deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .chest-object::before {
       content: '🔒';
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 1.4rem;
+      font-size: 1.6rem;
     }
-    .chest-open {
+    .chest-object.open {
       background: #a06b3a;
       box-shadow: inset 0 -4px 0 #5a3a1a;
     }
-    .chest-open::before {
+    .chest-object.open::before {
       content: '📦';
+      animation: chestOpenAnim 0.4s ease-out;
+    }
+    @keyframes chestOpenAnim {
+      0% { transform: translate(-50%, -50%) scale(0); }
+      100% { transform: translate(-50%, -50%) scale(1); }
     }
 
-    /* Cake */
+    /* ----- CAKE ----- */
     #cake-container {
       position: absolute;
-      bottom: 10%;
+      bottom: 8%;
       left: 50%;
       transform: translateX(-50%);
       z-index: 15;
@@ -315,27 +423,26 @@
       pointer-events: auto;
     }
     .cake-base {
-      width: 200px;
+      width: 190px;
       background: #d4a373;
       border-radius: 10px 10px 0 0;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.7);
       position: relative;
-      transition: transform 0.2s;
+      transition: transform 0.15s;
     }
     .cake-layer {
-      height: 30px;
+      height: 28px;
       border-radius: 8px 8px 0 0;
-      margin: 0 10px;
+      margin: 0 8px;
       background: #f8d5a8;
       border-bottom: 2px solid #e0b88a;
     }
-    .cake-layer:nth-child(2) { background: #e8c09a; height: 40px; margin: 0 6px; }
-    .cake-layer:nth-child(3) { background: #f0d0b0; height: 35px; margin: 0 2px; }
-    .cake-layer:last-child { border-radius: 10px 10px 0 0; background: #f5dcc0; height: 45px; margin: 0; }
-
+    .cake-layer:nth-child(3) { background: #e8c09a; height: 38px; margin: 0 4px; }
+    .cake-layer:nth-child(4) { background: #f0d0b0; height: 32px; margin: 0 1px; }
+    .cake-layer:nth-child(5) { border-radius: 0 0 10px 10px; background: #f5dcc0; height: 18px; margin: 0; }
     .cake-top {
       background: #f5dcc0;
-      height: 20px;
+      height: 18px;
       border-radius: 10px 10px 0 0;
       width: 100%;
       position: relative;
@@ -343,19 +450,19 @@
     /* Candles */
     .candles-container {
       display: flex;
-      gap: 8px;
+      gap: 5px;
       position: absolute;
-      top: -40px;
+      top: -38px;
       left: 50%;
       transform: translateX(-50%);
       flex-wrap: wrap;
       justify-content: center;
-      width: 90%;
+      width: 92%;
       pointer-events: none;
     }
     .candle {
-      width: 18px;
-      height: 35px;
+      width: 16px;
+      height: 32px;
       background: linear-gradient(180deg, #f0e6d0, #d4c4a8);
       border-radius: 4px 4px 2px 2px;
       position: relative;
@@ -366,21 +473,21 @@
     }
     .candle .flame {
       position: absolute;
-      top: -18px;
+      top: -16px;
       left: 50%;
       transform: translateX(-50%);
-      width: 12px;
-      height: 18px;
+      width: 10px;
+      height: 16px;
       background: radial-gradient(circle at 30% 20%, #ffdd44, #ff8800);
       border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-      animation: flicker 0.5s infinite alternate;
+      animation: flicker 0.4s infinite alternate;
       filter: blur(1px);
       box-shadow: 0 0 20px #ff8800, 0 0 40px #ff5500;
       transition: all 0.3s;
     }
     @keyframes flicker {
-      0% { transform: translateX(-50%) scale(1) rotate(-5deg); }
-      100% { transform: translateX(-50%) scale(1.1) rotate(5deg); }
+      0% { transform: translateX(-50%) scale(1) rotate(-4deg); }
+      100% { transform: translateX(-50%) scale(1.1) rotate(4deg); }
     }
     .candle .flame.extinct {
       opacity: 0;
@@ -388,28 +495,27 @@
       box-shadow: none;
     }
     .candle.extinct {
-      height: 25px;
-      opacity: 0.6;
+      height: 22px;
+      opacity: 0.5;
       background: #b0a088;
     }
     .candle.extinct .flame {
       display: none;
     }
-
-    /* cake eating progress */
     .cake-progress {
       position: absolute;
-      bottom: -25px;
+      bottom: -30px;
       left: 50%;
       transform: translateX(-50%);
       color: #fff;
       font-size: 0.8rem;
-      background: rgba(0,0,0,0.5);
-      padding: 2px 12px;
-      border-radius: 20px;
+      background: rgba(0,0,0,0.6);
+      padding: 3px 16px;
+      border-radius: 30px;
       backdrop-filter: blur(4px);
       white-space: nowrap;
       display: none;
+      border: 1px solid rgba(255,255,255,0.1);
     }
     .cake-progress.show {
       display: block;
@@ -421,17 +527,17 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) scale(0.9);
-      background: rgba(20, 15, 40, 0.92);
-      backdrop-filter: blur(12px);
+      background: rgba(20, 15, 40, 0.95);
+      backdrop-filter: blur(16px);
       border: 2px solid rgba(255, 215, 0, 0.6);
       border-radius: 30px;
       padding: 2rem 1.8rem;
-      max-width: 90%;
-      width: 380px;
+      max-width: 92%;
+      width: 400px;
       max-height: 80vh;
       overflow-y: auto;
       z-index: 200;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.9);
       color: #f0e8d0;
       display: none;
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -443,7 +549,7 @@
       transform: translate(-50%, -50%) scale(1);
     }
     .poem-popup .poem-title {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: #ffd700;
       margin-bottom: 1rem;
@@ -465,7 +571,7 @@
       background: #ffd700;
       border: none;
       color: #1a1a2e;
-      padding: 8px 28px;
+      padding: 10px 32px;
       border-radius: 40px;
       font-weight: 700;
       font-size: 1rem;
@@ -484,8 +590,8 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
       z-index: 300;
       display: none;
       justify-content: center;
@@ -497,12 +603,12 @@
     }
     .book {
       background: #f9f0e0;
-      border-radius: 20px;
+      border-radius: 24px;
       width: 92%;
-      max-width: 500px;
-      max-height: 85vh;
+      max-width: 520px;
+      max-height: 88vh;
       padding: 1.5rem 1.2rem 1.2rem;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.9);
       position: relative;
       overflow: hidden;
       display: flex;
@@ -532,13 +638,13 @@
       font-family: 'Georgia', serif;
       color: #3d2b1f;
       font-size: 0.95rem;
-      line-height: 1.6;
-      max-height: 60vh;
+      line-height: 1.7;
+      max-height: 58vh;
       scroll-behavior: smooth;
     }
     .book-body p {
       margin-bottom: 0.8rem;
-      text-indent: 1.5rem;
+      text-indent: 1.8rem;
     }
     .book-footer {
       display: flex;
@@ -574,73 +680,131 @@
       color: #8b6b4a !important;
       font-size: 1.2rem !important;
       padding: 0 12px !important;
+      box-shadow: none !important;
+    }
+
+    /* ----- MOON DECO ----- */
+    .moon-deco {
+      position: absolute;
+      top: 4%;
+      right: 6%;
+      font-size: 4.5rem;
+      filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.2));
+      opacity: 0.6;
+      z-index: 3;
+      pointer-events: none;
+      animation: moonGlow 4s infinite alternate;
+    }
+    @keyframes moonGlow {
+      0% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.1)); }
+      100% { filter: drop-shadow(0 0 60px rgba(255, 215, 0, 0.4)); }
     }
 
     /* ----- RESPONSIVE TWEAKS ----- */
     @media (max-width: 480px) {
-      .cake-base { width: 160px; }
-      .candle { width: 14px; height: 28px; }
-      .candle .flame { width: 10px; height: 14px; top: -14px; }
+      .cake-base { width: 150px; }
+      .candle { width: 13px; height: 26px; }
+      .candle .flame { width: 8px; height: 12px; top: -12px; }
       .dragon { width: 70px; height: 70px; }
-      .star-egg { width: 45px; height: 45px; }
-      .bush { width: 60px; height: 45px; }
-      .chest { width: 40px; height: 32px; }
-      .poem-popup { padding: 1.5rem 1rem; width: 92%; }
+      .star-egg { width: 40px; height: 40px; }
+      .bush-normal { width: 60px; height: 40px; }
+      .chest-object { width: 45px; height: 32px; }
+      .chest-object::before { font-size: 1.2rem; }
+      .poem-popup { padding: 1.5rem 1rem; width: 94%; }
       .book { padding: 1rem; }
+      .moon-deco { font-size: 3rem; }
+      .cloud-highlight { width: 100px; height: 35px; font-size: 1.2rem; }
     }
-
-    /* utility */
-    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-<!-- ========== WELCOME SCREEN ========== -->
+<!-- ========== WELCOME ========== -->
 <div id="welcome" class="screen">
   <div class="welcome-content">
     <div class="welcome-title">HAPPY BIRTHDAY<br>MY BELOVED<br>GIRLFRIEND</div>
     <div class="welcome-sub">🖱️ click anywhere to continue</div>
   </div>
-  <!-- Balloons (generated by JS) -->
   <div id="balloons-container"></div>
 </div>
 
-<!-- ========== GAME SCREEN ========== -->
+<!-- ========== GAME ========== -->
 <div id="game" class="screen hidden">
-  <!-- Stars background -->
+  <!-- Stars -->
   <div class="stars"></div>
 
-  <!-- Clouds (decorative) -->
-  <div class="cloud" style="width:120px;height:40px;top:8%;left:10%;"></div>
-  <div class="cloud" style="width:180px;height:50px;top:15%;right:15%;"></div>
-  <div class="cloud" style="width:100px;height:30px;bottom:20%;left:5%;"></div>
+  <!-- MOON (decorative) -->
+  <div class="moon-deco">🌙</div>
 
-  <!-- Highlighted Cloud (easter egg) -->
-  <div id="cloud-egg" class="cloud-highlight" style="width:130px;height:45px;top:5%;left:55%;">
-    <span style="position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);color:#ffd700;font-size:0.6rem;background:rgba(0,0,0,0.5);padding:0 8px;border-radius:10px;">✨ special cloud</span>
+  <!-- DECORATIVE CLOUDS (non-interactive) -->
+  <div class="cloud-deco" style="width:150px;height:50px;top:12%;left:5%;"></div>
+  <div class="cloud-deco" style="width:200px;height:60px;top:20%;right:18%;"></div>
+  <div class="cloud-deco" style="width:120px;height:40px;bottom:30%;left:12%;"></div>
+  <div class="cloud-deco" style="width:180px;height:55px;bottom:40%;right:5%;"></div>
+
+  <!-- DECORATIVE NORMAL STARS (non-clickable) -->
+  <div class="star-deco" style="top:10%;left:20%;"></div>
+  <div class="star-deco" style="top:25%;left:75%;animation-delay:1.5s;"></div>
+  <div class="star-deco" style="top:40%;left:10%;animation-delay:0.8s;"></div>
+  <div class="star-deco" style="top:5%;left:40%;animation-delay:2s;"></div>
+  <div class="star-deco" style="top:35%;left:85%;animation-delay:1.2s;"></div>
+
+  <!-- DECORATIVE TREES (non-interactive) -->
+  <div class="tree-deco" style="bottom:12%;left:3%;">
+    <div class="canopy"></div>
+    <div class="trunk"></div>
+  </div>
+  <div class="tree-deco small" style="bottom:16%;left:1%;">
+    <div class="canopy"></div>
+    <div class="trunk"></div>
+  </div>
+  <div class="tree-deco" style="bottom:14%;right:2%;">
+    <div class="canopy"></div>
+    <div class="trunk"></div>
+  </div>
+  <div class="tree-deco small" style="bottom:18%;right:0%;">
+    <div class="canopy"></div>
+    <div class="trunk"></div>
   </div>
 
-  <!-- Dragon -->
-  <div id="dragon-egg" class="egg-object" style="top:12%;left:5%;">
+  <!-- DECORATIVE ROCKS (non-interactive) -->
+  <div class="rock-deco" style="bottom:8%;left:15%;width:25px;height:15px;"></div>
+  <div class="rock-deco" style="bottom:10%;right:14%;width:30px;height:18px;"></div>
+  <div class="rock-deco" style="bottom:22%;left:6%;width:15px;height:10px;"></div>
+
+  <!-- DECORATIVE BUSHES (non-interactive) -->
+  <div style="position:absolute;bottom:8%;left:28%;width:45px;height:30px;background:radial-gradient(#2a6a2a,#0f2f0f);border-radius:50%;z-index:4;pointer-events:none;opacity:0.6;"></div>
+  <div style="position:absolute;bottom:12%;right:30%;width:55px;height:35px;background:radial-gradient(#2a6a2a,#0f2f0f);border-radius:50%;z-index:4;pointer-events:none;opacity:0.5;"></div>
+
+  <!-- ===== EASTER EGGS (interactable) ===== -->
+  
+  <!-- 1. DRAGON -->
+  <div id="dragon-egg" class="egg-object" style="top:8%;left:4%;">
     <div class="dragon"></div>
     <div class="label">🐉 dragon</div>
   </div>
 
-  <!-- Star -->
-  <div id="star-egg" class="egg-object" style="top:20%;right:6%;">
+  <!-- 2. STAR (clickable) -->
+  <div id="star-egg" class="egg-object" style="top:18%;right:8%;">
     <div class="star-egg"></div>
     <div class="label">⭐ star</div>
   </div>
 
-  <!-- Bush & Chest -->
-  <div id="bush-egg" class="egg-object" style="bottom:22%;left:8%;">
+  <!-- 3. BUSH & CHEST (FIXED) -->
+  <div id="bush-egg" class="egg-object" style="bottom:22%;left:12%;">
     <div id="bush-container">
-      <div class="bush"></div>
+      <div class="bush-normal" id="bush-visual"></div>
     </div>
     <div class="label">🌿 bush</div>
   </div>
 
-  <!-- CAKE -->
+  <!-- 4. HIGHLIGHTED CLOUD (FIXED & VISIBLE) -->
+  <div id="cloud-egg" class="cloud-highlight" style="width:140px;height:50px;top:6%;left:48%;">
+    ☁️✨
+    <span class="cloud-label">✨ special cloud</span>
+  </div>
+
+  <!-- ===== CAKE ===== -->
   <div id="cake-container">
     <div class="cake-base" id="cake-base">
       <div class="cake-top"></div>
@@ -648,19 +812,19 @@
       <div class="cake-layer"></div>
       <div class="cake-layer"></div>
       <div class="cake-layer"></div>
-      <div class="cake-layer" style="border-radius:0 0 10px 10px;height:20px;"></div>
+      <div class="cake-layer"></div>
     </div>
     <div class="cake-progress" id="cake-progress">🍰 eat cake (0/10)</div>
   </div>
 
-  <!-- Poem Popup (reused for all easter eggs) -->
+  <!-- POEM POPUP -->
   <div id="poem-popup" class="poem-popup">
     <div class="poem-title" id="poem-title">✨ Poem</div>
     <div class="poem-text" id="poem-text"></div>
     <button class="close-poem" id="close-poem">💖 close</button>
   </div>
 
-  <!-- Book Modal (Diary) -->
+  <!-- BOOK MODAL -->
   <div id="book-modal" class="book-modal">
     <div class="book">
       <div class="book-header">
@@ -669,7 +833,7 @@
       </div>
       <div class="book-body" id="book-body"></div>
       <div class="book-footer">
-        <button id="book-prev" disabled>◀ previous</button>
+        <button id="book-prev" disabled>◀ prev</button>
         <button id="book-close" class="book-close">✕ close</button>
         <button id="book-next">next ▶</button>
       </div>
@@ -679,10 +843,8 @@
 
 <script>
   // ====================================================================
-  //  DATA
+  //  DATA (Poems & Diary)
   // ====================================================================
-
-  // Poems for easter eggs (keys: dragon, star, bush, cloud)
   const poems = {
     dragon: `"POROOOOO PLSSS FOR THE SAKE OF US
   You can wait to look after your huzz
@@ -760,7 +922,6 @@
   Tomar shathe kotha bole nijer hashimukhe chaya makhte"`
   };
 
-  // Diary text (the whole essay)
   const diaryText = `Ashole na bolar moto onek kichui ase, but abar kichui nei. I feel like ami joto iccha toto bolte parbo but i don't know whether it'll be enough or not. Ami bujhtesina kibhabe boli im at a loss for words shona. You mean the world to me. You have lightened my cave with the love of yours. Allah protita manusher life e ekta torch bearer pathay, je oi manusher good fortune er jonno always help kore. He/she's really different than your family. Not blood related. It could be a friend or an acquaintance of yours but thanks to that person, tomar life e kokhono kichu niue ahamori ekta tension kora lagena. Jano amar life e oi manushta hoiso tumi. Tumi ashar por i feel like amar koshto onek beshi kome gese. Ar shobcheye boro irony ta dekhso? Allah tomake amar kache tokhoni pathaise jokhn i was really struggling. Jano Cr e je amar thakar o kotha na? I was there simply because im a good friend like amar uporer post e jei fnds ase bakider theke ami e eder shobcheye close and onek beshi time spend krsi, er jonnoi mainly dise amake😭 but ki oshesh rohmote, giye ekta baddie niye ashsi. Sorry not a baddie. A diva. People always seek for perfection, in search of perfection, they wander around, they try their hardest, they go through all ghe sleepless nights and yet they fail to achieve it. But thankfully Allah r rohmote, i have found it. The peak perfection. A gift. A blessing. Najifa. My beloved girlfriend. My beloved wife. My well wisher. My benefactor.  Thank you so much
   Btw tomake ki ekta kaj korte bolte pari? Birthday r din bola lagtese im sorry. But ekta kaj korona babu. Uncle aunty ke ekshathe dara koray 2jon ke hug koro, kore oderke ekta Thank you janao for what they've done for you.
 
@@ -785,23 +946,14 @@
   //  STATE
   // ====================================================================
   const state = {
-    candles: 18,
     candlesLit: 18,
     cakeClicks: 0,
     cakeEatEnabled: false,
     treasureFound: false,
     bookPages: [],
     currentPage: 0,
-    // easter eggs click counts (for multi-tap)
-    eggClicks: {
-      dragon: 0,
-      star: 0,
-      bush: 0,
-      cloud: 0
-    },
-    eggStates: {
-      bush: 'initial', // initial, split, chest, open
-    }
+    eggClicks: { dragon: 0, star: 0, bush: 0, cloud: 0 },
+    bushState: 'normal' // normal, split, chest, open
   };
 
   // ====================================================================
@@ -823,13 +975,14 @@
   const bookPrev = document.getElementById('book-prev');
   const bookNext = document.getElementById('book-next');
   const bookClose = document.getElementById('book-close');
+  const bushContainer = document.getElementById('bush-container');
+  const bushVisual = document.getElementById('bush-visual');
 
   // ====================================================================
-  //  WELCOME SCREEN
+  //  WELCOME
   // ====================================================================
-  // balloons
   const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6bff', '#ff9f43'];
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 22; i++) {
     const b = document.createElement('div');
     b.className = 'balloon';
     const size = 40 + Math.random() * 50;
@@ -844,11 +997,9 @@
     balloonsContainer.appendChild(b);
   }
 
-  // click anywhere to close welcome
   welcome.addEventListener('click', () => {
     welcome.classList.add('hidden');
     game.classList.remove('hidden');
-    // start game
     initGame();
   });
 
@@ -878,7 +1029,6 @@
       });
       candlesContainer.appendChild(candle);
     }
-    state.candles = count;
     state.candlesLit = count;
   }
 
@@ -887,16 +1037,12 @@
     candle.classList.add('extinct');
     candle.querySelector('.flame').classList.add('extinct');
     state.candlesLit--;
-    // play blow sound (simple oscillator)
     playBlowSound();
-    // particle effect (tiny sparkles)
     createSparkles(candle);
     if (state.candlesLit === 0) {
-      // all blown – enable cake eating
       state.cakeEatEnabled = true;
       cakeProgress.classList.add('show');
       cakeProgress.textContent = '🎂 now eat the cake! (tap)';
-      // show a small celebration
       setTimeout(() => {
         showPoem('🎉', 'You blew all the candles! Now eat the cake to find your treasure 🍰');
       }, 500);
@@ -913,7 +1059,7 @@
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(600, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.15);
-      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.15);
@@ -924,22 +1070,13 @@
     const rect = el.getBoundingClientRect();
     const cx = rect.left + rect.width/2;
     const cy = rect.top + rect.height/2;
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 14; i++) {
       const spark = document.createElement('div');
-      spark.style.position = 'fixed';
-      spark.style.width = '6px';
-      spark.style.height = '6px';
-      spark.style.background = `hsl(${Math.random() * 60 + 20}, 100%, 70%)`;
-      spark.style.borderRadius = '50%';
-      spark.style.pointerEvents = 'none';
-      spark.style.left = cx + 'px';
-      spark.style.top = cy + 'px';
-      spark.style.zIndex = '999';
+      spark.style.cssText = `position:fixed;width:6px;height:6px;background:hsl(${Math.random()*60+20},100%,70%);border-radius:50%;pointer-events:none;left:${cx}px;top:${cy}px;z-index:999;transition:all 0.6s ease-out;`;
       const angle = Math.random() * 2 * Math.PI;
-      const dist = 40 + Math.random() * 60;
+      const dist = 40 + Math.random() * 70;
       const dx = Math.cos(angle) * dist;
       const dy = Math.sin(angle) * dist - 30;
-      spark.style.transition = 'all 0.6s ease-out';
       document.body.appendChild(spark);
       requestAnimationFrame(() => {
         spark.style.transform = `translate(${dx}px, ${dy}px) scale(0)`;
@@ -949,29 +1086,24 @@
     }
   }
 
-  // ---- CAKE EATING ----
+  // ---- CAKE ----
   function setupCake() {
     cakeBase.addEventListener('click', (e) => {
-      if (!state.cakeEatEnabled) return;
-      if (state.treasureFound) return;
+      if (!state.cakeEatEnabled || state.treasureFound) return;
       state.cakeClicks++;
       const max = 10;
       const progress = Math.min(state.cakeClicks, max);
       cakeProgress.textContent = `🍰 eating... (${progress}/${max})`;
-      // visual feedback: shake
-      cakeBase.style.transform = 'scale(0.95)';
+      cakeBase.style.transform = 'scale(0.94)';
       setTimeout(() => cakeBase.style.transform = '', 150);
       if (progress === 9) {
-        // reveal treasure message
         showPoem('🎁', 'You\'ve found a hidden treasure that was in the cake! 📖');
-        // after closing, show book
         closePoemBtn.onclick = () => {
           hidePoem();
           showBook();
         };
         state.treasureFound = true;
         cakeProgress.textContent = '🎉 treasure found! open the diary!';
-        // also we could auto-show book after a delay
       } else if (progress >= max) {
         cakeProgress.textContent = '🍰 cake finished!';
         state.cakeEatEnabled = false;
@@ -979,52 +1111,56 @@
     });
   }
 
-  // ---- EASTER EGGS ----
+  // ---- EASTER EGGS (FIXED BUSH + VISIBLE CLOUD) ----
   function setupEasterEggs() {
     // Dragon
-    const dragon = document.getElementById('dragon-egg');
-    dragon.addEventListener('click', (e) => {
+    document.getElementById('dragon-egg').addEventListener('click', (e) => {
       e.stopPropagation();
       handleEggClick('dragon', '🐉 Dragon\'s Poem', poems.dragon);
     });
 
     // Star
-    const star = document.getElementById('star-egg');
-    star.addEventListener('click', (e) => {
+    document.getElementById('star-egg').addEventListener('click', (e) => {
       e.stopPropagation();
       handleEggClick('star', '⭐ Star\'s Poem', poems.star);
     });
 
-    // Bush
-    const bushContainer = document.getElementById('bush-container');
-    let bushClickCount = 0;
+    // Cloud (fixed, visible, and glowing)
+    document.getElementById('cloud-egg').addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleEggClick('cloud', '☁️ Cloud\'s Secret', poems.cloud);
+    });
+
+    // ---- BUSH (GLITCH FIXED) ----
     bushContainer.addEventListener('click', (e) => {
       e.stopPropagation();
-      const stateBush = state.eggStates.bush;
-      if (stateBush === 'initial') {
-        // split bush
+      const currentState = state.bushState;
+      
+      if (currentState === 'normal') {
+        // Split the bush
         bushContainer.innerHTML = `
           <div class="bush-split">
             <div class="bush-half"></div>
             <div class="bush-half"></div>
           </div>
         `;
-        state.eggStates.bush = 'split';
-        // show chest after a moment
+        state.bushState = 'split';
+        
+        // After a moment, show the chest
         setTimeout(() => {
-          const chestDiv = document.createElement('div');
-          chestDiv.className = 'chest';
-          chestDiv.id = 'chest-object';
-          bushContainer.appendChild(chestDiv);
-          state.eggStates.bush = 'chest';
-          // add click on chest
-          chestDiv.addEventListener('click', (ev) => {
+          const chest = document.createElement('div');
+          chest.className = 'chest-object';
+          chest.id = 'chest-object';
+          bushContainer.appendChild(chest);
+          state.bushState = 'chest';
+          
+          // Chest click handler
+          chest.addEventListener('click', (ev) => {
             ev.stopPropagation();
-            if (state.eggStates.bush === 'chest') {
-              // first click opens chest (animation)
-              chestDiv.classList.add('chest-open');
-              state.eggStates.bush = 'open';
-              // show poem after a slight delay (treasure)
+            if (state.bushState === 'chest') {
+              chest.classList.add('open');
+              state.bushState = 'open';
+              // Show poem
               setTimeout(() => {
                 handleEggClick('bush', '🌿 Bush\'s Treasure', poems.bush);
               }, 400);
@@ -1033,32 +1169,20 @@
         }, 500);
       }
     });
-
-    // Cloud
-    const cloudEgg = document.getElementById('cloud-egg');
-    cloudEgg.addEventListener('click', (e) => {
-      e.stopPropagation();
-      handleEggClick('cloud', '☁️ Cloud\'s Secret', poems.cloud);
-    });
   }
 
-  // Generic egg click handler (with multi-tap counter)
+  // Generic egg click with "?" on first tap
   function handleEggClick(eggKey, title, poem) {
-    // increment click count for that egg
     if (!state.eggClicks[eggKey]) state.eggClicks[eggKey] = 0;
     state.eggClicks[eggKey]++;
 
-    // if first click, show "?" dialogue (we'll show a small popup)
     if (state.eggClicks[eggKey] === 1) {
-      // show a "?" dialogue box (we'll reuse poem popup with minimal styling)
       showPoem('❓', 'Hmm... what could this be? Tap again to find out!');
       return;
     }
 
-    // on second click (or more), show the actual poem
     if (state.eggClicks[eggKey] >= 2) {
       showPoem(title, poem);
-      // reset counter after showing poem so it doesn't repeat immediately
       state.eggClicks[eggKey] = 0;
     }
   }
@@ -1068,9 +1192,7 @@
     poemTitle.textContent = title;
     poemText.textContent = text;
     poemPopup.classList.add('show');
-    // reset close handler to just hide
     closePoemBtn.onclick = hidePoem;
-    // also allow clicking outside? not needed
   }
 
   function hidePoem() {
@@ -1079,9 +1201,7 @@
 
   // ---- BOOK (DIARY) ----
   function setupBook() {
-    // Split diary text into paragraphs (double newline)
     const paragraphs = diaryText.split(/\n\s*\n/).filter(p => p.trim().length > 0);
-    // Group paragraphs into pages (2 paragraphs per page to keep it readable)
     const pages = [];
     for (let i = 0; i < paragraphs.length; i += 2) {
       pages.push(paragraphs.slice(i, i+2).join('\n\n'));
@@ -1093,22 +1213,19 @@
       if (state.currentPage > 0) {
         state.currentPage--;
         renderBookPage();
+        playPageSound();
       }
     });
     bookNext.addEventListener('click', () => {
       if (state.currentPage < state.bookPages.length - 1) {
         state.currentPage++;
         renderBookPage();
+        playPageSound();
       }
     });
-    bookClose.addEventListener('click', () => {
-      bookModal.classList.remove('show');
-    });
-    // also close on backdrop click (click on modal background)
+    bookClose.addEventListener('click', () => bookModal.classList.remove('show'));
     bookModal.addEventListener('click', (e) => {
-      if (e.target === bookModal) {
-        bookModal.classList.remove('show');
-      }
+      if (e.target === bookModal) bookModal.classList.remove('show');
     });
   }
 
@@ -1116,23 +1233,18 @@
     bookModal.classList.add('show');
     state.currentPage = 0;
     renderBookPage();
-    // play page rustle sound
     playPageSound();
   }
 
   function renderBookPage() {
     const pages = state.bookPages;
-    const idx = state.currentPage;
-    if (pages.length === 0) return;
-    const content = pages[idx] || '';
-    // split into lines and wrap in <p>
+    if (!pages.length) return;
+    const content = pages[state.currentPage] || '';
     const lines = content.split('\n').filter(line => line.trim() !== '');
-    let html = lines.map(line => `<p>${line.trim()}</p>`).join('');
-    bookBody.innerHTML = html;
-    pageNum.textContent = `${idx+1} / ${pages.length}`;
-    bookPrev.disabled = (idx === 0);
-    bookNext.disabled = (idx === pages.length - 1);
-    // scroll to top
+    bookBody.innerHTML = lines.map(line => `<p>${line.trim()}</p>`).join('');
+    pageNum.textContent = `${state.currentPage+1} / ${pages.length}`;
+    bookPrev.disabled = (state.currentPage === 0);
+    bookNext.disabled = (state.currentPage === pages.length - 1);
     bookBody.scrollTop = 0;
   }
 
@@ -1144,18 +1256,16 @@
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(300, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.08);
-      gain.gain.setValueAtTime(0.05, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+      osc.frequency.setValueAtTime(350, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
       osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.08);
+      osc.stop(ctx.currentTime + 0.1);
     } catch(e) {}
   }
 
-  // ====================================================================
-  //  KEYBOARD SHORTCUTS (for testing)
-  // ====================================================================
+  // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       hidePoem();
