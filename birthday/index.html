@@ -127,7 +127,6 @@
       overflow: hidden;
       position: relative;
     }
-    /* Semi-transparent overlay to keep elements readable */
     #game::before {
       content: '';
       position: absolute;
@@ -135,11 +134,10 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.15);
+      background: rgba(0,0,0,0.1);
       pointer-events: none;
       z-index: 1;
     }
-    /* All interactive elements go above the overlay */
     .game-content {
       position: relative;
       z-index: 10;
@@ -147,14 +145,14 @@
       height: 100%;
     }
 
-    /* ----- GROUND (decorative overlay) ----- */
+    /* ----- GROUND ----- */
     .ground-overlay {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       height: 20%;
-      background: linear-gradient(0deg, rgba(20,40,20,0.4) 0%, transparent 100%);
+      background: linear-gradient(0deg, rgba(20,40,20,0.35) 0%, transparent 100%);
       pointer-events: none;
       z-index: 3;
     }
@@ -186,31 +184,48 @@
       100% { transform: translateX(80px) scale(1.05); }
     }
 
-    /* ----- SPECIAL CLOUD (glow, no label, subtle) ----- */
-    .cloud-glow {
+    /* ----- SPECIAL CLOUD (normal looking, no outline, no glow) ----- */
+    .cloud-normal {
       position: absolute;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.09);
       border-radius: 120px;
-      border: 1px solid rgba(255, 215, 0, 0.2);
-      box-shadow: 0 0 40px rgba(255, 215, 0, 0.12), inset 0 0 40px rgba(255, 215, 0, 0.02);
+      filter: blur(3px);
       cursor: pointer;
       pointer-events: auto;
-      animation: cloudGlowPulse 4s infinite alternate ease-in-out;
-      backdrop-filter: blur(1px);
       z-index: 20;
-      transition: all 0.3s;
+      transition: transform 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.6rem;
-      color: rgba(255, 215, 0, 0.1);
+      color: rgba(255,255,255,0.05);
+      animation: cloudFloat 6s infinite alternate ease-in-out;
     }
-    .cloud-glow:active {
+    .cloud-normal:active {
       transform: scale(0.94);
     }
-    @keyframes cloudGlowPulse {
-      0% { box-shadow: 0 0 20px rgba(255,215,0,0.06); border-color: rgba(255,215,0,0.1); transform: scale(1) translateY(0px); }
-      100% { box-shadow: 0 0 60px rgba(255,215,0,0.25); border-color: rgba(255,215,0,0.4); transform: scale(1.02) translateY(-4px); }
+    .cloud-normal .cloud-label {
+      position: absolute;
+      bottom: -26px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.4);
+      color: rgba(255,255,255,0.4);
+      font-size: 0.5rem;
+      padding: 1px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      backdrop-filter: blur(2px);
+    }
+    .cloud-normal:hover .cloud-label {
+      opacity: 1;
+    }
+    @keyframes cloudFloat {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-8px); }
     }
 
     /* ----- EASTER EGG OBJECTS ----- */
@@ -229,9 +244,9 @@
       bottom: -24px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.4);
       color: #fff;
-      font-size: 0.55rem;
+      font-size: 0.5rem;
       padding: 2px 10px;
       border-radius: 12px;
       white-space: nowrap;
@@ -244,27 +259,28 @@
       opacity: 1;
     }
 
-    /* DRAGON (interactive) — uses the same image as background, but we make a clickable element with that image */
+    /* ----- DRAGON (using new image) ----- */
     .dragon-interact {
-      width: 120px;
-      height: 120px;
-      background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXdifbPUGvj4Q7xCBsWnxReTpC2t32U-7w6sQOu6Z07A&s=10') center/contain no-repeat;
-      filter: drop-shadow(0 0 20px rgba(255,200,100,0.2));
+      width: 100px;
+      height: 150px;
+      background: url('https://media.discordapp.net/attachments/1342752359658422323/1519784775550763028/image.png?ex=6a3ed15e&is=6a3d7fde&hm=f28efe0fec8b7bc1eb78a7438b08a8ca67bf6303c209c517135dd86b5ca815e6&=&format=webp&quality=lossless&width=135&height=203') center/contain no-repeat;
+      filter: drop-shadow(0 0 20px rgba(255,200,100,0.15));
       animation: dragonFloat 3s infinite alternate ease-in-out;
     }
     @keyframes dragonFloat {
-      0% { transform: translateY(0px) rotate(-2deg); }
-      100% { transform: translateY(-12px) rotate(2deg); }
+      0% { transform: translateY(0px) rotate(-1deg); }
+      100% { transform: translateY(-12px) rotate(1deg); }
     }
 
-    /* STAR (clickable) */
+    /* ----- STAR (clickable, hidden in sky behind cloud) ----- */
     .star-egg {
-      width: 50px;
-      height: 50px;
+      width: 45px;
+      height: 45px;
       background: #ffd700;
       clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-      animation: starSpin 6s linear infinite;
-      filter: drop-shadow(0 0 30px #ffd700);
+      animation: starSpin 8s linear infinite;
+      filter: drop-shadow(0 0 25px #ffd700);
+      opacity: 0.9;
     }
     @keyframes starSpin {
       0% { transform: rotate(0deg) scale(1); }
@@ -288,7 +304,7 @@
       100% { opacity: 0.5; transform: scale(1.1); }
     }
 
-    /* ----- DECORATIVE TREES & BUSHES (non-interactive) ----- */
+    /* ----- DECORATIVE TREES & BUSHES ----- */
     .tree-deco {
       position: absolute;
       pointer-events: none;
@@ -330,12 +346,12 @@
       box-shadow: inset -3px -3px 8px rgba(0,0,0,0.3);
     }
 
-    /* ----- FLOATING ELEMENTS (magical) ----- */
+    /* ----- FLOATING ELEMENTS ----- */
     .float-tree {
       position: absolute;
       pointer-events: none;
       z-index: 3;
-      opacity: 0.3;
+      opacity: 0.25;
       animation: floatTree 8s infinite alternate ease-in-out;
     }
     .float-tree .ft-canopy {
@@ -360,7 +376,7 @@
       position: absolute;
       pointer-events: none;
       z-index: 3;
-      opacity: 0.2;
+      opacity: 0.18;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, rgba(50,130,50,0.2), rgba(10,40,10,0.1));
       animation: floatBush 6s infinite alternate ease-in-out;
@@ -393,7 +409,7 @@
       box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 -6px 15px rgba(0,30,0,0.3);
       transition: all 0.3s;
       position: relative;
-      border: 1px solid rgba(100,200,100,0.1);
+      border: 1px solid rgba(100,200,100,0.08);
     }
     .bush-interact::after {
       content: '🌿';
@@ -402,7 +418,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 1.6rem;
-      opacity: 0.3;
+      opacity: 0.25;
       pointer-events: none;
     }
     .bush-interact .bush-shake {
@@ -416,7 +432,7 @@
     }
 
     /* ================================================================
-       🎂  CAKE — upgraded, colorful, beautiful
+       🎂  CAKE — using image
        ================================================================ */
     #cake-container {
       position: absolute;
@@ -437,7 +453,6 @@
       align-items: center;
     }
 
-    /* Candles */
     .candles-container {
       display: flex;
       gap: 4px;
@@ -447,13 +462,13 @@
       transform: translateX(-50%);
       flex-wrap: wrap;
       justify-content: center;
-      width: 90%;
+      width: 85%;
       pointer-events: none;
       z-index: 5;
     }
     .candle {
-      width: 14px;
-      height: 28px;
+      width: 13px;
+      height: 26px;
       background: linear-gradient(180deg, #f5e8d0, #d4c4a8);
       border-radius: 3px 3px 2px 2px;
       position: relative;
@@ -465,11 +480,11 @@
     }
     .candle .flame {
       position: absolute;
-      top: -13px;
+      top: -12px;
       left: 50%;
       transform: translateX(-50%);
       width: 8px;
-      height: 12px;
+      height: 11px;
       background: radial-gradient(circle at 30% 20%, #ffdd44, #ff8800);
       border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
       animation: flicker 0.4s infinite alternate;
@@ -487,7 +502,7 @@
       box-shadow: none;
     }
     .candle.extinct {
-      height: 18px;
+      height: 17px;
       opacity: 0.4;
       background: #b0a088;
     }
@@ -495,147 +510,21 @@
       display: none;
     }
 
-    /* Cake base */
-    .cake-base {
-      width: 190px;
-      background: transparent;
-      border-radius: 12px 12px 6px 6px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-      position: relative;
-      transition: transform 0.15s;
-      overflow: visible;
-      padding: 0 10px;
-    }
-
-    /* Cake layers — colorful! */
-    .cake-layer {
-      height: 28px;
-      border-radius: 10px 10px 4px 4px;
-      margin: 0 4px;
-      border-bottom: 2px solid rgba(0,0,0,0.08);
-      position: relative;
-      box-shadow: inset 0 4px 12px rgba(255,255,255,0.2), inset 0 -4px 8px rgba(0,0,0,0.1);
-    }
-    /* Layer 1 (bottom) — chocolate */
-    .cake-layer:nth-child(3) {
-      background: linear-gradient(180deg, #8B5E3C, #6B3A2A);
-      height: 30px;
-      margin: 0 2px;
-      border-radius: 6px 6px 4px 4px;
-      border-bottom: 3px solid #4a2a1a;
-    }
-    /* Layer 2 — strawberry pink */
-    .cake-layer:nth-child(4) {
-      background: linear-gradient(180deg, #f8a5b0, #e8798a);
-      height: 26px;
-      margin: 0 6px;
-      border-radius: 8px 8px 4px 4px;
-      border-bottom: 3px solid #d46a7a;
-      box-shadow: inset 0 4px 12px rgba(255,200,200,0.3), inset 0 -4px 8px rgba(0,0,0,0.08);
-    }
-    /* Layer 3 — vanilla/cream */
-    .cake-layer:nth-child(5) {
-      background: linear-gradient(180deg, #f5e6c8, #e8d0b0);
-      height: 24px;
-      margin: 0 10px;
-      border-radius: 10px 10px 4px 4px;
-      border-bottom: 3px solid #d4b88a;
-      box-shadow: inset 0 4px 12px rgba(255,240,210,0.4), inset 0 -4px 8px rgba(0,0,0,0.06);
-    }
-    /* Layer 4 (top) — blueberry/purple */
-    .cake-layer:nth-child(6) {
-      background: linear-gradient(180deg, #b8a0d8, #8a6aaa);
-      height: 22px;
-      margin: 0 14px;
-      border-radius: 12px 12px 4px 4px;
-      border-bottom: 3px solid #6a4a8a;
-      box-shadow: inset 0 4px 12px rgba(200,180,240,0.3), inset 0 -4px 8px rgba(0,0,0,0.08);
-    }
-    /* Top frosting */
-    .cake-top-frosting {
-      background: linear-gradient(135deg, #f8e8d8, #f0dcc8);
-      height: 14px;
-      border-radius: 12px 12px 0 0;
-      width: calc(100% - 6px);
-      margin: 0 3px;
-      position: relative;
-      box-shadow: inset 0 4px 12px rgba(255,240,220,0.5);
-      border-bottom: 2px solid rgba(200,180,160,0.2);
-      z-index: 2;
-    }
-    /* Frosting drips */
-    .frosting-drip {
-      position: absolute;
-      bottom: -6px;
-      border-radius: 0 0 8px 8px;
-      background: #f0dcc8;
-      height: 8px;
-      width: 6px;
-      z-index: 1;
-    }
-
-    /* Sprinkles */
-    .sprinkles {
-      position: absolute;
-      top: 2px;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 3;
-      overflow: hidden;
+    /* Cake image */
+    .cake-image {
+      width: 180px;
+      height: auto;
+      aspect-ratio: 1/1;
+      object-fit: contain;
       border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      transition: transform 0.15s;
+      display: block;
+      background: transparent;
+      image-rendering: auto;
     }
-    .sprinkle {
-      position: absolute;
-      width: 4px;
-      height: 2px;
-      border-radius: 2px;
-      transform: rotate(var(--rot, 0deg));
-      opacity: 0.5;
-    }
-
-    /* Cake pearls */
-    .cake-pearls {
-      position: absolute;
-      bottom: -6px;
-      left: 0;
-      width: 100%;
-      height: 6px;
-      display: flex;
-      justify-content: space-around;
-      padding: 0 10px;
-      pointer-events: none;
-      z-index: 4;
-    }
-    .cake-pearl {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 40% 30%, #f8e8d8, #c8b8a8);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    }
-
-    /* "Happy Birthday" text */
-    .cake-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-family: 'Georgia', serif;
-      font-weight: 700;
-      font-size: 0.65rem;
-      color: rgba(255, 255, 255, 0.5);
-      text-shadow: 0 1px 4px rgba(0,0,0,0.3);
-      letter-spacing: 2px;
-      white-space: nowrap;
-      pointer-events: none;
-      z-index: 2;
-      background: rgba(0,0,0,0.15);
-      padding: 2px 12px;
-      border-radius: 20px;
-      backdrop-filter: blur(2px);
-      border: 1px solid rgba(255,255,255,0.05);
+    .cake-image:active {
+      transform: scale(0.96);
     }
 
     .cake-progress {
@@ -686,7 +575,7 @@
       transform: translate(-50%, -50%) scale(1);
     }
     .poem-popup .poem-title {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 700;
       color: #ffd700;
       margin-bottom: 1rem;
@@ -694,7 +583,7 @@
       padding-bottom: 0.5rem;
     }
     .poem-popup .poem-text {
-      font-size: 1rem;
+      font-size: 0.95rem;
       line-height: 1.7;
       white-space: pre-wrap;
       font-family: 'Georgia', serif;
@@ -720,7 +609,7 @@
       transform: scale(0.94);
     }
 
-    /* ----- BOOK MODAL (Diary) ----- */
+    /* ----- BOOK MODAL ----- */
     .book-modal {
       position: absolute;
       top: 0;
@@ -822,30 +711,23 @@
 
     /* ----- RESPONSIVE ----- */
     @media (max-width: 480px) {
-      .cake-base { width: 150px; }
-      .cake-layer { height: 22px; }
-      .cake-layer:nth-child(3) { height: 24px; }
-      .cake-layer:nth-child(4) { height: 20px; }
-      .cake-layer:nth-child(5) { height: 18px; }
-      .cake-layer:nth-child(6) { height: 16px; }
-      .cake-top-frosting { height: 10px; }
+      .cake-image { width: 140px; }
       .candle { width: 11px; height: 22px; }
-      .candle .flame { width: 7px; height: 10px; top: -10px; }
+      .candle .flame { width: 7px; height: 9px; top: -10px; }
       .candles-container { gap: 3px; top: -26px; }
-      .cake-text { font-size: 0.5rem; padding: 1px 8px; }
-      .star-egg { width: 38px; height: 38px; }
+      .star-egg { width: 35px; height: 35px; }
       .bush-interact { width: 60px; height: 40px; }
       .bush-interact::after { font-size: 1.2rem; }
-      .dragon-interact { width: 80px; height: 80px; }
+      .dragon-interact { width: 70px; height: 105px; }
       .poem-popup { padding: 1.5rem 1rem; width: 94%; }
       .book { padding: 1rem; }
-      .cloud-glow { width: 100px !important; height: 35px !important; font-size: 1.2rem; }
+      .cloud-normal { width: 100px !important; height: 35px !important; font-size: 1.2rem; }
       .ground-overlay { height: 15%; }
     }
     @media (max-width: 380px) {
-      .cake-base { width: 130px; }
+      .cake-image { width: 110px; }
       .candle { width: 9px; height: 18px; }
-      .candle .flame { width: 6px; height: 8px; top: -8px; }
+      .candle .flame { width: 6px; height: 7px; top: -8px; }
       .candles-container { gap: 2px; top: -22px; }
     }
   </style>
@@ -864,99 +746,74 @@
 <!-- ===== GAME ===== -->
 <div id="game" class="screen hidden">
   <div class="game-content">
-    <!-- Ground overlay -->
+    <!-- Ground -->
     <div class="ground-overlay" id="groundOverlay"></div>
 
-    <!-- Decorative clouds (non-interactive) -->
+    <!-- Decorative clouds -->
     <div class="cloud-deco" style="width:160px;height:50px;top:10%;left:3%;"></div>
     <div class="cloud-deco" style="width:220px;height:60px;top:18%;right:12%;"></div>
     <div class="cloud-deco" style="width:130px;height:40px;bottom:28%;left:8%;"></div>
     <div class="cloud-deco" style="width:190px;height:55px;bottom:35%;right:4%;"></div>
 
-    <!-- SPECIAL CLOUD (glow, subtle) -->
-    <div id="cloud-egg" class="cloud-glow" style="width:140px;height:48px;top:5%;left:42%;">
+    <!-- SPECIAL CLOUD — normal looking, no outline/glow -->
+    <div id="cloud-egg" class="cloud-normal" style="width:150px;height:50px;top:6%;left:38%;">
       ☁️
+      <span class="cloud-label">✨ special</span>
     </div>
 
-    <!-- Decorative stars (non-clickable) -->
+    <!-- CLOUD THAT HIDES THE STAR (decorative, non-interactive) -->
+    <div class="cloud-deco" style="width:110px;height:40px;top:4%;left:52%;"></div>
+
+    <!-- Decorative stars -->
     <div class="star-deco" style="top:8%;left:22%;"></div>
     <div class="star-deco" style="top:20%;left:78%;animation-delay:1.5s;"></div>
     <div class="star-deco" style="top:35%;left:12%;animation-delay:0.8s;"></div>
-    <div class="star-deco" style="top:4%;left:38%;animation-delay:2s;"></div>
     <div class="star-deco" style="top:30%;right:10%;animation-delay:1.2s;"></div>
-    <div class="star-deco" style="top:45%;left:25%;animation-delay:0.4s;"></div>
     <div class="star-deco" style="top:12%;right:25%;animation-delay:1.8s;"></div>
 
-    <!-- Decorative trees (ground) -->
-    <div class="tree-deco" style="bottom:10%;left:2%;">
-      <div class="canopy"></div>
-      <div class="trunk"></div>
-    </div>
-    <div class="tree-deco small" style="bottom:14%;left:0%;">
-      <div class="canopy"></div>
-      <div class="trunk"></div>
-    </div>
-    <div class="tree-deco" style="bottom:8%;right:1%;">
-      <div class="canopy"></div>
-      <div class="trunk"></div>
-    </div>
-    <div class="tree-deco small" style="bottom:12%;right:-1%;">
-      <div class="canopy"></div>
-      <div class="trunk"></div>
-    </div>
-    <div class="tree-deco" style="bottom:16%;left:6%;">
-      <div class="canopy"></div>
-      <div class="trunk"></div>
-    </div>
-    <div class="tree-deco small" style="bottom:18%;right:6%;">
-      <div class="canopy"></div>
-      <div class="trunk"></div>
-    </div>
+    <!-- Decorative trees -->
+    <div class="tree-deco" style="bottom:10%;left:2%;"><div class="canopy"></div><div class="trunk"></div></div>
+    <div class="tree-deco small" style="bottom:14%;left:0%;"><div class="canopy"></div><div class="trunk"></div></div>
+    <div class="tree-deco" style="bottom:8%;right:1%;"><div class="canopy"></div><div class="trunk"></div></div>
+    <div class="tree-deco small" style="bottom:12%;right:-1%;"><div class="canopy"></div><div class="trunk"></div></div>
+    <div class="tree-deco" style="bottom:16%;left:6%;"><div class="canopy"></div><div class="trunk"></div></div>
+    <div class="tree-deco small" style="bottom:18%;right:6%;"><div class="canopy"></div><div class="trunk"></div></div>
 
-    <!-- Decorative bushes (ground) -->
+    <!-- Decorative bushes -->
     <div class="bush-deco" style="bottom:10%;left:18%;width:40px;height:28px;"></div>
     <div class="bush-deco" style="bottom:14%;right:20%;width:50px;height:32px;"></div>
     <div class="bush-deco" style="bottom:8%;left:35%;width:30px;height:20px;"></div>
     <div class="bush-deco" style="bottom:12%;right:35%;width:35px;height:24px;"></div>
 
-    <!-- Decorative rocks -->
+    <!-- Rocks -->
     <div class="rock-deco" style="bottom:8%;left:10%;width:22px;height:14px;"></div>
     <div class="rock-deco" style="bottom:10%;right:12%;width:28px;height:16px;"></div>
     <div class="rock-deco" style="bottom:16%;left:4%;width:14px;height:9px;"></div>
     <div class="rock-deco" style="bottom:18%;right:8%;width:18px;height:11px;"></div>
 
-    <!-- Floating trees & bushes (magical) -->
-    <div class="float-tree" style="top:25%;left:2%;animation-delay:0s;">
-      <div class="ft-canopy"></div>
-      <div class="ft-trunk"></div>
-    </div>
-    <div class="float-tree" style="top:40%;right:1%;animation-delay:3s;">
-      <div class="ft-canopy"></div>
-      <div class="ft-trunk"></div>
-    </div>
-    <div class="float-tree" style="top:8%;left:15%;animation-delay:5s;">
-      <div class="ft-canopy"></div>
-      <div class="ft-trunk"></div>
-    </div>
+    <!-- Floating trees & bushes -->
+    <div class="float-tree" style="top:25%;left:2%;animation-delay:0s;"><div class="ft-canopy"></div><div class="ft-trunk"></div></div>
+    <div class="float-tree" style="top:40%;right:1%;animation-delay:3s;"><div class="ft-canopy"></div><div class="ft-trunk"></div></div>
+    <div class="float-tree" style="top:8%;left:15%;animation-delay:5s;"><div class="ft-canopy"></div><div class="ft-trunk"></div></div>
     <div class="float-bush" style="top:28%;left:8%;width:25px;height:18px;animation-delay:1s;"></div>
     <div class="float-bush" style="top:15%;right:2%;width:30px;height:20px;animation-delay:4s;"></div>
     <div class="float-bush" style="top:45%;left:3%;width:20px;height:14px;animation-delay:2s;"></div>
 
-    <!-- ===== EASTER EGGS (interactable) ===== -->
+    <!-- ===== EASTER EGGS ===== -->
 
-    <!-- 1. DRAGON (using your new image as the element) -->
-    <div id="dragon-egg" class="egg-object" style="top:12%;right:8%;">
+    <!-- 1. DRAGON (new image) -->
+    <div id="dragon-egg" class="egg-object" style="top:10%;right:5%;">
       <div class="dragon-interact"></div>
       <div class="label">🐉 dragon</div>
     </div>
 
-    <!-- 2. STAR (clickable) -->
-    <div id="star-egg" class="egg-object" style="top:20%;left:12%;">
+    <!-- 2. STAR (hidden in sky, behind a cloud) -->
+    <div id="star-egg" class="egg-object" style="top:4%;left:52%;z-index:19;">
       <div class="star-egg"></div>
-      <div class="label">⭐ star</div>
+      <div class="label" style="bottom:-28px;">⭐ hidden star</div>
     </div>
 
-    <!-- 3. BUSH (interactable — simplified, multiple taps) -->
+    <!-- 3. BUSH (interactable) -->
     <div id="bush-egg" class="egg-object" style="bottom:22%;left:10%;">
       <div id="bush-container">
         <div class="bush-interact" id="bush-visual"></div>
@@ -964,27 +821,11 @@
       <div class="label">🌿 bush</div>
     </div>
 
-    <!-- ===== CAKE (upgraded) ===== -->
+    <!-- ===== CAKE (using image) ===== -->
     <div id="cake-container">
       <div class="cake-wrapper">
         <div class="candles-container" id="candles-container"></div>
-        <div class="cake-base" id="cake-base">
-          <div class="cake-top-frosting" id="cake-top">
-            <div class="sprinkles" id="sprinkles-container"></div>
-          </div>
-          <div class="cake-layer"></div>
-          <div class="cake-layer"></div>
-          <div class="cake-layer"></div>
-          <div class="cake-layer"></div>
-          <div class="cake-text">🎂 Happy Birthday 🎂</div>
-          <div class="cake-pearls">
-            <span class="cake-pearl"></span><span class="cake-pearl"></span>
-            <span class="cake-pearl"></span><span class="cake-pearl"></span>
-            <span class="cake-pearl"></span><span class="cake-pearl"></span>
-            <span class="cake-pearl"></span><span class="cake-pearl"></span>
-            <span class="cake-pearl"></span>
-          </div>
-        </div>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz2mIxJuNgXXoNHkB4zfnGi-pDBoqSblhhBSCIOmfsx3wGeh9NE3DzqM0&s=10" alt="Birthday Cake" class="cake-image" id="cake-image" />
         <div class="cake-progress" id="cake-progress">🍰 eat cake (0/10)</div>
       </div>
     </div>
@@ -1038,7 +879,10 @@
   Across the sea of hay bales
   Look at her, her shiny scales 
   Man those look beautiful 
-  Which might even break not one but multiple scales"`,
+  Which might even break not one but multiple scales
+
+  ———
+  Feels more like a rap doesn't it lmao.. i hope u like it tho 😝 and yeah so a bit of touch thanks to my imagination and yes a smol detailed reasoning on why and how i wrote each and every line.. first 3lines are pretty normal but I realized that it kinda went towards a rappy style so instead of a poem, i chose something different lol, a small rap which randomly popped up in my head and yeah the scales part, i was imagining us soaring high like a dragon, flying above everything, farms asw, kinda gives off the countryside vibes yk, the clear sky with no clouds which helps the sunlight to let you shine. And why the sunlight? Why the shiny scales u ask? On june 3rd, you told me je tomake naki sunlight er jonno forsha dekhacche (ofc a lie), in my eyes, you and your smile was shining like a gem and i can proudly tell you that with no shame, cz babe ily and u sure do love my game😈 (ts itself is a small poem 😭)`,
 
     star: `I love my Princess cutubabu
   Wish he was with me
@@ -1135,7 +979,7 @@
   const game = document.getElementById('game');
   const balloonsContainer = document.getElementById('balloons-container');
   const candlesContainer = document.getElementById('candles-container');
-  const cakeBase = document.getElementById('cake-base');
+  const cakeImage = document.getElementById('cake-image');
   const cakeProgress = document.getElementById('cake-progress');
   const poemPopup = document.getElementById('poem-popup');
   const poemTitle = document.getElementById('poem-title');
@@ -1184,7 +1028,6 @@
     setupCake();
     setupBook();
     createGrass();
-    createSprinkles();
   }
 
   // ---- GRASS ----
@@ -1201,24 +1044,6 @@
       g.style.transform = `rotate(${Math.random() * 30 - 15}deg)`;
       g.style.opacity = 0.15 + Math.random() * 0.25;
       ground.appendChild(g);
-    }
-  }
-
-  // ---- SPRINKLES on cake ----
-  function createSprinkles() {
-    const container = document.getElementById('sprinkles-container');
-    const sprinkleColors = ['#ff4757', '#ffd93d', '#2ed573', '#1e90ff', '#ff6bff', '#ff9f43', '#ff6b6b', '#a29bfe'];
-    for (let i = 0; i < 35; i++) {
-      const s = document.createElement('div');
-      s.className = 'sprinkle';
-      s.style.left = Math.random() * 90 + '%';
-      s.style.top = Math.random() * 80 + '%';
-      s.style.background = sprinkleColors[Math.floor(Math.random() * sprinkleColors.length)];
-      s.style.width = (3 + Math.random() * 5) + 'px';
-      s.style.height = (1.5 + Math.random() * 2) + 'px';
-      s.style.setProperty('--rot', (Math.random() * 360) + 'deg');
-      s.style.borderRadius = Math.random() > 0.5 ? '2px' : '50%';
-      container.appendChild(s);
     }
   }
 
@@ -1297,14 +1122,14 @@
 
   // ---- CAKE ----
   function setupCake() {
-    cakeBase.addEventListener('click', (e) => {
+    cakeImage.addEventListener('click', (e) => {
       if (!state.cakeEatEnabled || state.treasureFound) return;
       state.cakeClicks++;
       const max = 10;
       const progress = Math.min(state.cakeClicks, max);
       cakeProgress.textContent = `🍰 eating... (${progress}/${max})`;
-      cakeBase.style.transform = 'scale(0.95)';
-      setTimeout(() => cakeBase.style.transform = '', 150);
+      cakeImage.style.transform = 'scale(0.94)';
+      setTimeout(() => cakeImage.style.transform = '', 150);
       if (progress === 9) {
         showPoem('🎁', 'You\'ve found a hidden treasure that was in the cake! 📖');
         closePoemBtn.onclick = () => {
@@ -1328,24 +1153,23 @@
       handleEggClick('dragon', '🐉 Dragon\'s Poem', poems.dragon);
     });
 
-    // Star
+    // Star (hidden in sky)
     document.getElementById('star-egg').addEventListener('click', (e) => {
       e.stopPropagation();
       handleEggClick('star', '⭐ Star\'s Poem', poems.star);
     });
 
-    // Cloud (special glow)
+    // Cloud (normal looking)
     document.getElementById('cloud-egg').addEventListener('click', (e) => {
       e.stopPropagation();
       handleEggClick('cloud', '☁️ Cloud\'s Secret', poems.cloud);
     });
 
-    // BUSH — simplified: multiple taps → poem
+    // BUSH — multiple taps → poem
     let bushTapCount = 0;
     bushContainer.addEventListener('click', (e) => {
       e.stopPropagation();
       bushTapCount++;
-      // Shake animation
       bushVisual.classList.remove('bush-shake');
       void bushVisual.offsetWidth;
       bushVisual.classList.add('bush-shake');
@@ -1354,7 +1178,7 @@
         showPoem('❓', 'Hmm... what could be hiding here? Tap the bush again!');
       } else if (bushTapCount >= 2) {
         showPoem('🌿 Bush\'s Treasure', poems.bush);
-        bushTapCount = 0; // reset
+        bushTapCount = 0;
       }
     });
   }
@@ -1386,7 +1210,7 @@
     poemPopup.classList.remove('show');
   }
 
-  // ---- BOOK (DIARY) ----
+  // ---- BOOK ----
   function setupBook() {
     const paragraphs = diaryText.split(/\n\s*\n/).filter(p => p.trim().length > 0);
     const pages = [];
@@ -1452,7 +1276,6 @@
     } catch(e) {}
   }
 
-  // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       hidePoem();
