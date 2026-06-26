@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>🎂 Happy Birthday, My Love</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background: #0a0e1a;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      touch-action: manipulation;
+    }
+    .screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      will-change: transform, opacity;
+    }
+    .screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.95);
+    }
+
+    /* WELCOME */
+    #welcome {
+      background: radial-gradient(circle at center, #1a1f33, #0a0e1a);
+      z-index: 100;
+    }
+    #welcome .welcome-content {
+      text-align: center;
+      padding: 1rem;
+      position: relative;
+      z-index: 2;
+    }
+    .welcome-title {
+      font-size: clamp(2.2rem, 10vw, 4.5rem);
+      font-weight: 900;
+      color: #ffd700;
+      text-shadow: 0 0 20px #ffaa00, 0 0 40px #ff8800, 0 0 80px #ff5500;
+      letter-spacing: 0.04em;
+      font-family: 'Courier New', monospace;
+      image-rendering: pixelated;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+      animation: pulseGlow 2s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      0% { text-shadow: 0 0 20px #ffaa00, 0 0 40px #ff8800; }
+      100% { text-shadow: 0 0 40px #ffdd44, 0 0 80px #ffaa00, 0 0 120px #ff6600; }
+    }
+    .welcome-sub {
+      font-size: clamp(0.9rem, 3vw, 1.4rem);
+      color: rgba(255, 215, 0, 0.8);
+      background: rgba(0,0,0,0.4);
+      padding: 0.5rem 1.5rem;
+      border-radius: 40px;
+      display: inline-block;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      margin-top: 1rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+      animation: blink 1.5s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .balloon {
+      position: absolute;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      width: 60px;
+      height: 70px;
+      animation: floatBalloon 6s infinite alternate ease-in-out;
+      z-index: 1;
+      box-shadow: inset -10px -10px 20px rgba(0,0,0,0.2);
+    }
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 30px;
+      background: rgba(255,255,255,0.3);
+    }
+    .balloon::before {
+      content: '▼';
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.5);
+      color: rgba(255,255,255,0.5);
+    }
+    @keyframes floatBalloon {
+      0% { transform: translateY(0px) rotate(-3deg); }
+      100% { transform: translateY(-30px) rotate(3deg); }
+    }
+
+    /* GAME SCREEN - using dragon image as bg */
+    #game {
+      background: url('https://media.discordapp.net/attachments/1342752359658422323/1519784775550763028/image.png?ex=6a3f7a1e&is=6a3e289e&hm=3703fe3b89cc0ed607edf017186d7392ed2d93f3486f202e369d260c42697d6b&=&format=webp&quality=lossless&width=135&height=203') center/cover no-repeat;
+      z-index: 10;
+      overflow: hidden;
+      position: relative;
+    }
+    #game::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.15);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .game-content {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* GROUND OVERLAY */
+    .ground-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 28%;
+      background: linear-gradient(0deg, rgba(20,35,20,0.25) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* EASTER EGG OBJECTS */
+    .egg-object {
+      position: absolute;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: transform 0.15s;
+      z-index: 20;
+    }
+    .egg-object:active {
+      transform: scale(0.92);
+    }
+
+    /* DRAGON - on the road */
+    .dragon-road {
+      width: 120px;
+      height: 180px;
+      background: url('https://media.discordapp.net/attachments/1342752359658422323/1519784775550763028/image.png?ex=6a3f7a1e&is=6a3e289e&hm=3703fe3b89cc0ed607edf017186d7392ed2d93f3486f202e369d260c42697d6b&=&format=webp&quality=lossless&width=135&height=203') center/contain no-repeat;
+      filter: drop-shadow(0 0 15px rgba(255,200,100,0.12));
+      animation: dragonIdle 3s infinite alternate ease-in-out;
+      opacity: 0.92;
+    }
+    @keyframes dragonIdle {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-6px) rotate(1deg); }
+    }
+
+    /* STAR - in the sky */
+    .star-sky {
+      width: 50px;
+      height: 40px;
+      background: url('https://media.discordapp.net/attachments/1342752359658422323/1520130711430889593/image.png?ex=6a40138c&is=6a3ec20c&hm=6012bbe5e68bc1af10742c40af4f034b7eadc52ab722ced343217a8564c0fb08&=&format=webp&quality=lossless&width=14&height=11') center/contain no-repeat;
+      filter: drop-shadow(0 0 20px rgba(255,215,0,0.15));
+      opacity: 0.9;
+    }
+
+    /* BUSH - bottom right */
+    .bush-ground {
+      width: 140px;
+      height: 65px;
+      background: url('https://media.discordapp.net/attachments/1342752359658422323/1520131058966728925/image.png?ex=6a4013df&is=6a3ec25f&hm=1bf396f1035c0e513cc2df75e51768c2441064c0dd2f8e1056b4ce9c3e181014&=&format=webp&quality=lossless&width=357&height=160') center/contain no-repeat;
+      filter: drop-shadow(0 4px 15px rgba(0,0,0,0.3));
+      transition: transform 0.2s;
+    }
+    .bush-ground:active {
+      transform: scale(0.92);
+    }
+    .bush-shake {
+      animation: bushShake 0.3s ease-out;
+    }
+    @keyframes bushShake {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(-4deg); }
+      75% { transform: rotate(4deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    /* ===== CAKE ===== */
+    #cake-container {
+      position: absolute;
+      bottom: 14%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 15;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+    .cake-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Candles on top of cake */
+    .candles-container {
+      display: flex;
+      gap: 8px;
+      position: absolute;
+      top: -32px;
+      left: 50%;
+      transform: translateX(-50%);
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 70%;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .candle {
+      width: 14px;
+      height: 28px;
+      background: linear-gradient(180deg, #f5e8d0, #d4c4a8);
+      border-radius: 3px 3px 2px 2px;
+      position: relative;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: height 0.3s, opacity 0.3s;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      border: 1px solid rgba(200,180,160,0.2);
+    }
+    .candle .flame {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 9px;
+      height: 13px;
+      background: radial-gradient(circle at 30% 20%, #ffdd44, #ff8800);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      animation: flicker 0.4s infinite alternate;
+      filter: blur(0.5px);
+      box-shadow: 0 0 16px #ff8800, 0 0 30px #ff5500;
+      transition: all 0.3s;
+    }
+    @keyframes flicker {
+      0% { transform: translateX(-50%) scale(1) rotate(-3deg); }
+      100% { transform: translateX(-50%) scale(1.08) rotate(3deg); }
+    }
+    .candle .flame.extinct {
+      opacity: 0;
+      transform: scale(0);
+      box-shadow: none;
+    }
+    .candle.extinct {
+      height: 18px;
+      opacity: 0.4;
+      background: #b0a088;
+    }
+    .candle.extinct .flame {
+      display: none;
+    }
+
+    /* Cake image */
+    .cake-img {
+      width: 160px;
+      height: auto;
+      aspect-ratio: 220/350;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      transition: transform 0.15s;
+      display: block;
+      background: transparent;
+      image-rendering: auto;
+    }
+    .cake-img:active {
+      transform: scale(0.96);
+    }
+
+    .cake-progress {
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 0.7rem;
+      background: rgba(0,0,0,0.5);
+      padding: 3px 14px;
+      border-radius: 30px;
+      backdrop-filter: blur(4px);
+      white-space: nowrap;
+      display: none;
+      border: 1px solid rgba(255,255,255,0.06);
+      z-index: 10;
+    }
+    .cake-progress.show {
+      display: block;
+    }
+
+    /* DECORATIVE CLOUDS */
+    .cloud-deco {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 120px;
+      filter: blur(4px);
+      pointer-events: none;
+      animation: cloudDrift 25s infinite alternate ease-in-out;
+      z-index: 2;
+    }
+    .cloud-deco:nth-child(2) { animation-duration: 30s; animation-delay: 3s; }
+    .cloud-deco:nth-child(3) { animation-duration: 20s; animation-delay: 6s; }
+    .cloud-deco:nth-child(4) { animation-duration: 35s; animation-delay: 0s; }
+    @keyframes cloudDrift {
+      0% { transform: translateX(0px) scale(1); }
+      100% { transform: translateX(80px) scale(1.05); }
+    }
+
+    /* SPECIAL CLOUD (easter egg) - blends in */
+    .cloud-normal {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 120px;
+      filter: blur(3px);
+      cursor: pointer;
+      pointer-events: auto;
+      z-index: 20;
+      transition: transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: rgba(255,255,255,0.04);
+      animation: cloudFloat 6s infinite alternate ease-in-out;
+    }
+    .cloud-normal:active {
+      transform: scale(0.94);
+    }
+    .cloud-normal .cloud-label {
+      position: absolute;
+      bottom: -26px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.3);
+      color: rgba(255,255,255,0.3);
+      font-size: 0.45rem;
+      padding: 1px 8px;
+      border-radius: 10px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      backdrop-filter: blur(2px);
+    }
+    .cloud-normal:hover .cloud-label {
+      opacity: 1;
+    }
+    @keyframes cloudFloat {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-6px); }
+    }
+
+    /* DECORATIVE STARS */
+    .star-deco {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.07);
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      animation: twinkleDeco 3s infinite alternate;
+      pointer-events: none;
+      z-index: 2;
+    }
+    @keyframes twinkleDeco {
+      0% { opacity: 0.06; transform: scale(0.6); }
+      100% { opacity: 0.35; transform: scale(1.1); }
+    }
+
+    /* POEM POPUP */
+    .poem-popup {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: rgba(20, 15, 40, 0.94);
+      backdrop-filter: blur(16px);
+      border: 2px solid rgba(255, 215, 0, 0.5);
+      border-radius: 30px;
+      padding: 2rem 1.8rem;
+      max-width: 92%;
+      width: 400px;
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 200;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+      color: #f0e8d0;
+      display: none;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-align: center;
+      pointer-events: auto;
+    }
+    .poem-popup.show {
+      display: block;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .poem-popup .poem-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ffd700;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,215,0,0.2);
+      padding-bottom: 0.5rem;
+    }
+    .poem-popup .poem-text {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      font-family: 'Georgia', serif;
+      text-align: left;
+      margin: 0.5rem 0 1.5rem;
+      max-height: 50vh;
+      overflow-y: auto;
+      padding: 0 0.5rem;
+    }
+    .poem-popup .close-poem {
+      background: #ffd700;
+      border: none;
+      color: #1a1a2e;
+      padding: 10px 32px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      pointer-events: auto;
+    }
+    .poem-popup .close-poem:active {
+      transform: scale(0.94);
+    }
+
+    /* BOOK MODAL */
+    .book-modal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      z-index: 300;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      pointer-events: auto;
+    }
+    .book-modal.show {
+      display: flex;
+    }
+    .book {
+      background: #f9f0e0;
+      border-radius: 24px;
+      width: 92%;
+      max-width: 520px;
+      max-height: 88vh;
+      padding: 1.5rem 1.2rem 1.2rem;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.9);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 4px solid #d4b48c;
+    }
+    .book-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px dashed #d4b48c;
+      margin-bottom: 0.8rem;
+      font-family: 'Georgia', serif;
+      color: #6b4a2c;
+    }
+    .book-header .page-num {
+      font-size: 0.9rem;
+      background: #e8d5c0;
+      padding: 2px 14px;
+      border-radius: 20px;
+    }
+    .book-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.2rem 0.4rem;
+      font-family: 'Georgia', serif;
+      color: #3d2b1f;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      max-height: 58vh;
+      scroll-behavior: smooth;
+    }
+    .book-body p {
+      margin-bottom: 0.8rem;
+      text-indent: 1.8rem;
+    }
+    .book-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.8rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid #d4b48c;
+    }
+    .book-footer button {
+      background: #d4b48c;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      color: #2d1f14;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      pointer-events: auto;
+    }
+    .book-footer button:active {
+      transform: scale(0.94);
+      background: #c4a07a;
+    }
+    .book-footer button:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .book-close {
+      background: transparent !important;
+      color: #8b6b4a !important;
+      font-size: 1.2rem !important;
+      padding: 0 12px !important;
+      box-shadow: none !important;
+    }
+
+    @media (max-width: 480px) {
+      .dragon-road { width: 80px; height: 120px; }
+      .star-sky { width: 35px; height: 28px; }
+      .bush-ground { width: 100px; height: 46px; }
+      .cake-img { width: 120px; }
+      .candle { width: 11px; height: 22px; }
+      .candle .flame { width: 7px; height: 10px; top: -11px; }
+      .candles-container { gap: 5px; top: -26px; }
+      .poem-popup { padding: 1.5rem 1rem; width: 94%; }
+      .book { padding: 1rem; }
+      .cloud-normal { width: 100px !important; height: 35px !important; font-size: 1.2rem; }
+    }
+    @media (max-width: 380px) {
+      .dragon-road { width: 65px; height: 98px; }
+      .star-sky { width: 28px; height: 22px; }
+      .bush-ground { width: 80px; height: 37px; }
+      .cake-img { width: 100px; }
+      .candle { width: 9px; height: 18px; }
+      .candle .flame { width: 6px; height: 8px; top: -9px; }
+      .candles-container { gap: 3px; top: -22px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- WELCOME -->
+<div id="welcome" class="screen">
+  <div class="welcome-content">
+    <div class="welcome-title">HAPPY BIRTHDAY<br>MY BELOVED<br>GIRLFRIEND</div>
+    <div class="welcome-sub">🖱️ click anywhere to continue</div>
+  </div>
+  <div id="balloons-container"></div>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen hidden">
+  <div class="game-content">
+    <!-- Ground overlay -->
+    <div class="ground-overlay"></div>
+
+    <!-- Decorative clouds -->
+    <div class="cloud-deco" style="width:160px;height:50px;top:8%;left:5%;"></div>
+    <div class="cloud-deco" style="width:200px;height:55px;top:15%;right:15%;"></div>
+    <div class="cloud-deco" style="width:120px;height:38px;top:28%;left:3%;"></div>
+    <div class="cloud-deco" style="width:180px;height:50px;bottom:32%;right:6%;"></div>
+
+    <!-- SPECIAL CLOUD (easter egg) -->
+    <div id="cloud-egg" class="cloud-normal" style="width:140px;height:45px;top:5%;left:40%;">
+      ☁️
+      <span class="cloud-label">✨</span>
+    </div>
+
+    <!-- Decorative stars (non-clickable) -->
+    <div class="star-deco" style="top:10%;left:18%;"></div>
+    <div class="star-deco" style="top:22%;left:80%;animation-delay:1.5s;"></div>
+    <div class="star-deco" style="top:32%;left:10%;animation-delay:0.8s;"></div>
+    <div class="star-deco" style="top:6%;right:30%;animation-delay:2s;"></div>
+    <div class="star-deco" style="top:40%;right:12%;animation-delay:1.2s;"></div>
+
+    <!-- ===== EASTER EGGS ===== -->
+
+    <!-- 1. DRAGON - on the road -->
+    <div id="dragon-egg" class="egg-object" style="bottom:22%;left:12%;z-index:18;">
+      <div class="dragon-road"></div>
+    </div>
+
+    <!-- 2. STAR - in the sky -->
+    <div id="star-egg" class="egg-object" style="top:8%;left:52%;z-index:18;">
+      <div class="star-sky"></div>
+    </div>
+
+    <!-- 3. BUSH - bottom right -->
+    <div id="bush-egg" class="egg-object" style="bottom:10%;right:8%;z-index:19;">
+      <div class="bush-ground" id="bush-visual"></div>
+    </div>
+
+    <!-- ===== CAKE ===== -->
+    <div id="cake-container">
+      <div class="cake-wrapper">
+        <div class="candles-container" id="candles-container"></div>
+        <img src="https://media.discordapp.net/attachments/1342752359658422323/1519788552832160008/image.png?ex=6a3f7da3&is=6a3e2c23&hm=7acf15f3db73124c30dd5c43aa47072a05ad3d5df85b6d3826e5340d2bd19609&=&format=webp&quality=lossless&width=220&height=350" alt="Birthday Cake" class="cake-img" id="cake-img" />
+        <div class="cake-progress" id="cake-progress">🍰 eat cake (0/10)</div>
+      </div>
+    </div>
+
+    <!-- POEM POPUP -->
+    <div id="poem-popup" class="poem-popup">
+      <div class="poem-title" id="poem-title">✨ Poem</div>
+      <div class="poem-text" id="poem-text"></div>
+      <button class="close-poem" id="close-poem">💖 close</button>
+    </div>
+
+    <!-- BOOK MODAL -->
+    <div id="book-modal" class="book-modal">
+      <div class="book">
+        <div class="book-header">
+          <span>📖 My Diary</span>
+          <span class="page-num" id="page-num">1 / 1</span>
+        </div>
+        <div class="book-body" id="book-body"></div>
+        <div class="book-footer">
+          <button id="book-prev" disabled>◀ prev</button>
+          <button id="book-close" class="book-close">✕ close</button>
+          <button id="book-next">next ▶</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ====================================================================
+  //  DATA — Poems (same as before)
+  // ====================================================================
+  const poems = {
+    dragon: `"POROOOOO PLSSS FOR THE SAKE OF US
+  You can wait to look after your huzz
+  Pls don't gimme badbuzz 
+  Im already getting it tho, thansk to you, not studying enough 
+  Things are pretty rough
+  Out here
+  Out there
+  Wherever 
+  Whenever 
+  Whatever 
+  You gotta do well
+  As she stands in business 
+  I keep tracking her sucess
+  We both soar up in the sky
+  Fly high
+  Over the bae
+  Across the sea of hay bales
+  Look at her, her shiny scales 
+  Man those look beautiful 
+  Which might even break not one but multiple scales
+
+  ———
+  Feels more like a rap doesn't it lmao.. i hope u like it tho 😝 and yeah so a bit of touch thanks to my imagination and yes a smol detailed reasoning on why and how i wrote each and every line.. first 3lines are pretty normal but I realized that it kinda went towards a rappy style so instead of a poem, i chose something different lol, a small rap which randomly popped up in my head and yeah the scales part, i was imagining us soaring high like a dragon, flying above everything, farms asw, kinda gives off the countryside vibes yk, the clear sky with no clouds which helps the sunlight to let you shine. And why the sunlight? Why the shiny scales u ask? On june 3rd, you told me je tomake naki sunlight er jonno forsha dekhacche (ofc a lie), in my eyes, you and your smile was shining like a gem and i can proudly tell you that with no shame, cz babe ily and u sure do love my game😈 (ts itself is a small poem 😭)`,
+
+    star: `I love my Princess cutubabu
+  Wish he was with me
+  Holding my hands
+  With his big broad smile
+  I wish i could see him without showing him my other side which i think is vile
+  But to him, it's pretty 
+  Pretty beautiful 
+  Like a flower
+  Waiting for it's bloom
+  Meanwhile, im in my gloom
+  And my princess cutubabu is trying his best to make up for it
+  So that I don't cry like a piece of shit
+  I wish i could tell him how much i love him
+  I wish he could see himself through my eyes
+  As he sees himself, he'll get red as he shys
+  I love my cutubabu because he's why my sun rises in the west
+  He's the best😝`,
+
+    bush: `"kothin tomake chara ekdin
+  Tobe nichchoi ei koshto shesh hobe ekdin na ekdin 
+  Ei opekkha to bohudiner
+  Koshte bhayakranto mon niye tomar jonno achi je boshe 
+  Achi tomar opekkhay phone ti ridoye gheshe
+  Tomar chobir dike takiye ektu heshe
+  Jemon tomar akash dhorar shokh
+  Temni amar shomuddurer chokh
+  Tomar hashi 
+  Ami amar ridoye gethe, din din dhore rekhechi
+  Eije hashi jeno moner moddhe ache ghati gere
+  Jiboner shorbotomo upohar tumi 
+  Ei khushitei ami diyechi nijer stri khojar procheshta shere.
+  Shei je ekdin tomar shathe dekha hobe 
+  Jani na ta thik kobe
+  Tobe bolechi jehitu, nishchoi hobe
+  Ebong tumi amar bashay ar amar mone sharadin raat robe
+  Kintu tai bole je opekkhay nistar paba ta hobena tobe
+  Bhalobasha pabe tumi shob kichutei sheta aj hok kingba jobe"`,
+
+    cloud: `"Hard tomake chara ekdin,wet tomake niye prottekdin
+  Tobe tumi ashle thiki kotha bolte bolte raat baaje 3
+  Bhoy lage kobe je dhore fele she amake
+  She to kono manush noy borong amar chotobelar bhoy jinn😭
+  Raat baje 3ta 
+  Tomar shathe kotha bole katate chai dinta
+  Sharadin mathay shudhu ektai chinta
+  Ar tumi hole tar mul e
+  Chintay chintay pari na ar kichu korte
+  Na chao tumi amar matha theke shorte
+  Na pari nijer mon porte
+  Tobe pari ektai, ja holo tomake chara morte
+  Kingba tomar shathe ajibon beche thakte
+  Nijer bhalobashar chitro ti akte
+  Tomar shathe kotha bole nijer hashimukhe chaya makhte"`
+  };
+
+  const diaryText = `Ashole na bolar moto onek kichui ase, but abar kichui nei. I feel like ami joto iccha toto bolte parbo but i don't know whether it'll be enough or not. Ami bujhtesina kibhabe boli im at a loss for words shona. You mean the world to me. You have lightened my cave with the love of yours. Allah protita manusher life e ekta torch bearer pathay, je oi manusher good fortune er jonno always help kore. He/she's really different than your family. Not blood related. It could be a friend or an acquaintance of yours but thanks to that person, tomar life e kokhono kichu niue ahamori ekta tension kora lagena. Jano amar life e oi manushta hoiso tumi. Tumi ashar por i feel like amar koshto onek beshi kome gese. Ar shobcheye boro irony ta dekhso? Allah tomake amar kache tokhoni pathaise jokhn i was really struggling. Jano Cr e je amar thakar o kotha na? I was there simply because im a good friend like amar uporer post e jei fnds ase bakider theke ami e eder shobcheye close and onek beshi time spend krsi, er jonnoi mainly dise amake😭 but ki oshesh rohmote, giye ekta baddie niye ashsi. Sorry not a baddie. A diva. People always seek for perfection, in search of perfection, they wander around, they try their hardest, they go through all ghe sleepless nights and yet they fail to achieve it. But thankfully Allah r rohmote, i have found it. The peak perfection. A gift. A blessing. Najifa. My beloved girlfriend. My beloved wife. My well wisher. My benefactor.  Thank you so much
+  Btw tomake ki ekta kaj korte bolte pari? Birthday r din bola lagtese im sorry. But ekta kaj korona babu. Uncle aunty ke ekshathe dara koray 2jon ke hug koro, kore oderke ekta Thank you janao for what they've done for you.
+
+  Jano you look marvelous Mash'Allah. Ami janina tumi keno nijeke eto kharap bhabo but after ur humor, amar tomar looks ei eto bhallagse tomake. I fancy you my gf. I adore you. I think about you. Jano ekhon 3:32Am baje ar ami eta likhtesi boshe.
+  Cholo ektu first day r kahini te ghure ashi. Oidin i saw your humor. Amar eto bhallagse je wow this girl is funny. Oke friend banano uchit. So ami bolsi ektu je wow tomwr humour to bhaloi ase pls moirona tumi 😭. Turns out pore je maiyar eto health issues ayhay. LOL was that a prophecy 😭. Whatever. Toh erporer din tumi as usual, off geso and i was really really really sad. I saw your pfp and goodness heavens, eto shundor smile, eto forsha shada dhobdoba, eto shundor porir moto dekhte MASHALLAH. I swear to God, ami tokhoni like ekdom fida hoye gesilam je Shitttt etoo shundor meyeta wowwww. Pore ami tomake bsf banaite chaisilam 🤭. I was really sad after getting to know you jano. After knowing about your health issues, i cried and yes that was the first day ami jedin kansilam. Amar chokh theke pani porislo ektu.. 2 3 fota but yeah ofc teary eyes hoye overflowed. Ami oidin tomake bolsilam na? Je I'll always take care of you. Erpor tomar koshter kahini shune amar khubi kharap lagse. So i promised myself je she's such an angel, and I'll take care of this angel. Joto din jacche, jotodin katacchi ami aste aste bujhte partesi je yes, i was right. She really is an angel. Erpor tumi jokhn bolso je "please amar life e thako, ar kicchu lagbena amar"..that day i was so happy. I was soo happy mane ami bole bujhaite parbona. Words cannot express that moment and what i went through tokhn. Tokhn theke ami tomar hoye gesi trust me. Tumi always bolo je tumi express korte parona. But my wifey, im here to make up for the things you lack. You cannot express toh kisse. Ami korbo tomar kotha shobair shamne express. Kintu tumi honestly jemne kotha bolo oitai enough bhai, ar express kora lagena honestly. Such a beautiful soul. How did emon tausif get this soul. I was wandering around like a lost boat. Then i saw you.
+  The ray of hope which turned my dark cave into a lush cave. Lushcaves ki jano? They're the huge caves jegular moddhe actually greenery thake. Onek shundor dekhte. Idea ta Minecraft game er arki. Oije ekta asena banaisilam je ghor game e? Qurbanir eid e tumi jokhn mehdi dicchila tokhn je banailam? Oitai Minecraft game ta
+  OH QURBANIR KOTHAY MONE PORSE. BHAI U KILLED ME OIDIN. AMAR LIFE ER BEST QURBANI EID. I couldn't believe my eyes je ekta MEYE amar AMARRRRR NAME LEKHSE MEHDI DIYE.. jano amr fnd ra na tokhn boltesilo je pics paise mehdi te nijer name er and shit and i was kinda sad je ami painai but i acted normal even tho i had no energy lol.pore kono karone amader ektu kotha katakati hoise BUT UFF KI MARATTOK KAPOL 5MIN E 2JON KAINDA BHASHAY SHOB THIK KORE FELSI😭😭 0lafda ahh. Pore to thiki paisi pics.thank you so much. Mwahhhhh i love my wifey. The most beautiful woman in this earth. To me, you're as far as beauty goes.  Btw thanks to you, jhogras with you doesn't even feel like jhogras with you. Eto shundorbhabe solve kori amra mashallah 🤭. I feel like, with every jhogra, and the communication, we get closer to each other but that doesn't mean je protidin jhamela korba😡
+  I really miss you. Life er protita second e i crave your attention. Idk tomar attention thaklei i feel like im the goat. Otherwise, idk what to do man. Without you, i feel like amar life er ektw part is just incomplete. Ekta part is just not functioning. Jano what you mean to me. If only i could get blant and say "everything". When i mean everything, i mean you're my happiness, you're my fortune. You're my present. You're my future. You're my love. You're my partner. You're my smilem you're my sadness. You're what makes me act like a child. You're what makes me jealous, jealous not because i envy you, jealous because i admire you and i aspire to be as strong as you. You're emotionally weak but mentally, probably the strongest one i have seen so far. I used to think, i was strong mentally atleast but then you appeared in my life. Shattering every bit of ego of mine, shattering every possibilities ja bhabsilam je amar shathe hoite pare. Shattering every boundaries ja bhabsilam je ekta meye rakhte pare. You don't even know how far ahead you're. Mane if ami bhabi je ekta meye tar life e amar jonno ki korte pare, im pretty sure je tumi ekhon jekhane acho. Oikhane adou kew thakbe kina karon you're genuinely special. Truly exceptional. Surely one cannot be this lucky to have someone like you. I get really crazy when you randomly send snaps of urs. I love to share every sec of my life with you. Thank you darling, thank you my honey.
+  Jokhoni tumi tomar estimated time theke beshi offline thako, amar dom atke jay bhai. That day, ict exam, 1st exam dewar por it was like 8:15 tokhono tomar kono khoj khobor nai. I was constantly checking my phone from 3:30-4:30 je ashso kina. Ghumaite giye i was checking my phone BARBAR BARBAR BARBAR. Kono khoj nai 8ta porjonto. I was really sad and worried je ki holo. Is she afraid of confronting me? Exam ki kharap holo naki abar? I was worried je abar ki doctor er kaxhe gelo? (U were having pet and buke betha at that time and bolsila je doc er kase jaba but u didn't karon ict exam er agerdin gele time waste hobe so odin jaonai tai it was very much likely je doc er kase geso). Naki abar parents phone e dhorte deynai. Kicchu jantam na lol i was seriously worried tomar jonno. Pore dekhu ghumaise bole lolz. Peranai tao atleast rest niso jak bhalo. But Crazy how matro 5hrs to 6hrs ekjon offline thakle amar emon hoye jay eto chinta kori. Ei emotionless polada ki hoye gelo ekjoner jonno. I was not joking when i said "imma love you with my life" ✌️ i have always meant it and my actions will speak. Just like you, amio actions er upor bisshashi 😈😝.
+  hello jaan, today is 24th June, Yes ajk we met for the 2nd time in the span of 3days. let me give you a total breakdown of what  i went thru ei 3dine. ei 3din was my life er best days. these days were packed with everything. Us meeting like that, me standing 15mins for you. waiting to see you and then ei 2dine the time we have spent on those stairs, same spot e 2din giye boshe the fun we had. it was genuinely something. thank you so much my queen for letting me experience the peak time of my life. thank you so much for giving me all the warmth i needed. i really loved the every second we've spent together. i loved how u smiled when i randomly cracked a small joke,i loved how your eyes were looking at me. i loved just how much love you had in for me. i loved the way you were telling me "edike asho" "ahare babutaaa" and then hugging me or kissing me. 😭 omg its like a dream come true. shotti bolte ami maybe shopneo imagine korte partam na emon eto romantic eto shundor kichu. jano i could cry to have another chance to lay on that lap. thank you for coming in my life. thank you for making me who i am right now. every one says je i have lightened up a lot. atleast my friends do. thank you my beloved queen for blessing me with your presence. thank you my mommmy for ur lap e showano and all those kisses. you cannot imagine just how romantic     those scenes were where u kissed me like i was a baby. just how beautiful you looked when u were looking into my eyes. i cannnot express anything. mane words arent enough to tell you just how  beautiful and pretty u look in my eyes. words arent enough to express my feelings tokhoner. you saw the look into my eyes taina? did they ever seem like they reaaaally tell u everything. did it seem like you actually know just how much i adore you? did it seem like you already know just what my eyes wanted to tell you. ajk jokhn amra forehead lagay 2jon 2joner chokhe takay chilam my eyes wanted to have you.
+  not in a weird way but in a pretty way. my eyes wanted to have you for itself. my eyes wanted to kiss you. my eyes wanted to fulfill all of your dreams. my eyes wanted to see the whole najifa in a different way. if i ever loose all of my memories, ill be happy and ill be deeply hurt. sad cz ill forget all these. happy cz isha'Allah it'll be you jar shathe ami always amader ei moment gula abaro notun kore 1st bar experience korte parbo. but if u ask me, ami prolly ready to go there. same stairs e every meet e every day tomar  shathe. im fine with it. im happy with anything. as long as YOU are with me. thank you my jaan. thank you honey. thank you  darling. thank you for choosing me. also those kisses???? egula ki chilo. kothay kothay kiss dey omgomgomg eto loved jiboneo feel kori nai. you're addictive girl, youre beautiful, pretty AND THEN NOT EVEN NOCHALANT???? KEMNE KI EMON ANGEL ABAR KEMNE EXIST KORE LOL.. kemne abar ekta manush ekdine eto kisu pay. lap e showa?? chest e niye cuddle kora ERPORE  JOKHON TUMI AMAR MATHAY HAAT BOLAY DICCHILA ALLAHHHH I ALMOST DIED TOKHN KHUSHI TE KARON JIBONEO BHABI NAKI EMON KICHU EXPECT KORBO OR PABO. ETO CUTEE ETO ADORABLE. ERPORE JOKHN TUMI AMAKE HUG KORSILA. AWW KI CUTE. I LOVED every sec of it. sharakkhon tomar shathe thakte onek bhallagse .those hours felt like mins and prolly life er happiest ones. thank you and insha'Allah amra emon moments life e shamne aro banaite parbo ameen.
+  insha'Allah emon time amra abaro spend korte parbo ar hopefully aro shundorbhabe aro bhalobahbe korte parbo ekshomoy ❤️ .
+  ajk toh tomar birthday taina? have i wished you yet? mone nai toh..  anyways abar kori jodi kore thaki ar jodi na kore thaki then im sorry here it is:
+  HAPPY BIRTHDAY MY WIFEY! HAPPY BIRTHDAY MY LOML! HAPPY BIRTHDAY MY JAAN! HAPPY BIRTHDAY MY SHONAPAKHI! HAPPY BIRTHDAY MY LOVE! HAPPY BIRTHDAY MY ANATA! HAPPY BIRTHDAY MY DARLING! HAPPY BIRTHDAY MY YEOBO! HAPPY BIRTHDAY MY HONEY! HAPPY BIRTHDAY TO THE PRETTIEST GIRL IN THE PLANET! EKHON JODI BOLO JE NAH URE NOT THE PRETTIEST TAILE MARUM. in my eyes, youre as far as  beauty goes. youre all i need. jodi tumi prettiest na hou then so be it, im happy with what i have and in my eyes, she's the prettiest among all. youre what my heart truly desires, thank you
+
+  tumi jibone ja chao shob jeno pao, tumi jibone jeshob theke koshto paiso sheshob jeno allah tomake ar na face korak,cholar pothe jeshob kata chilo ogula jeno chole jak and insha'Allah shamne jeishob kata ashbe shegulo theke jeno ami tomake safe rakhte pari ar tomake best way ta khuje dite pari allah jeno amake shei toufik daan koruk Ameen. tomake jeno jibone khushi korte pari ar tomar shokol chahida jeno ami mitaite pari.
+  aro kisu bolar thakleo thakte pare idk but this shall be the end of it, thasnk you babe, mwah i love you.  i really do.. usually haate betha hoye jay eto kisu keyboard e likhte but yeah when its for my love, i can push thru karon youre my inspiration, youre the reason why i wanna push thru and secure a better future for the both of us
+  thats it. have fun ei shundor din e
+  adulthood is scary taina? 😝 ekhon bujhba 😈`;
+
+  // ====================================================================
+  //  STATE
+  // ====================================================================
+  const state = {
+    candlesLit: 18,
+    cakeClicks: 0,
+    cakeEatEnabled: false,
+    treasureFound: false,
+    bookPages: [],
+    currentPage: 0,
+    eggClicks: { dragon: 0, star: 0, bush: 0, cloud: 0 }
+  };
+
+  // ====================================================================
+  //  DOM REFS
+  // ====================================================================
+  const welcome = document.getElementById('welcome');
+  const game = document.getElementById('game');
+  const balloonsContainer = document.getElementById('balloons-container');
+  const candlesContainer = document.getElementById('candles-container');
+  const cakeImg = document.getElementById('cake-img');
+  const cakeProgress = document.getElementById('cake-progress');
+  const poemPopup = document.getElementById('poem-popup');
+  const poemTitle = document.getElementById('poem-title');
+  const poemText = document.getElementById('poem-text');
+  const closePoemBtn = document.getElementById('close-poem');
+  const bookModal = document.getElementById('book-modal');
+  const bookBody = document.getElementById('book-body');
+  const pageNum = document.getElementById('page-num');
+  const bookPrev = document.getElementById('book-prev');
+  const bookNext = document.getElementById('book-next');
+  const bookClose = document.getElementById('book-close');
+  const bushVisual = document.getElementById('bush-visual');
+
+  // ====================================================================
+  //  WELCOME — balloons
+  // ====================================================================
+  const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6bff', '#ff9f43', '#ff4757', '#2ed573', '#1e90ff', '#ff6348'];
+  for (let i = 0; i < 24; i++) {
+    const b = document.createElement('div');
+    b.className = 'balloon';
+    const size = 38 + Math.random() * 55;
+    b.style.width = size + 'px';
+    b.style.height = (size * 1.15) + 'px';
+    b.style.background = colors[Math.floor(Math.random() * colors.length)];
+    b.style.left = Math.random() * 90 + '%';
+    b.style.top = Math.random() * 80 + '%';
+    b.style.animationDuration = (5 + Math.random() * 6) + 's';
+    b.style.animationDelay = (Math.random() * 5) + 's';
+    b.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
+    balloonsContainer.appendChild(b);
+  }
+
+  welcome.addEventListener('click', () => {
+    welcome.classList.add('hidden');
+    game.classList.remove('hidden');
+    initGame();
+  });
+
+  // ====================================================================
+  //  GAME INIT
+  // ====================================================================
+  function initGame() {
+    createCandles();
+    setupEasterEggs();
+    setupCake();
+    setupBook();
+  }
+
+  // ---- CANDLES ----
+  function createCandles() {
+    const count = 18;
+    for (let i = 0; i < count; i++) {
+      const candle = document.createElement('div');
+      candle.className = 'candle';
+      candle.dataset.index = i;
+      const flame = document.createElement('div');
+      flame.className = 'flame';
+      candle.appendChild(flame);
+      candle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        blowCandle(candle);
+      });
+      candlesContainer.appendChild(candle);
+    }
+    state.candlesLit = count;
+  }
+
+  function blowCandle(candle) {
+    if (candle.classList.contains('extinct')) return;
+    candle.classList.add('extinct');
+    candle.querySelector('.flame').classList.add('extinct');
+    state.candlesLit--;
+    playBlowSound();
+    createSparkles(candle);
+    if (state.candlesLit === 0) {
+      state.cakeEatEnabled = true;
+      cakeProgress.classList.add('show');
+      cakeProgress.textContent = '🎂 now eat the cake! (tap)';
+      setTimeout(() => {
+        showPoem('🎉', 'You blew all the candles! Now eat the cake to find your treasure 🍰');
+      }, 500);
+    }
+  }
+
+  function playBlowSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.07, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.15);
+    } catch(e) {}
+  }
+
+  function createSparkles(el) {
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    for (let i = 0; i < 14; i++) {
+      const spark = document.createElement('div');
+      spark.style.cssText = `position:fixed;width:5px;height:5px;background:hsl(${Math.random()*60+20},100%,70%);border-radius:50%;pointer-events:none;left:${cx}px;top:${cy}px;z-index:999;transition:all 0.6s ease-out;`;
+      const angle = Math.random() * 2 * Math.PI;
+      const dist = 35 + Math.random() * 65;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist - 25;
+      document.body.appendChild(spark);
+      requestAnimationFrame(() => {
+        spark.style.transform = `translate(${dx}px, ${dy}px) scale(0)`;
+        spark.style.opacity = '0';
+      });
+      setTimeout(() => spark.remove(), 700);
+    }
+  }
+
+  // ---- CAKE ----
+  function setupCake() {
+    cakeImg.addEventListener('click', (e) => {
+      if (!state.cakeEatEnabled || state.treasureFound) return;
+      state.cakeClicks++;
+      const max = 10;
+      const progress = Math.min(state.cakeClicks, max);
+      cakeProgress.textContent = `🍰 eating... (${progress}/${max})`;
+      cakeImg.style.transform = 'scale(0.94)';
+      setTimeout(() => cakeImg.style.transform = '', 150);
+      if (progress === 9) {
+        showPoem('🎁', 'You\'ve found a hidden treasure that was in the cake! 📖');
+        closePoemBtn.onclick = () => {
+          hidePoem();
+          showBook();
+        };
+        state.treasureFound = true;
+        cakeProgress.textContent = '🎉 treasure found! open the diary!';
+      } else if (progress >= max) {
+        cakeProgress.textContent = '🍰 cake finished!';
+        state.cakeEatEnabled = false;
+      }
+    });
+  }
+
+  // ---- EASTER EGGS ----
+  function setupEasterEggs() {
+    // Dragon — on the road
+    document.getElementById('dragon-egg').addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleEggClick('dragon', '🐉 Dragon\'s Poem', poems.dragon);
+    });
+
+    // Star — in the sky
+    document.getElementById('star-egg').addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleEggClick('star', '⭐ Star\'s Poem', poems.star);
+    });
+
+    // Cloud — normal looking
+    document.getElementById('cloud-egg').addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleEggClick('cloud', '☁️ Cloud\'s Secret', poems.cloud);
+    });
+
+    // Bush — bottom right
+    let bushTapCount = 0;
+    bushVisual.addEventListener('click', (e) => {
+      e.stopPropagation();
+      bushTapCount++;
+      bushVisual.classList.remove('bush-shake');
+      void bushVisual.offsetWidth;
+      bushVisual.classList.add('bush-shake');
+
+      if (bushTapCount === 1) {
+        showPoem('❓', 'Hmm... what could be hiding here? Tap the bush again!');
+      } else if (bushTapCount >= 2) {
+        showPoem('🌿 Bush\'s Treasure', poems.bush);
+        bushTapCount = 0;
+      }
+    });
+  }
+
+  function handleEggClick(eggKey, title, poem) {
+    if (!state.eggClicks[eggKey]) state.eggClicks[eggKey] = 0;
+    state.eggClicks[eggKey]++;
+
+    if (state.eggClicks[eggKey] === 1) {
+      showPoem('❓', 'Hmm... what could this be? Tap again to find out!');
+      return;
+    }
+
+    if (state.eggClicks[eggKey] >= 2) {
+      showPoem(title, poem);
+      state.eggClicks[eggKey] = 0;
+    }
+  }
+
+  // ---- POEM POPUP ----
+  function showPoem(title, text) {
+    poemTitle.textContent = title;
+    poemText.textContent = text;
+    poemPopup.classList.add('show');
+    closePoemBtn.onclick = hidePoem;
+  }
+
+  function hidePoem() {
+    poemPopup.classList.remove('show');
+  }
+
+  // ---- BOOK ----
+  function setupBook() {
+    const paragraphs = diaryText.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+    const pages = [];
+    for (let i = 0; i < paragraphs.length; i += 2) {
+      pages.push(paragraphs.slice(i, i+2).join('\n\n'));
+    }
+    state.bookPages = pages;
+    state.currentPage = 0;
+
+    bookPrev.addEventListener('click', () => {
+      if (state.currentPage > 0) {
+        state.currentPage--;
+        renderBookPage();
+        playPageSound();
+      }
+    });
+    bookNext.addEventListener('click', () => {
+      if (state.currentPage < state.bookPages.length - 1) {
+        state.currentPage++;
+        renderBookPage();
+        playPageSound();
+      }
+    });
+    bookClose.addEventListener('click', () => bookModal.classList.remove('show'));
+    bookModal.addEventListener('click', (e) => {
+      if (e.target === bookModal) bookModal.classList.remove('show');
+    });
+  }
+
+  function showBook() {
+    bookModal.classList.add('show');
+    state.currentPage = 0;
+    renderBookPage();
+    playPageSound();
+  }
+
+  function renderBookPage() {
+    const pages = state.bookPages;
+    if (!pages.length) return;
+    const content = pages[state.currentPage] || '';
+    const lines = content.split('\n').filter(line => line.trim() !== '');
+    bookBody.innerHTML = lines.map(line => `<p>${line.trim()}</p>`).join('');
+    pageNum.textContent = `${state.currentPage+1} / ${pages.length}`;
+    bookPrev.disabled = (state.currentPage === 0);
+    bookNext.disabled = (state.currentPage === pages.length - 1);
+    bookBody.scrollTop = 0;
+  }
+
+  function playPageSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(350, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.1);
+    } catch(e) {}
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      hidePoem();
+      bookModal.classList.remove('show');
+    }
+  });
+
+  console.log('🎂 Happy Birthday, my love!');
+</script>
+</body>
+</html>
