@@ -118,9 +118,9 @@
       100% { transform: translateY(-30px) rotate(3deg); }
     }
 
-    /* GAME SCREEN - using dragon image as bg */
+    /* GAME SCREEN - REPLACE THE URL BELOW WITH YOUR CORRECT BACKGROUND */
     #game {
-      background: url(https://media.discordapp.net/attachments/1342752359658422323/1520130404194062507/Gemini_Generated_Image_jhmp62jhmp62jhmp.png?ex=6a401343&is=6a3ec1c3&hm=1149a1d9cc2551335e8afdecf5624b6c8ee0641d6ab2e9a39b0ef4911790a2f5&=&format=webp&quality=lossless&width=867&height=472) center/cover no-repeat;
+      background: url('https://media.discordapp.net/attachments/1342752359658422323/1520130404194062507/Gemini_Generated_Image_jhmp62jhmp62jhmp.png?ex=6a401343&is=6a3ec1c3&hm=1149a1d9cc2551335e8afdecf5624b6c8ee0641d6ab2e9a39b0ef4911790a2f5&=&format=webp&quality=lossless&width=867&height=472') center/cover no-repeat;
       z-index: 10;
       overflow: hidden;
       position: relative;
@@ -143,7 +143,6 @@
       height: 100%;
     }
 
-    /* GROUND OVERLAY */
     .ground-overlay {
       position: absolute;
       bottom: 0;
@@ -167,7 +166,6 @@
       transform: scale(0.92);
     }
 
-    /* DRAGON - on the road (NO GLOW) */
     .dragon-road {
       width: 120px;
       height: 180px;
@@ -180,7 +178,6 @@
       100% { transform: translateY(-6px) rotate(1deg); }
     }
 
-    /* STAR - in the sky (NO GLOW) */
     .star-sky {
       width: 50px;
       height: 40px;
@@ -188,7 +185,6 @@
       opacity: 0.9;
     }
 
-    /* BUSH - bottom right (NO GLOW) */
     .bush-ground {
       width: 140px;
       height: 65px;
@@ -208,7 +204,7 @@
       100% { transform: rotate(0deg); }
     }
 
-    /* ===== CAKE ===== */
+    /* CAKE */
     #cake-container {
       position: absolute;
       bottom: 14%;
@@ -228,7 +224,6 @@
       align-items: center;
     }
 
-    /* Candles on top of cake */
     .candles-container {
       display: flex;
       gap: 8px;
@@ -286,7 +281,6 @@
       display: none;
     }
 
-    /* Cake image */
     .cake-img {
       width: 160px;
       height: auto;
@@ -297,7 +291,6 @@
       transition: transform 0.15s;
       display: block;
       background: transparent;
-      image-rendering: auto;
     }
     .cake-img:active {
       transform: scale(0.96);
@@ -323,7 +316,6 @@
       display: block;
     }
 
-    /* DECORATIVE CLOUDS */
     .cloud-deco {
       position: absolute;
       background: rgba(255, 255, 255, 0.06);
@@ -341,7 +333,6 @@
       100% { transform: translateX(80px) scale(1.05); }
     }
 
-    /* SPECIAL CLOUD (easter egg) - blends in */
     .cloud-normal {
       position: absolute;
       background: rgba(255, 255, 255, 0.07);
@@ -385,7 +376,6 @@
       100% { transform: translateY(-6px); }
     }
 
-    /* DECORATIVE STARS */
     .star-deco {
       position: absolute;
       width: 10px;
@@ -401,7 +391,6 @@
       100% { opacity: 0.35; transform: scale(1.1); }
     }
 
-    /* POEM POPUP */
     .poem-popup {
       position: absolute;
       top: 50%;
@@ -463,7 +452,6 @@
       transform: scale(0.94);
     }
 
-    /* BOOK MODAL */
     .book-modal {
       position: absolute;
       top: 0;
@@ -600,46 +588,37 @@
 <!-- GAME -->
 <div id="game" class="screen hidden">
   <div class="game-content">
-    <!-- Ground overlay -->
     <div class="ground-overlay"></div>
 
-    <!-- Decorative clouds -->
     <div class="cloud-deco" style="width:160px;height:50px;top:8%;left:5%;"></div>
     <div class="cloud-deco" style="width:200px;height:55px;top:15%;right:15%;"></div>
     <div class="cloud-deco" style="width:120px;height:38px;top:28%;left:3%;"></div>
     <div class="cloud-deco" style="width:180px;height:50px;bottom:32%;right:6%;"></div>
 
-    <!-- SPECIAL CLOUD (easter egg) - NO GLOW -->
     <div id="cloud-egg" class="cloud-normal" style="width:140px;height:45px;top:5%;left:40%;">
       ☁️
       <span class="cloud-label">✨</span>
     </div>
 
-    <!-- Decorative stars (non-clickable) -->
     <div class="star-deco" style="top:10%;left:18%;"></div>
     <div class="star-deco" style="top:22%;left:80%;animation-delay:1.5s;"></div>
     <div class="star-deco" style="top:32%;left:10%;animation-delay:0.8s;"></div>
     <div class="star-deco" style="top:6%;right:30%;animation-delay:2s;"></div>
     <div class="star-deco" style="top:40%;right:12%;animation-delay:1.2s;"></div>
 
-    <!-- ===== EASTER EGGS - NO GLOW ===== -->
-
-    <!-- 1. DRAGON - on the road -->
+    <!-- EASTER EGGS -->
     <div id="dragon-egg" class="egg-object" style="bottom:22%;left:12%;z-index:18;">
       <div class="dragon-road"></div>
     </div>
 
-    <!-- 2. STAR - in the sky -->
     <div id="star-egg" class="egg-object" style="top:8%;left:52%;z-index:18;">
       <div class="star-sky"></div>
     </div>
 
-    <!-- 3. BUSH - bottom right -->
     <div id="bush-egg" class="egg-object" style="bottom:10%;right:8%;z-index:19;">
       <div class="bush-ground" id="bush-visual"></div>
     </div>
 
-    <!-- ===== CAKE ===== -->
     <div id="cake-container">
       <div class="cake-wrapper">
         <div class="candles-container" id="candles-container"></div>
@@ -648,14 +627,12 @@
       </div>
     </div>
 
-    <!-- POEM POPUP -->
     <div id="poem-popup" class="poem-popup">
       <div class="poem-title" id="poem-title">✨ Poem</div>
       <div class="poem-text" id="poem-text"></div>
       <button class="close-poem" id="close-poem">💖 close</button>
     </div>
 
-    <!-- BOOK MODAL -->
     <div id="book-modal" class="book-modal">
       <div class="book">
         <div class="book-header">
@@ -675,7 +652,7 @@
 
 <script>
   // ====================================================================
-  //  DATA — Poems (same as before)
+  //  DATA — Poems & Diary (unchanged)
   // ====================================================================
   const poems = {
     dragon: `"POROOOOO PLSSS FOR THE SAKE OF US
@@ -919,52 +896,65 @@
     }
   }
 
-  // ---- CAKE ----
+  // ---- CAKE (fixed: click cake to reopen diary after treasure found) ----
   function setupCake() {
     cakeImg.addEventListener('click', (e) => {
-      if (!state.cakeEatEnabled || state.treasureFound) return;
+      // If treasure found, just reopen the book (if not already open)
+      if (state.treasureFound) {
+        if (!bookModal.classList.contains('show')) {
+          showBook();
+        }
+        return;
+      }
+
+      // Otherwise, normal eating logic
+      if (!state.cakeEatEnabled) return;
       state.cakeClicks++;
       const max = 10;
       const progress = Math.min(state.cakeClicks, max);
       cakeProgress.textContent = `🍰 eating... (${progress}/${max})`;
       cakeImg.style.transform = 'scale(0.94)';
       setTimeout(() => cakeImg.style.transform = '', 150);
+
       if (progress === 9) {
         showPoem('🎁', 'You\'ve found a hidden treasure that was in the cake! 📖');
         closePoemBtn.onclick = () => {
           hidePoem();
+          // Mark treasure as found and allow book to open
+          state.treasureFound = true;
+          cakeProgress.textContent = '📖 click cake to open diary';
+          // Open the book immediately
           showBook();
         };
+        // Also set treasure found now so that later clicks open book directly
         state.treasureFound = true;
-        cakeProgress.textContent = '🎉 treasure found! open the diary!';
+        cakeProgress.textContent = '📖 click cake to open diary';
       } else if (progress >= max) {
         cakeProgress.textContent = '🍰 cake finished!';
         state.cakeEatEnabled = false;
+        state.treasureFound = true;
+        cakeProgress.textContent = '📖 click cake to open diary';
       }
     });
   }
 
-  // ---- EASTER EGGS - NO GLOW ----
+  // ---- EASTER EGGS ----
   function setupEasterEggs() {
-    // Dragon — on the road
     document.getElementById('dragon-egg').addEventListener('click', (e) => {
       e.stopPropagation();
       handleEggClick('dragon', '🐉 Dragon\'s Poem', poems.dragon);
     });
 
-    // Star — in the sky
     document.getElementById('star-egg').addEventListener('click', (e) => {
       e.stopPropagation();
       handleEggClick('star', '⭐ Star\'s Poem', poems.star);
     });
 
-    // Cloud — normal looking
     document.getElementById('cloud-egg').addEventListener('click', (e) => {
       e.stopPropagation();
       handleEggClick('cloud', '☁️ Cloud\'s Secret', poems.cloud);
     });
 
-    // Bush — bottom right
     let bushTapCount = 0;
     bushVisual.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -1009,7 +999,7 @@
     poemPopup.classList.remove('show');
   }
 
-  // ---- BOOK ----
+  // ---- BOOK (diary) ----
   function setupBook() {
     const paragraphs = diaryText.split(/\n\s*\n/).filter(p => p.trim().length > 0);
     const pages = [];
@@ -1033,7 +1023,9 @@
         playPageSound();
       }
     });
-    bookClose.addEventListener('click', () => bookModal.classList.remove('show'));
+    bookClose.addEventListener('click', () => {
+      bookModal.classList.remove('show');
+    });
     bookModal.addEventListener('click', (e) => {
       if (e.target === bookModal) bookModal.classList.remove('show');
     });
