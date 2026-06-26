@@ -120,7 +120,7 @@
 
     /* GAME SCREEN - using dragon image as bg */
     #game {
-      background: url('https://media.discordapp.net/attachments/1342752359658422323/1519784775550763028/image.png?ex=6a3f7a1e&is=6a3e289e&hm=3703fe3b89cc0ed607edf017186d7392ed2d93f3486f202e369d260c42697d6b&=&format=webp&quality=lossless&width=135&height=203') center/cover no-repeat;
+      background: url(https://media.discordapp.net/attachments/1342752359658422323/1520130404194062507/Gemini_Generated_Image_jhmp62jhmp62jhmp.png?ex=6a401343&is=6a3ec1c3&hm=1149a1d9cc2551335e8afdecf5624b6c8ee0641d6ab2e9a39b0ef4911790a2f5&=&format=webp&quality=lossless&width=867&height=472) center/cover no-repeat;
       z-index: 10;
       overflow: hidden;
       position: relative;
@@ -155,7 +155,7 @@
       z-index: 3;
     }
 
-    /* EASTER EGG OBJECTS */
+    /* EASTER EGG OBJECTS - NO GLOW */
     .egg-object {
       position: absolute;
       cursor: pointer;
@@ -167,12 +167,11 @@
       transform: scale(0.92);
     }
 
-    /* DRAGON - on the road */
+    /* DRAGON - on the road (NO GLOW) */
     .dragon-road {
       width: 120px;
       height: 180px;
       background: url('https://media.discordapp.net/attachments/1342752359658422323/1519784775550763028/image.png?ex=6a3f7a1e&is=6a3e289e&hm=3703fe3b89cc0ed607edf017186d7392ed2d93f3486f202e369d260c42697d6b&=&format=webp&quality=lossless&width=135&height=203') center/contain no-repeat;
-      filter: drop-shadow(0 0 15px rgba(255,200,100,0.12));
       animation: dragonIdle 3s infinite alternate ease-in-out;
       opacity: 0.92;
     }
@@ -181,21 +180,19 @@
       100% { transform: translateY(-6px) rotate(1deg); }
     }
 
-    /* STAR - in the sky */
+    /* STAR - in the sky (NO GLOW) */
     .star-sky {
       width: 50px;
       height: 40px;
       background: url('https://media.discordapp.net/attachments/1342752359658422323/1520130711430889593/image.png?ex=6a40138c&is=6a3ec20c&hm=6012bbe5e68bc1af10742c40af4f034b7eadc52ab722ced343217a8564c0fb08&=&format=webp&quality=lossless&width=14&height=11') center/contain no-repeat;
-      filter: drop-shadow(0 0 20px rgba(255,215,0,0.15));
       opacity: 0.9;
     }
 
-    /* BUSH - bottom right */
+    /* BUSH - bottom right (NO GLOW) */
     .bush-ground {
       width: 140px;
       height: 65px;
       background: url('https://media.discordapp.net/attachments/1342752359658422323/1520131058966728925/image.png?ex=6a4013df&is=6a3ec25f&hm=1bf396f1035c0e513cc2df75e51768c2441064c0dd2f8e1056b4ce9c3e181014&=&format=webp&quality=lossless&width=357&height=160') center/contain no-repeat;
-      filter: drop-shadow(0 4px 15px rgba(0,0,0,0.3));
       transition: transform 0.2s;
     }
     .bush-ground:active {
@@ -612,7 +609,7 @@
     <div class="cloud-deco" style="width:120px;height:38px;top:28%;left:3%;"></div>
     <div class="cloud-deco" style="width:180px;height:50px;bottom:32%;right:6%;"></div>
 
-    <!-- SPECIAL CLOUD (easter egg) -->
+    <!-- SPECIAL CLOUD (easter egg) - NO GLOW -->
     <div id="cloud-egg" class="cloud-normal" style="width:140px;height:45px;top:5%;left:40%;">
       ☁️
       <span class="cloud-label">✨</span>
@@ -625,7 +622,7 @@
     <div class="star-deco" style="top:6%;right:30%;animation-delay:2s;"></div>
     <div class="star-deco" style="top:40%;right:12%;animation-delay:1.2s;"></div>
 
-    <!-- ===== EASTER EGGS ===== -->
+    <!-- ===== EASTER EGGS - NO GLOW ===== -->
 
     <!-- 1. DRAGON - on the road -->
     <div id="dragon-egg" class="egg-object" style="bottom:22%;left:12%;z-index:18;">
@@ -947,7 +944,7 @@
     });
   }
 
-  // ---- EASTER EGGS ----
+  // ---- EASTER EGGS - NO GLOW ----
   function setupEasterEggs() {
     // Dragon — on the road
     document.getElementById('dragon-egg').addEventListener('click', (e) => {
