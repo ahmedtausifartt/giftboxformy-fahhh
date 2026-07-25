@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Love Pendant – 3D Locket Opening</title>
+    <title>Love Pendant – Locket Opening</title>
     <style>
         * {
             margin: 0;
@@ -14,36 +14,16 @@
             background: #0d0a0f;
             overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            user-select: none;
         }
         canvas {
             display: block;
         }
-
-        #info {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 215, 180, 0.5);
-            font-size: 14px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            background: rgba(30, 20, 25, 0.6);
-            padding: 10px 24px;
-            border-radius: 40px;
-            backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 180, 140, 0.15);
-            pointer-events: none;
-            white-space: nowrap;
-        }
-
         #ui-hint {
             position: absolute;
-            top: 30px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(255, 200, 170, 0.6);
+            color: rgba(255, 200, 170, 0.5);
             font-size: 13px;
             letter-spacing: 1px;
             background: rgba(20, 12, 16, 0.5);
@@ -52,80 +32,62 @@
             border: 1px solid rgba(255, 180, 140, 0.08);
             pointer-events: none;
             backdrop-filter: blur(4px);
+            user-select: none;
+            white-space: nowrap;
         }
-
+        #info {
+            position: absolute;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 215, 180, 0.4);
+            font-size: 13px;
+            letter-spacing: 2px;
+            background: rgba(30, 20, 25, 0.5);
+            padding: 8px 22px;
+            border-radius: 40px;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 180, 140, 0.1);
+            pointer-events: none;
+            user-select: none;
+            white-space: nowrap;
+        }
         #message {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
             color: #ffd8c0;
-            font-size: 28px;
+            font-size: 30px;
             font-weight: 300;
-            letter-spacing: 6px;
-            text-shadow: 0 0 40px rgba(255, 100, 80, 0.6), 0 0 80px rgba(255, 60, 40, 0.3);
+            letter-spacing: 8px;
+            text-shadow: 0 0 60px rgba(255, 100, 80, 0.5), 0 0 120px rgba(255, 60, 40, 0.2);
             opacity: 0;
             transition: all 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
             pointer-events: none;
             font-family: 'Georgia', serif;
-            background: radial-gradient(circle, rgba(255, 200, 180, 0.15), transparent 70%);
+            background: radial-gradient(circle, rgba(255, 200, 180, 0.1), transparent 70%);
             padding: 30px 50px;
             border-radius: 60px;
-            border: 1px solid rgba(255, 180, 150, 0.1);
+            border: 1px solid rgba(255, 180, 150, 0.08);
         }
         #message.show {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
         }
-
-        #sparkle-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .sparkle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: radial-gradient(circle, #ffd8c0, #ff6b4a);
-            border-radius: 50%;
-            opacity: 0;
-            animation: sparkleAnim 2s ease-in-out infinite;
-            box-shadow: 0 0 12px #ff6b4a88;
-        }
-
-        @keyframes sparkleAnim {
-            0% {
-                opacity: 0;
-                transform: scale(0) translateY(0);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.2) translateY(-30px);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0) translateY(-60px);
-            }
-        }
-
         @media (max-width: 600px) {
             #info {
                 font-size: 10px;
-                padding: 6px 14px;
+                padding: 4px 14px;
                 bottom: 16px;
             }
             #ui-hint {
                 font-size: 10px;
                 padding: 4px 12px;
-                top: 16px;
+                top: 12px;
             }
             #message {
-                font-size: 18px;
+                font-size: 20px;
                 padding: 20px 30px;
                 letter-spacing: 4px;
             }
@@ -134,10 +96,9 @@
 </head>
 <body>
 
-    <div id="ui-hint">✦ click or drag to interact ✦</div>
+    <div id="ui-hint">✦ click & drag to orbit ✦</div>
     <div id="info">❤︎ love pendant · locket opening ❤︎</div>
     <div id="message">∞ forever ∞</div>
-    <div id="sparkle-container"></div>
 
     <script type="importmap">
         {
@@ -155,340 +116,429 @@
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-        // ─── Scene Setup ─────────────────────────────────────────────
+        // ─── Scene ──────────────────────────────────────────────────
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x0d0a0f);
 
-        const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
-        camera.position.set(3.2, 2.0, 5.5);
-        camera.lookAt(0, 0.2, 0);
+        const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 30);
+        camera.position.set(3.0, 1.8, 4.8);
+        camera.lookAt(0, 0.1, 0);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.2;
+        renderer.toneMappingExposure = 1.0;
         document.body.prepend(renderer.domElement);
 
-        // ─── Controls ────────────────────────────────────────────────
+        // ─── Controls ──────────────────────────────────────────────
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.06;
-        controls.minDistance = 2.5;
+        controls.minDistance = 2.0;
         controls.maxDistance = 12;
-        controls.target.set(0, 0.2, 0);
-        controls.autoRotate = false;
-        controls.autoRotateSpeed = 0.8;
+        controls.target.set(0, 0.1, 0);
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.6;
 
-        // ─── Post Processing ─────────────────────────────────────────
+        // ─── Post-processing ───────────────────────────────────────
         const composer = new EffectComposer(renderer);
-        const renderPass = new RenderPass(scene, camera);
-        composer.addPass(renderPass);
-
-        const bloomPass = new UnrealBloomPass(
+        composer.addPass(new RenderPass(scene, camera));
+        const bloom = new UnrealBloomPass(
             new THREE.Vector2(window.innerWidth, window.innerHeight),
-            0.3, // strength
-            0.4, // radius
-            0.2 // threshold
+            0.35, 0.4, 0.2
         );
-        composer.addPass(bloomPass);
+        composer.addPass(bloom);
 
-        // ─── Lighting ────────────────────────────────────────────────
-        const ambient = new THREE.AmbientLight(0x44333a, 0.5);
-        scene.add(ambient);
+        // ─── Lighting ──────────────────────────────────────────────
+        scene.add(new THREE.AmbientLight(0x44333a, 0.4));
 
-        const keyLight = new THREE.DirectionalLight(0xffd8c0, 2.0);
-        keyLight.position.set(4, 6, 4);
-        keyLight.castShadow = true;
-        keyLight.shadow.mapSize.width = 1024;
-        keyLight.shadow.mapSize.height = 1024;
-        scene.add(keyLight);
+        const key = new THREE.DirectionalLight(0xffd8c0, 2.2);
+        key.position.set(4, 6, 4);
+        key.castShadow = true;
+        key.shadow.mapSize.width = 1024;
+        key.shadow.mapSize.height = 1024;
+        scene.add(key);
 
-        const fillLight = new THREE.DirectionalLight(0x8866aa, 0.6);
-        fillLight.position.set(-3, 1, -2);
-        scene.add(fillLight);
+        const fill = new THREE.DirectionalLight(0x8866aa, 0.5);
+        fill.position.set(-3, 1, -2);
+        scene.add(fill);
 
-        const rimLight = new THREE.DirectionalLight(0xffaa88, 0.8);
-        rimLight.position.set(-2, 3, -5);
-        scene.add(rimLight);
+        const rim = new THREE.DirectionalLight(0xffaa88, 0.7);
+        rim.position.set(-2, 3, -5);
+        scene.add(rim);
 
-        const backLight = new THREE.DirectionalLight(0x4422aa, 0.3);
-        backLight.position.set(0, -1, -6);
-        scene.add(backLight);
-
-        const pointGlow = new THREE.PointLight(0xff4433, 0.6, 8);
-        pointGlow.position.set(0, 0.2, 0.5);
-        scene.add(pointGlow);
-
-        // subtle environment
-        const hemi = new THREE.HemisphereLight(0x664466, 0x332233, 0.6);
+        const hemi = new THREE.HemisphereLight(0x664466, 0x221122, 0.5);
         scene.add(hemi);
 
-        // ─── Ground / Environment ──────────────────────────────────
-        const groundGeo = new THREE.PlaneGeometry(30, 30);
-        const groundMat = new THREE.ShadowMaterial({ opacity: 0.3, color: 0x000000 });
-        const ground = new THREE.Mesh(groundGeo, groundMat);
+        const glowPoint = new THREE.PointLight(0xff4433, 0.5, 6);
+        glowPoint.position.set(0, 0.1, 0.8);
+        scene.add(glowPoint);
+
+        // ─── Ground shadow catcher ──────────────────────────────────
+        const ground = new THREE.Mesh(
+            new THREE.PlaneGeometry(20, 20),
+            new THREE.ShadowMaterial({ opacity: 0.25, color: 0x000000 })
+        );
         ground.rotation.x = -Math.PI / 2;
-        ground.position.y = -0.5;
+        ground.position.y = -0.45;
         ground.receiveShadow = true;
         scene.add(ground);
 
-        // particles background
-        const starCount = 400;
+        // ─── Starfield ─────────────────────────────────────────────
+        const starCount = 500;
         const starGeo = new THREE.BufferGeometry();
         const starPos = new Float32Array(starCount * 3);
         for (let i = 0; i < starCount * 3; i++) {
-            starPos[i] = (Math.random() - 0.5) * 40;
+            starPos[i] = (Math.random() - 0.5) * 50;
             if (i % 3 === 1) starPos[i] = (Math.random() - 0.5) * 20 + 2;
             if (i % 3 === 2) starPos[i] = (Math.random() - 0.5) * 40 - 10;
         }
         starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
         const starMat = new THREE.PointsMaterial({
             color: 0xffccbb,
-            size: 0.04,
+            size: 0.035,
             transparent: true,
             opacity: 0.5,
             blending: THREE.AdditiveBlending,
         });
-        const stars = new THREE.Points(starGeo, starMat);
-        scene.add(stars);
+        scene.add(new THREE.Points(starGeo, starMat));
 
-        // ─── Heart Shape (param) ────────────────────────────────────
-        function generateHeartPoints(numPts = 80) {
+        // ─── Heart Geometry Helpers ────────────────────────────────
+        function getHeartPoints(num = 100) {
             const pts = [];
-            for (let i = 0; i <= numPts; i++) {
-                const t = (i / numPts) * Math.PI * 2;
+            for (let i = 0; i <= num; i++) {
+                const t = (i / num) * Math.PI * 2;
                 const x = 16 * Math.pow(Math.sin(t), 3);
                 const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
-                pts.push({ x: x / 16, y: y / 16 });
+                pts.push({ x: x / 17, y: y / 17 });
             }
             return pts;
         }
 
-        function createHalfShape(points, side) {
-            // side: 'left' or 'right'
+        function buildHalfShape(points, side) {
             const shape = new THREE.Shape();
-            const halfPts = points.filter(p => {
-                if (side === 'left') return p.x <= 0;
-                else return p.x >= 0;
-            });
-
-            // sort: for left, from bottom to top along left side; for right, from bottom to top along right side
-            // We need to order them properly.
-            // The heart points go: t=0 → bottom (0, ~0.81), t=π/2 → right, t=π → top, t=3π/2 → left
-            // For left side: t from π to 2π (bottom → left → top)
-            // For right side: t from 0 to π (bottom → right → top)
-
-            let ordered = [];
+            let filtered;
             if (side === 'left') {
-                // t from π to 2π
-                for (let i = 0; i < points.length; i++) {
-                    const frac = i / points.length;
-                    const t = frac * Math.PI * 2;
-                    if (t >= Math.PI && t <= Math.PI * 2) {
-                        ordered.push(points[i]);
-                    }
-                }
-                // ensure we go from bottom → left → top
-                // bottom is at t=2π (or 0), top is at t=π
-                // actually we want bottom → left → top → back to bottom (center)
-                // Reorder: from t=2π down to t=π (going backwards through left side)
-                const bottomIdx = ordered.findIndex(p => p.x === 0 && p.y < 0);
-                // simpler: just use the points as-is, but ensure closure
+                filtered = points.filter(p => p.x <= 0);
+                // sort by angle to ensure proper winding: bottom → left → top
+                filtered.sort((a, b) => {
+                    const angA = Math.atan2(a.y, a.x);
+                    const angB = Math.atan2(b.y, b.x);
+                    return angA - angB;
+                });
             } else {
-                // right side: t from 0 to π
-                for (let i = 0; i < points.length; i++) {
-                    const frac = i / points.length;
-                    const t = frac * Math.PI * 2;
-                    if (t >= 0 && t <= Math.PI) {
-                        ordered.push(points[i]);
-                    }
-                }
-                // bottom → right → top
+                filtered = points.filter(p => p.x >= 0);
+                filtered.sort((a, b) => {
+                    const angA = Math.atan2(a.y, a.x);
+                    const angB = Math.atan2(b.y, b.x);
+                    return angA - angB;
+                });
             }
-
-            // If empty, fallback
-            if (ordered.length < 3) {
-                // fallback simple heart half
-                if (side === 'left') {
-                    shape.moveTo(0, 0);
-                    shape.bezierCurveTo(0, -0.3, -0.6, -0.6, -0.6, 0);
-                    shape.bezierCurveTo(-0.6, 0.5, -0.2, 0.8, 0, 1.0);
-                    shape.lineTo(0, 0);
-                } else {
-                    shape.moveTo(0, 0);
-                    shape.bezierCurveTo(0, -0.3, 0.6, -0.6, 0.6, 0);
-                    shape.bezierCurveTo(0.6, 0.5, 0.2, 0.8, 0, 1.0);
-                    shape.lineTo(0, 0);
-                }
+            if (filtered.length < 3) {
+                // fallback
+                shape.moveTo(0, -0.5);
+                shape.quadraticCurveTo(side === 'left' ? -0.6 : 0.6, -0.6, side === 'left' ? -0.6 : 0.6, 0);
+                shape.quadraticCurveTo(side === 'left' ? -0.6 : 0.6, 0.6, 0, 0.8);
+                shape.lineTo(0, -0.5);
                 return shape;
             }
-
-            // Build shape from ordered points
-            shape.moveTo(ordered[0].x, ordered[0].y);
-            for (let i = 1; i < ordered.length; i++) {
-                shape.lineTo(ordered[i].x, ordered[i].y);
+            shape.moveTo(filtered[0].x, filtered[0].y);
+            for (let i = 1; i < filtered.length; i++) {
+                shape.lineTo(filtered[i].x, filtered[i].y);
             }
-            // close back to center along the cut
-            // find the top point (max y) and bottom point (min y)
-            let topY = -Infinity,
-                bottomY = Infinity;
-            let topP = null,
-                bottomP = null;
-            for (const p of ordered) {
-                if (p.y > topY) { topY = p.y;
-                    topP = p; }
-                if (p.y < bottomY) { bottomY = p.y;
-                    bottomP = p; }
-            }
-            // close along the center line from top to bottom
-            shape.lineTo(0, topY);
-            shape.lineTo(0, bottomY);
-            shape.lineTo(ordered[0].x, ordered[0].y);
-
+            // close along the center cut
+            const top = filtered.reduce((a, b) => a.y > b.y ? a : b);
+            const bottom = filtered.reduce((a, b) => a.y < b.y ? a : b);
+            shape.lineTo(0, top.y);
+            shape.lineTo(0, bottom.y);
+            shape.lineTo(filtered[0].x, filtered[0].y);
             return shape;
         }
 
-        // Generate full heart points
-        const heartPts = generateHeartPoints(120);
+        const heartPts = getHeartPoints(140);
+        const leftShape = buildHalfShape(heartPts, 'left');
+        const rightShape = buildHalfShape(heartPts, 'right');
 
-        // Create left and right shapes
-        const leftShape = createHalfShape(heartPts, 'left');
-        const rightShape = createHalfShape(heartPts, 'right');
-
-        // ─── Create 3D Heart Halves ──────────────────────────────────
-        const extrudeSettings = {
-            depth: 0.32,
-            bevelEnabled: true,
-            bevelThickness: 0.08,
-            bevelSize: 0.04,
-            bevelSegments: 8,
-        };
-
-        // Materials
+        // ─── Materials ──────────────────────────────────────────────
         const goldMat = new THREE.MeshPhysicalMaterial({
             color: 0xdd8844,
-            metalness: 0.75,
-            roughness: 0.25,
+            metalness: 0.8,
+            roughness: 0.2,
             clearcoat: 0.3,
-            clearcoatRoughness: 0.4,
-            envMapIntensity: 1.2,
-            emissive: 0x662200,
-            emissiveIntensity: 0.08,
+            clearcoatRoughness: 0.3,
+            emissive: 0x552200,
+            emissiveIntensity: 0.06,
         });
 
         const innerMat = new THREE.MeshPhysicalMaterial({
             color: 0xff6644,
-            metalness: 0.1,
-            roughness: 0.3,
+            metalness: 0.05,
+            roughness: 0.2,
             emissive: 0xff3322,
-            emissiveIntensity: 0.4,
+            emissiveIntensity: 0.6,
             transparent: true,
-            opacity: 0.92,
-            clearcoat: 0.1,
+            opacity: 0.9,
         });
 
-        const innerGlowMat = new THREE.MeshPhysicalMaterial({
+        const glowMat = new THREE.MeshPhysicalMaterial({
             color: 0xff8866,
-            metalness: 0.0,
-            roughness: 0.2,
+            metalness: 0,
+            roughness: 0.1,
             emissive: 0xff4433,
-            emissiveIntensity: 1.2,
+            emissiveIntensity: 1.5,
             transparent: true,
-            opacity: 0.7,
+            opacity: 0.6,
             side: THREE.DoubleSide,
         });
 
-        // Left half
-        const leftGeo = new THREE.ExtrudeGeometry(leftShape, extrudeSettings);
-        leftGeo.computeVertexNormals();
-        const leftMesh = new THREE.Mesh(leftGeo, goldMat);
-        leftMesh.castShadow = true;
-        leftMesh.receiveShadow = true;
-        leftMesh.position.set(0, 0, -0.16);
+        const extrudeSettings = {
+            depth: 0.30,
+            bevelEnabled: true,
+            bevelThickness: 0.07,
+            bevelSize: 0.04,
+            bevelSegments: 8,
+        };
 
-        // Right half
-        const rightGeo = new THREE.ExtrudeGeometry(rightShape, extrudeSettings);
-        rightGeo.computeVertexNormals();
-        const rightMesh = new THREE.Mesh(rightGeo, goldMat);
-        rightMesh.castShadow = true;
-        rightMesh.receiveShadow = true;
-        rightMesh.position.set(0, 0, -0.16);
+        // ─── Build halves ────────────────────────────────────────────
+        function createHalf(shape, xOffset) {
+            const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            geo.computeVertexNormals();
+            const mesh = new THREE.Mesh(geo, goldMat);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            mesh.position.set(0, 0, -0.15);
 
-        // ─── Inner glow surfaces (on the cut face) ──────────────────
-        function createInnerSurface(shape, colorMat, offsetX = 0) {
-            const pts = shape.getPoints(40);
-            const s = new THREE.Shape();
-            s.moveTo(pts[0].x, pts[0].y);
-            for (let i = 1; i < pts.length; i++) {
-                s.lineTo(pts[i].x, pts[i].y);
-            }
-            s.lineTo(pts[0].x, pts[0].y);
+            // inner face (cut plane)
+            const faceShape = shape.clone();
+            const faceGeo = new THREE.ShapeGeometry(faceShape);
+            const face = new THREE.Mesh(faceGeo, innerMat);
+            face.position.set(0, 0, 0.15);
 
-            const geo = new THREE.ShapeGeometry(s);
-            const mesh = new THREE.Mesh(geo, colorMat);
-            // position on the cut face
-            mesh.position.set(offsetX, 0, 0.16);
-            mesh.rotation.y = 0;
-            return mesh;
+            // glow overlay
+            const glowShape = shape.clone();
+            const glowGeo = new THREE.ShapeGeometry(glowShape);
+            const glow = new THREE.Mesh(glowGeo, glowMat);
+            glow.position.set(0, 0, 0.17);
+            glow.scale.set(0.82, 0.82, 1);
+
+            const group = new THREE.Group();
+            group.add(mesh);
+            group.add(face);
+            group.add(glow);
+            return group;
         }
 
-        // Inner surfaces - positioned at the cut plane
-        const leftInner = createInnerSurface(leftShape, innerMat, 0);
-        const rightInner = createInnerSurface(rightShape, innerMat, 0);
+        const leftGroup = createHalf(leftShape, 0);
+        const rightGroup = createHalf(rightShape, 0);
 
-        // Glow layers
-        const glowMatL = innerGlowMat.clone();
-        glowMatL.emissiveIntensity = 1.0;
-        const glowMatR = innerGlowMat.clone();
-        glowMatR.emissiveIntensity = 1.0;
-
-        const leftGlow = createInnerSurface(leftShape, glowMatL, 0.01);
-        leftGlow.scale.set(0.85, 0.85, 1);
-        leftGlow.position.z = 0.18;
-
-        const rightGlow = createInnerSurface(rightShape, glowMatR, -0.01);
-        rightGlow.scale.set(0.85, 0.85, 1);
-        rightGlow.position.z = 0.18;
-
-        // ─── Group halves ────────────────────────────────────────────
-        const leftGroup = new THREE.Group();
-        leftGroup.add(leftMesh);
-        leftGroup.add(leftInner);
-        leftGroup.add(leftGlow);
-        leftGroup.position.set(0, 0.15, 0);
-
-        const rightGroup = new THREE.Group();
-        rightGroup.add(rightMesh);
-        rightGroup.add(rightInner);
-        rightGroup.add(rightGlow);
-        rightGroup.position.set(0, 0.15, 0);
-
-        // Pivot groups for rotation
+        // ─── Pivots for opening animation ──────────────────────────
         const pivotL = new THREE.Group();
         pivotL.add(leftGroup);
-        pivotL.position.set(0, 0.15, 0);
+        pivotL.position.set(0, 0.1, 0);
 
         const pivotR = new THREE.Group();
         pivotR.add(rightGroup);
-        pivotR.position.set(0, 0.15, 0);
+        pivotR.position.set(0, 0.1, 0);
 
         scene.add(pivotL);
         scene.add(pivotR);
 
-        // Store for animation
-        const halves = { left: pivotL, right: pivotR, leftGroup, rightGroup };
-
-        // ─── Decorative Chain / Bail ─────────────────────────────────
+        // ─── Bail (top ring) ────────────────────────────────────────
         function createBail() {
-            const group = new THREE.Group();
+            const g = new THREE.Group();
 
-            // top ring
-            const ringGeo = new THREE.TorusGeometry(0.18, 0.04, 12, 24);
-            const ringMat = new THREE.MeshPhysicalMaterial({
-                color: 0xdd9955,
-                metalness: 0.8,
-                roughness: 0.2,
-                emissive: 0x442200,
+            // main ring
+            const ring = new THREE.Mesh(
+                new THREE.TorusGeometry(0.18, 0.04, 16, 28),
+                new THREE.MeshPhysicalMaterial({
+                    color: 0xdd9955,
+                    metalness: 0.8,
+                    roughness: 0.2,
+                    emissive: 0x442200,
+                    emissiveIntensity: 0.1,
+                })
+            );
+            ring.rotation.x = Math.PI / 2;
+            ring.position.y = 0.5;
+            ring.castShadow = true;
+            g.add(ring);
+
+            // small loop underneath
+            const loop = new THREE.Mesh(
+                new THREE.TorusGeometry(0.07, 0.025, 12, 18),
+                new THREE.MeshPhysicalMaterial({
+                    color: 0xdd9955,
+                    metalness: 0.8,
+                    roughness: 0.25,
+                })
+            );
+            loop.position.set(0, 0.32, 0);
+            loop.castShadow = true;
+            g.add(loop);
+
+            // tiny connectors
+            for (let side of [-1, 1]) {
+                const bar = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.015, 0.015, 0.12, 6),
+                    new THREE.MeshPhysicalMaterial({
+                        color: 0xdd9955,
+                        metalness: 0.8,
+                        roughness: 0.25,
+                    })
+                );
+                bar.position.set(side * 0.1, 0.40, 0);
+                bar.rotation.z = side * 0.15;
+                bar.castShadow = true;
+                g.add(bar);
+            }
+
+            return g;
+        }
+
+        const bail = createBail();
+        scene.add(bail);
+
+        // ─── Inner sparkle gems ─────────────────────────────────────
+        const gemMat = new THREE.MeshPhysicalMaterial({
+            color: 0xff5577,
+            emissive: 0xff2244,
+            emissiveIntensity: 0.8,
+            metalness: 0.1,
+            roughness: 0.1,
+            transparent: true,
+            opacity: 0.9,
+            envMapIntensity: 0.5,
+        });
+
+        const gems = [];
+        for (let i = 0; i < 7; i++) {
+            const size = 0.03 + Math.random() * 0.04;
+            const gem = new THREE.Mesh(new THREE.OctahedronGeometry(size, 0), gemMat);
+            const angle = Math.random() * Math.PI * 2;
+            const radius = 0.1 + Math.random() * 0.25;
+            gem.position.set(
+                Math.cos(angle) * radius,
+                Math.sin(angle) * radius * 0.8 + 0.1,
+                0.18
+            );
+            gem.userData = {
+                phase: Math.random() * Math.PI * 2,
+                speed: 0.5 + Math.random() * 0.8,
+                baseY: gem.position.y,
+            };
+            scene.add(gem);
+            gems.push(gem);
+        }
+
+        // ─── Animation state ────────────────────────────────────────
+        let isOpen = false;
+        let openProgress = 0; // 0 = closed, 1 = open
+        const targetOpen = 0.75; // radians
+
+        const messageEl = document.getElementById('message');
+
+        // ─── Click to toggle ────────────────────────────────────────
+        renderer.domElement.addEventListener('click', () => {
+            isOpen = !isOpen;
+            if (isOpen) {
+                messageEl.classList.add('show');
+                controls.autoRotate = false;
+            } else {
+                messageEl.classList.remove('show');
+                controls.autoRotate = true;
+            }
+        });
+
+        // also toggle on touch for mobile
+        renderer.domElement.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                isOpen = !isOpen;
+                if (isOpen) {
+                    messageEl.classList.add('show');
+                    controls.autoRotate = false;
+                } else {
+                    messageEl.classList.remove('show');
+                    controls.autoRotate = true;
+                }
+            }
+        });
+
+        // ─── Resize ──────────────────────────────────────────────────
+        window.addEventListener('resize', () => {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+            composer.setSize(w, h);
+        });
+
+        // ─── Render Loop ─────────────────────────────────────────────
+        const clock = new THREE.Clock();
+
+        function animate() {
+            const dt = clock.getDelta();
+            const time = clock.getElapsedTime();
+
+            // smooth open/close
+            const speed = 2.8;
+            if (isOpen && openProgress < 1) {
+                openProgress = Math.min(openProgress + dt * speed, 1);
+            } else if (!isOpen && openProgress > 0) {
+                openProgress = Math.max(openProgress - dt * speed, 0);
+            }
+
+            // ease in-out
+            const ease = openProgress * openProgress * (3 - 2 * openProgress);
+            const angle = ease * targetOpen;
+
+            // rotate halves around Y axis at their inner edge
+            pivotL.rotation.y = -angle;
+            pivotR.rotation.y = angle;
+
+            // slight outward translation for realism
+            const spread = ease * 0.08;
+            pivotL.position.x = -spread;
+            pivotR.position.x = spread;
+
+            // glow pulse
+            const pulse = 0.7 + 0.3 * Math.sin(time * 1.5);
+            glowMat.emissiveIntensity = 0.8 + pulse * 0.8;
+
+            // twinkle gems
+            for (const gem of gems) {
+                const u = gem.userData;
+                const scale = 0.7 + 0.5 * Math.sin(time * u.speed + u.phase);
+                gem.scale.set(scale, scale, scale);
+                gem.position.y = u.baseY + 0.02 * Math.sin(time * u.speed * 0.7 + u.phase);
+                gem.rotation.x += dt * 0.5;
+                gem.rotation.z += dt * 0.3;
+            }
+
+            // bail subtle sway
+            bail.rotation.z = 0.04 * Math.sin(time * 0.6);
+            bail.rotation.x = 0.02 * Math.sin(time * 0.4 + 1);
+
+            // update controls
+            controls.update();
+
+            // render with bloom
+            composer.render();
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // small delay to show initial state
+        setTimeout(() => {
+            controls.autoRotate = true;
+        }, 500);
+
+        console.log('❤️ Love Pendant — click to open/close');
+    </script>
+</body>
+</html>
