@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Love Pendant – Locket Opening</title>
+    <title>Love Pendant + Passport Frames</title>
     <style>
         * {
             margin: 0;
@@ -18,12 +18,14 @@
         canvas {
             display: block;
         }
+
+        /* ─── UI overlays (heart controls) ─── */
         #ui-hint {
             position: absolute;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(255, 200, 170, 0.5);
+            color: rgba(255, 200, 170, 0.4);
             font-size: 13px;
             letter-spacing: 1px;
             background: rgba(20, 12, 16, 0.5);
@@ -34,23 +36,25 @@
             backdrop-filter: blur(4px);
             user-select: none;
             white-space: nowrap;
+            z-index: 10;
         }
         #info {
             position: absolute;
             bottom: 28px;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(255, 215, 180, 0.4);
+            color: rgba(255, 215, 180, 0.3);
             font-size: 13px;
             letter-spacing: 2px;
-            background: rgba(30, 20, 25, 0.5);
+            background: rgba(30, 20, 25, 0.4);
             padding: 8px 22px;
             border-radius: 40px;
             backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 180, 140, 0.1);
+            border: 1px solid rgba(255, 180, 140, 0.08);
             pointer-events: none;
             user-select: none;
             white-space: nowrap;
+            z-index: 10;
         }
         #message {
             position: absolute;
@@ -70,21 +74,102 @@
             padding: 30px 50px;
             border-radius: 60px;
             border: 1px solid rgba(255, 180, 150, 0.08);
+            z-index: 20;
         }
         #message.show {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
         }
+
+        /* ─── Passport‑style photo frames ─── */
+        .frame {
+            position: absolute;
+            width: 160px;
+            height: 200px;
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            user-select: none;
+            z-index: 30;
+        }
+        .frame:hover {
+            transform: scale(1.04);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.9);
+        }
+        .frame .photo {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 2px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .frame .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.3s ease;
+        }
+        /* flipped state → image hidden, pure white shows */
+        .frame.flipped .photo img {
+            opacity: 0;
+        }
+        .frame .hint {
+            position: absolute;
+            bottom: -26px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 1px;
+            pointer-events: none;
+        }
+
+        /* corner positions */
+        .frame.top-left {
+            top: 30px;
+            left: 30px;
+        }
+        .frame.bottom-right {
+            bottom: 30px;
+            right: 30px;
+        }
+
+        /* responsive shrink */
         @media (max-width: 600px) {
-            #info {
-                font-size: 10px;
-                padding: 4px 14px;
+            .frame {
+                width: 100px;
+                height: 130px;
+                padding: 6px;
+            }
+            .frame.top-left {
+                top: 16px;
+                left: 16px;
+            }
+            .frame.bottom-right {
                 bottom: 16px;
+                right: 16px;
+            }
+            .frame .hint {
+                font-size: 9px;
+                bottom: -20px;
             }
             #ui-hint {
                 font-size: 10px;
                 padding: 4px 12px;
                 top: 12px;
+            }
+            #info {
+                font-size: 10px;
+                padding: 4px 14px;
+                bottom: 16px;
             }
             #message {
                 font-size: 20px;
@@ -96,11 +181,35 @@
 </head>
 <body>
 
-    <div id="ui-hint">✦ click & drag to orbit ✦</div>
-    <div id="info">❤︎ love pendant · locket opening ❤︎</div>
-    <div id="message"> Tausif & Najifa 
-                         13-3-26 to ∞ </div>
+    <!-- ─── Heart UI ─── -->
+    <div id="ui-hint">✦ click heart to open · drag to orbit ✦</div>
+    <div id="info">❤︎ love locket · passport mementos ❤︎</div>
+    <div id="message">∞ forever ∞</div>
 
+    <!-- ─── Passport frames ─── -->
+    <div class="frame top-left" id="frame1">
+        <div class="photo">
+            <img
+                src="https://media.discordapp.net/attachments/1483203477151678539/1530643733345861744/IMG_20260725_135112.jpg?ex=6a665290&is=6a650110&hm=5903a672b111f84cd58c5c0e66e748b37099343478430df56e7ea8f01c9f72ad&=&format=webp&width=389&height=516"
+                alt="photo 1"
+                crossorigin="anonymous"
+            />
+        </div>
+        <div class="hint">click to flip</div>
+    </div>
+
+    <div class="frame bottom-right" id="frame2">
+        <div class="photo">
+            <img
+                src="https://media.discordapp.net/attachments/1342752359658422323/1530644938042114209/image.png?ex=6a6653af&is=6a65022f&hm=ebfd3f9e983df55ed3a114248ee05151119e53046975d4d6549454cb666e6eb9&=&format=webp&quality=lossless&width=315&height=316"
+                alt="photo 2"
+                crossorigin="anonymous"
+            />
+        </div>
+        <div class="hint">click to flip</div>
+    </div>
+
+    <!-- ─── Three.js 3D Heart ────────────────────────────────────── -->
     <script type="importmap">
         {
             "imports": {
@@ -142,7 +251,7 @@
         controls.maxDistance = 12;
         controls.target.set(0, 0.1, 0);
         controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.6;
+        controls.autoRotateSpeed = 0.5;
 
         // ─── Post-processing ───────────────────────────────────────
         const composer = new EffectComposer(renderer);
@@ -207,7 +316,7 @@
         });
         scene.add(new THREE.Points(starGeo, starMat));
 
-        // ─── Heart Geometry Helpers ────────────────────────────────
+        // ─── Heart Geometry ────────────────────────────────────────
         function getHeartPoints(num = 100) {
             const pts = [];
             for (let i = 0; i <= num; i++) {
@@ -224,7 +333,6 @@
             let filtered;
             if (side === 'left') {
                 filtered = points.filter(p => p.x <= 0);
-                // sort by angle to ensure proper winding: bottom → left → top
                 filtered.sort((a, b) => {
                     const angA = Math.atan2(a.y, a.x);
                     const angB = Math.atan2(b.y, b.x);
@@ -239,7 +347,6 @@
                 });
             }
             if (filtered.length < 3) {
-                // fallback
                 shape.moveTo(0, -0.5);
                 shape.quadraticCurveTo(side === 'left' ? -0.6 : 0.6, -0.6, side === 'left' ? -0.6 : 0.6, 0);
                 shape.quadraticCurveTo(side === 'left' ? -0.6 : 0.6, 0.6, 0, 0.8);
@@ -250,7 +357,6 @@
             for (let i = 1; i < filtered.length; i++) {
                 shape.lineTo(filtered[i].x, filtered[i].y);
             }
-            // close along the center cut
             const top = filtered.reduce((a, b) => a.y > b.y ? a : b);
             const bottom = filtered.reduce((a, b) => a.y < b.y ? a : b);
             shape.lineTo(0, top.y);
@@ -304,7 +410,7 @@
         };
 
         // ─── Build halves ────────────────────────────────────────────
-        function createHalf(shape, xOffset) {
+        function createHalf(shape) {
             const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
             geo.computeVertexNormals();
             const mesh = new THREE.Mesh(geo, goldMat);
@@ -312,13 +418,11 @@
             mesh.receiveShadow = true;
             mesh.position.set(0, 0, -0.15);
 
-            // inner face (cut plane)
             const faceShape = shape.clone();
             const faceGeo = new THREE.ShapeGeometry(faceShape);
             const face = new THREE.Mesh(faceGeo, innerMat);
             face.position.set(0, 0, 0.15);
 
-            // glow overlay
             const glowShape = shape.clone();
             const glowGeo = new THREE.ShapeGeometry(glowShape);
             const glow = new THREE.Mesh(glowGeo, glowMat);
@@ -332,10 +436,9 @@
             return group;
         }
 
-        const leftGroup = createHalf(leftShape, 0);
-        const rightGroup = createHalf(rightShape, 0);
+        const leftGroup = createHalf(leftShape);
+        const rightGroup = createHalf(rightShape);
 
-        // ─── Pivots for opening animation ──────────────────────────
         const pivotL = new THREE.Group();
         pivotL.add(leftGroup);
         pivotL.position.set(0, 0.1, 0);
@@ -350,8 +453,6 @@
         // ─── Bail (top ring) ────────────────────────────────────────
         function createBail() {
             const g = new THREE.Group();
-
-            // main ring
             const ring = new THREE.Mesh(
                 new THREE.TorusGeometry(0.18, 0.04, 16, 28),
                 new THREE.MeshPhysicalMaterial({
@@ -367,7 +468,6 @@
             ring.castShadow = true;
             g.add(ring);
 
-            // small loop underneath
             const loop = new THREE.Mesh(
                 new THREE.TorusGeometry(0.07, 0.025, 12, 18),
                 new THREE.MeshPhysicalMaterial({
@@ -380,7 +480,6 @@
             loop.castShadow = true;
             g.add(loop);
 
-            // tiny connectors
             for (let side of [-1, 1]) {
                 const bar = new THREE.Mesh(
                     new THREE.CylinderGeometry(0.015, 0.015, 0.12, 6),
@@ -395,7 +494,6 @@
                 bar.castShadow = true;
                 g.add(bar);
             }
-
             return g;
         }
 
@@ -436,12 +534,11 @@
 
         // ─── Animation state ────────────────────────────────────────
         let isOpen = false;
-        let openProgress = 0; // 0 = closed, 1 = open
-        const targetOpen = 0.75; // radians
+        let openProgress = 0;
+        const targetOpen = 0.75;
 
         const messageEl = document.getElementById('message');
 
-        // ─── Click to toggle ────────────────────────────────────────
         renderer.domElement.addEventListener('click', () => {
             isOpen = !isOpen;
             if (isOpen) {
@@ -453,7 +550,6 @@
             }
         });
 
-        // also toggle on touch for mobile
         renderer.domElement.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
                 isOpen = !isOpen;
@@ -465,6 +561,17 @@
                     controls.autoRotate = true;
                 }
             }
+        });
+
+        // ─── Frame flip logic ──────────────────────────────────────
+        document.querySelectorAll('.frame').forEach(frame => {
+            frame.addEventListener('click', function(e) {
+                e.stopPropagation(); // don't interfere with heart click
+                this.classList.toggle('flipped');
+                this.style.transition = 'transform 0.15s';
+                this.style.transform = 'scale(0.96)';
+                setTimeout(() => { this.style.transform = ''; }, 150);
+            });
         });
 
         // ─── Resize ──────────────────────────────────────────────────
@@ -484,7 +591,6 @@
             const dt = clock.getDelta();
             const time = clock.getElapsedTime();
 
-            // smooth open/close
             const speed = 2.8;
             if (isOpen && openProgress < 1) {
                 openProgress = Math.min(openProgress + dt * speed, 1);
@@ -492,24 +598,19 @@
                 openProgress = Math.max(openProgress - dt * speed, 0);
             }
 
-            // ease in-out
             const ease = openProgress * openProgress * (3 - 2 * openProgress);
             const angle = ease * targetOpen;
 
-            // rotate halves around Y axis at their inner edge
             pivotL.rotation.y = -angle;
             pivotR.rotation.y = angle;
 
-            // slight outward translation for realism
             const spread = ease * 0.08;
             pivotL.position.x = -spread;
             pivotR.position.x = spread;
 
-            // glow pulse
             const pulse = 0.7 + 0.3 * Math.sin(time * 1.5);
             glowMat.emissiveIntensity = 0.8 + pulse * 0.8;
 
-            // twinkle gems
             for (const gem of gems) {
                 const u = gem.userData;
                 const scale = 0.7 + 0.5 * Math.sin(time * u.speed + u.phase);
@@ -519,27 +620,16 @@
                 gem.rotation.z += dt * 0.3;
             }
 
-            // bail subtle sway
             bail.rotation.z = 0.04 * Math.sin(time * 0.6);
             bail.rotation.x = 0.02 * Math.sin(time * 0.4 + 1);
 
-            // update controls
             controls.update();
-
-            // render with bloom
             composer.render();
-
             requestAnimationFrame(animate);
         }
 
         animate();
-
-        // small delay to show initial state
-        setTimeout(() => {
-            controls.autoRotate = true;
-        }, 500);
-
-        console.log('❤️ Love Pendant — click to open/close');
+        setTimeout(() => { controls.autoRotate = true; }, 500);
     </script>
 </body>
 </html>
