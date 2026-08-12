@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Love Diary</title>
+    <style>
+        /* Base Styling & Background */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1b003a 0%, #000b2e 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Floating Hearts Animation Background */
+        .heart-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            font-size: 24px;
+            animation: floatUp 8s infinite ease-in-out;
+            opacity: 0.7;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.8) rotate(0deg);
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-110vh) scale(1.3) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Heart color distributions & animation delays */
+        .heart:nth-child(1) { left: 10%; color: #ff2a6d; animation-duration: 7s; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 25%; color: #ffbe0b; animation-duration: 9s; animation-delay: 2s; }
+        .heart:nth-child(3) { left: 40%; color: #00f5d4; animation-duration: 6s; animation-delay: 4s; }
+        .heart:nth-child(4) { left: 55%; color: #4169e1; animation-duration: 10s; animation-delay: 1s; }
+        .heart:nth-child(5) { left: 70%; color: #ff007f; animation-duration: 8s; animation-delay: 3s; }
+        .heart:nth-child(6) { left: 85%; color: #38b000; animation-duration: 7s; animation-delay: 5s; }
+
+        /* Main Content Container */
+        .container {
+            max-width: 750px;
+            width: 100%;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            color: #ff69b4; /* Pink */
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: #ffd700; /* Yellow */
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        /* Diary Entries Section */
+        .diary-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Diary Card */
+        .diary-card {
+            background: rgba(16, 20, 50, 0.75);
+            border-left: 6px solid #4169e1; /* Royal Blue Accent */
+            border-radius: 12px;
+            padding: 24px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .diary-card:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Card color themes alternating via CSS nth-child */
+        .diary-card:nth-child(2n) {
+            border-left-color: #ff1493; /* Pink */
+        }
+        .diary-card:nth-child(3n) {
+            border-left-color: #ff3333; /* Red */
+        }
+        .diary-card:nth-child(4n) {
+            border-left-color: #2ec4b6; /* Green */
+        }
+        .diary-card:nth-child(5n) {
+            border-left-color: #ffbe0b; /* Yellow */
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+        }
+
+        .entry-title {
+            font-size: 1.4rem;
+            color: #ff69b4; /* Pink */
+        }
+
+        .entry-date {
+            font-size: 0.85rem;
+            color: #2ec4b6; /* Green Accent */
+            background: rgba(46, 196, 182, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .entry-body {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            white-space: pre-line;
+        }
+
+        .entry-footer {
+            margin-top: 15px;
+            text-align: right;
+            font-size: 1.2rem;
+            color: #ff3333; /* Red */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2.1rem;
+            }
+            .diary-card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Floating Hearts Background -->
+    <div class="heart-container">
+        <div class="heart">&#10084;</div>
+        <div class="heart">&#10084;</div>
+        <div class="heart">&#10084;</div>
+        <div class="heart">&#10084;</div>
+        <div class="heart">&#10084;</div>
+        <div class="heart">&#10084;</div>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div class="container">
+        <header>
+            <h1>&#10084; Love Notes & Diary &#10084;</h1>
+            <p>A safe space for sweet memories and thoughts</p>
+        </header>
+
+        <main class="diary-feed">
+
+            <!-- ENTRY 1 -->
+            <article class="diary-card">
+                <div class="entry-header">
+                    <h2 class="entry-title">First Diary Entry Title</h2>
+                    <span class="entry-date">August 12, 2026</span>
+                </div>
+                <div class="entry-body">
+                    Hi baby. I miss you. I really do :(. I wish i could tell you everything i have in my heart. I wish i could hold you. I wishbi could kiss you. I wish i could look into ur eyes and tell you that i love you. It has already been 153 days huh? Or 5months. Wow. I can't believe it je it's been so long. Ami tomake etodin dhore chini bisshash e hoyna. The spark, jeta amder moddhe ase. It feels special. Really different. It Truly feels like amra ekdom talking stage e asi and everything 😭. I love you my beautiful. I love you so much. You are the best girlfriend and the most perfect one i could ever ask for. Your presence has blessed me in many ways. I cannot imagine a single day without you. I really can't. I have been wrapping myself by u and ur gifts for the past 5months and yes you are a daily routine now. My phone bears your mark. My mug, amr fav thing btw😭😭 eto bhallagse amar trust me i was really really really happy. And yeah it was my 1st time getting a gift 😭😭 so IT WAS SPECIAL LIKE REALLY SPECIAL TO ME AND IM GLAD AND GRATEFUL TO ALLAH JE IT WAS YOU JAR SHATHE AMI AMAR OI FIRST TIME TA SHARE KORSI. Thank you for being the most perfect girl. I miss you so much bhai. Kanna ashe amdr ekshathe kotha bola ar pass kora time gular kotha mone kore. How do u even expect someone to fall out of love jar protita jinish e tar kotha mone pore. Drawer khulle or shirt er smell, shirt e or name, pani to amader jibon right? Even oitao tumi e hold koro or tomwr gift arki, even phone haate nileo time dekhte nileo tomake dekhi, ur eyes 😔💔, lock screen o tomar, phone ultay rakhleo tomake dekhi 💔 amar life er first gift jeta tumi amake diso, That can er matha diye Love jetay 'N' crave kora, Whatsapp e dhukle dekhi tomar banano oi bouquet ta 😔. Do u even know how much i miss you. Shit teared me up lol. I hope everything will be alright and soon you'll be back to where you belong.
+                </div>
+                <div class="entry-footer">&#10084;</div>
+            </article>
+
+            <!-- ENTRY 2 -->
+            <article class="diary-card">
+                <div class="entry-header">
+                    <h2 class="entry-title">Another Memory</h2>
+                    <span class="entry-date">August 13, 2026</span>
+                </div>
+                <div class="entry-body">
+                   Oh also Please ekta request . Can u add my alt to ur cf? Ami trxt dibona kisu te reply dibona plspls im sorry tokhn fahhsheep diye reply dewar jonno. U did block me pore to stop me but okay im really sorry  tokhn oita korar jonno. Eto impatient hoye jai bhai. I know tomaro onek iccha kore and u probs cry raate asw, ik u miss me a lot but yeah ekhon jei step niso etai bhalo. Im glad that u chose something for urself. I wonder tomar upor diye kiki jacche and how hard it is for you 😿 ami kotha na bolte perei eto koshte asi ar tumi je kemon aso idk bhai, kotha bolte parona, guilty o feel koro probably (i hope korona pls Don't). I wonder tomar parents ekhon kemon behave kortese and that bihh najiat specially. I'll pray to Allah jeno shob thik thak jay and jeno tumi beshi pressure e na poro. Please timemoto medicines nio and bhalomoto kheyo. Sharadin na kheye thakle pore to aro sick hoba. And also poralekha o koro please. 24/7 club er kaj koirona. Tomake na bolse off thakte kaj theke. Anyways, Don't worry shona. Whenever u feel sad. Imagine yourself sitting somewhere or standing in a corner, and ill hug you from the behind. Ill clean your thoughts, clouded mind, saddened heart, yearns and pain. insha'Allah I'll be with you for the rest of my life. Oije 1st day te je ekta gift disilam na? Oita hocche amar promise gift or something similar. It means je "i promise you that I'll be with you for the rest of my life and I'll always choose you over everybody else and I'll stay loyal to you. Ill never back off while you're in danger and i swear to protect you from every mischief or ruckus  caused by the evils and their evil deeds." My allah and his protection be with us and may allah bless the both of us so that we can achieve our dreams. Aro onek kichu likhte parbo but yeah 😔 let this line be the end of this paragraph and anniversary text😝 here:
+Oh my beautiful princess, my queen, my mommy and the partner of my life, the light of my dark, the cure of my problems, my safe space, my adorable fine shyt, my desire,my dream, i love you so muchhh. Thank you for lighting my world up.
+                </div>
+                <div class="entry-footer">&#10084;</div>
+            </article>
+
+        </main>
+    </div>
+
+</body>
+</html>
