@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Personal Diary</title>
+    <style>
+        :root {
+            --bg-color: #f4efe6;
+            --sidebar-bg: #e8e1d5;
+            --paper-bg: #fffdf9;
+            --text-color: #2b2b2b;
+            --accent-color: #8c6d58;
+            --line-color: #e0d8cc;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Georgia, serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar for Past Entries */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--line-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .entry-list {
+            list-style: none;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .entry-item {
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .entry-item:hover {
+            background-color: #ffffff;
+            transform: translateX(3px);
+        }
+
+        .entry-item .date {
+            font-size: 0.8rem;
+            color: #777;
+            font-weight: bold;
+        }
+
+        .entry-item .preview {
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 4px;
+        }
+
+        /* Main Journal Editor Area */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .diary-paper {
+            width: 100%;
+            max-width: 700px;
+            height: 100%;
+            background-color: var(--paper-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            border-left: 4px solid var(--accent-color);
+            position: relative;
+        }
+
+        .diary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--line-color);
+            padding-bottom: 10px;
+        }
+
+        .date-display {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .mood-selector select {
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--line-color);
+            background-color: #fff;
+            font-family: inherit;
+        }
+
+        .entry-title {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .entry-body {
+            width: 100%;
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #333;
+            resize: none;
+            outline: none;
+            font-family: inherit;
+            /* Lined paper effect */
+            background-image: linear-gradient(transparent 95%, var(--line-color) 95%);
+            background-size: 100% 1.8em;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+
+        .save-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .save-btn:hover {
+            background-color: #725744;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left Sidebar for Navigation -->
+    <div class="sidebar">
+        <h2>My Entries</h2>
+        <ul class="entry-list" id="entryList">
+            <!-- Saved entries will appear here -->
+        </ul>
+    </div>
+
+    <!-- Main Diary Writing Paper -->
+    <div class="main-content">
+        <div class="diary-paper">
+            <div class="diary-header">
+                <div class="date-display" id="currentDate"></div>
+                <div class="mood-selector">
+                    <label for="mood">Mood: </label>
+                    <select id="mood">
+                        <option value="😊 Happy">😊 Happy</option>
+                        <option value="😌 Calm">😌 Calm</option>
+                        <option value="🤔 Thoughtful">🤔 Thoughtful</option>
+                        <option value="🌧️ Sad">🌧️ Sad</option>
+                        <option value="🔥 Energetic">🔥 Energetic</option>
+                    </select>
+                </div>
+            </div>
+
+            <input type="text" id="entryTitle" class="entry-title" placeholder="Entry Title..." />
+            <textarea id="entryBody" class="entry-body" placeholder="Hi najifa, 1st of getting blocked lol. It's 1:21am, raining outside. High heartbeat rate. I was Just remembering our Sunday er clg er porer meet er kotha 😭. It was a fine day bhai. Ektu extra cute things o bhabsi mathay but yeah oito😭. I already miss her. Eta likhte jaiya  Kanna aisha portese kn jani. Dk how I'll be without you etodin or idk kotodin but insha'Allah tomar jonno korbo. Goodnight loveyou- 11th aug, 1:23am
+
+Shokal bela 6:38 e shopne dekhi je u texted me on insta and bolteso je onek koshto hocche amake chara thakte. Partesona tai text diso , rip 😭😭 pore ami Shathe shathe uthe check korsi phone 🙁 -11aug, 7:04am
+
+Ajk shara shokal i was like "o ki kantese ekhon? I wonder or angul gular ki obosta. I wonder o ki bhabtese ekhon. I wonder o ki amake niye bhabtese naki. O ki klk shararaat kanna kore kore pore ghumay nai ar? O ki nijeke dosh dicche ekhon eishober jonno?'. Matro bashay ashsi and checked again je unblock diso kina 🙁. It's gonna be rough bhai lol idk how I'll do it. When im literally drinking from the glass that she gave me as a gift. And inshallah ill keep it safe and ajibon amar shathe rakhbo. This mug holds her kissies, her love, her desire and everything else. I miss her beautiful cheeks. Private folder theke pore or jersey r pics gula dekhbo 😭 i miss her so much. Ekta "good morning" chara din katailam. Dk how many more to go. Let's see how it goes ✌️ -11aug, 2:09pm
+
+Almost 24hrs without talking to her 🙁 tho thanks to farhana apu, ektu holeo jansi or bepare. I hope she'll recover soon. May allah bless her and keep her safe ✌️ - 11th aug,9:14pm"></textarea>
+
+            <div class="action-bar">
+                <button class="save-btn" onclick="saveEntry()">Save Entry</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date automatically
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', dateOptions);
+
+        let entries = JSON.parse(localStorage.getItem('diaryEntries')) || [];
+
+        function renderEntries() {
+            const list = document.getElementById('entryList');
+            list.innerHTML = '';
+            
+            entries.forEach((entry, index) => {
+                const li = document.createElement('li');
+                li.className = 'entry-item';
+                li.onclick = () => loadEntry(index);
+                li.innerHTML = `
+                    <div class="date">${entry.date} - ${entry.mood}</div>
+                    <div class="preview">${entry.title || 'Untitled'}</div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function saveEntry() {
+            const title = document.getElementById('entryTitle').value.trim();
+            const body = document.getElementById('entryBody').value.trim();
+            const mood = document.getElementById('mood').value;
+            const date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+            if (!title && !body) {
+                alert('Please write something before saving.');
+                return;
+            }
+
+            const newEntry = { title, body, mood, date };
+            entries.unshift(newEntry);
+            localStorage.setItem('diaryEntries', JSON.stringify(entries));
+            
+            // Clear inputs
+            document.getElementById('entryTitle').value = '';
+            document.getElementById('entryBody').value = '';
+            
+            renderEntries();
+        }
+
+        function loadEntry(index) {
+            const entry = entries[index];
+            document.getElementById('entryTitle').value = entry.title;
+            document.getElementById('entryBody').value = entry.body;
+            document.getElementById('mood').value = entry.mood;
+        }
+
+        // Initialize saved entries on page load
+        renderEntries();
+    </script>
+</body>
+</html>
