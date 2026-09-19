@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Web Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom dark theme background texture pattern mimicking WhatsApp */
+        body {
+            background-color: #0c1317;
+            color: #e9edef;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+        .chat-bg {
+            background-color: #0b141a;
+            background-image: radial-gradient(#1f2c34 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between select-none">
+
+    <div class="flex h-full w-full max-w-[1600px] mx-auto my-0 lg:my-3 lg:h-[calc(100vh-24px)] lg:rounded-md shadow-2xl overflow-hidden border border-[#222d34]">
+        
+        <div class="w-[60px] bg-[#202c33] flex flex-col justify-between items-center py-3 z-10">
+            <div class="flex flex-col items-center space-y-3">
+                <button class="w-10 h-10 rounded-full flex items-center justify-center text-[#aebac1] hover:bg-[#374248] transition" title="Chats">
+                    <i class="fa-solid fa-comment-alt text-xl text-[#00a884]"></i>
+                </button>
+                <button class="w-10 h-10 rounded-full flex items-center justify-center text-[#aebac1] hover:bg-[#374248] transition" title="Status">
+                    <i class="fa-solid fa-circle-notch text-xl"></i>
+                </button>
+                <button class="w-10 h-10 rounded-full flex items-center justify-center text-[#aebac1] hover:bg-[#374248] transition" title="Channels">
+                    <i class="fa-solid fa-users text-xl"></i>
+                </button>
+                <button class="w-10 h-10 rounded-full flex items-center justify-center text-[#aebac1] hover:bg-[#374248] transition" title="Communities">
+                    <i class="fa-solid fa-users-rectangle text-xl"></i>
+                </button>
+                <button class="w-10 h-10 rounded-full flex items-center justify-center text-[#aebac1] hover:bg-[#374248] transition" title="Meta AI">
+                    <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                </button>
+            </div>
+            <div class="flex flex-col items-center space-y-3">
+                <button class="w-10 h-10 rounded-full flex items-center justify-center text-[#aebac1] hover:bg-[#374248] transition" title="Starred Messages">
+                    <i class="fa-solid fa-star text-xl"></i>
+                </button>
+                <button class="w-10 h-10 rounded-full flex items-center justify-center text-[#aebac1] hover:bg-[#374248] transition" title="Settings">
+                    <i class="fa-solid fa-gear text-xl"></i>
+                </button>
+                <div class="w-10 h-10 rounded-full overflow-hidden border border-[#8696a0] cursor-pointer hover:opacity-90">
+                    <img src="https://placehold.co/40x40/00a884/ffffff?text=U" alt="Profile" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+
+        <div id="sidebar" class="w-full md:w-[380px] lg:w-[420px] bg-[#111b21] flex flex-col border-r border-[#222d34] flex-shrink-0">
+            <!-- Header -->
+            <div class="h-[60px] bg-[#202c33] px-4 flex items-center justify-between flex-shrink-0">
+                <div class="flex items-center space-x-3">
+                    <h1 class="text-xl font-bold text-[#e9edef]">WhatsApp</h1>
+                </div>
+                <div class="flex items-center space-x-4 text-[#aebac1]">
+                    <button class="hover:text-[#e9edef] transition" title="Communities"><i class="fa-solid fa-users-rectangle text-lg"></i></button>
+                    <button class="hover:text-[#e9edef] transition" title="Status"><i class="fa-solid fa-circle-notch text-lg"></i></button>
+                    <button class="hover:text-[#e9edef] transition" title="New Chat"><i class="fa-solid fa-comment-medical text-lg"></i></button>
+                    <button class="hover:text-[#e9edef] transition" title="Menu"><i class="fa-solid fa-ellipsis-vertical text-lg"></i></button>
+                </div>
+            </div>
+
+            <!-- Search and Filter Pills -->
+            <div class="p-2 border-b border-[#222d34] flex flex-col space-y-2 flex-shrink-0">
+                <div class="flex items-center space-x-2">
+                    <div class="flex-1 bg-[#202c33] rounded-lg flex items-center px-3 py-1.5 focus-within:bg-[#111b21] focus-within:border focus-within:border-[#00a884] transition">
+                        <i class="fa-solid fa-search text-[#8696a0] mr-3 text-sm"></i>
+                        <input type="text" id="chat-search" placeholder="Search or start new chat" class="bg-transparent w-full text-sm text-[#e9edef] placeholder-[#8696a0] focus:outline-none">
+                    </div>
+                    <button class="text-[#8696a0] p-2 hover:bg-[#202c33] rounded-lg transition" title="Filter unread chats">
+                        <i class="fa-solid fa-filter text-sm"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2 overflow-x-auto pb-1 text-xs">
+                    <button class="bg-[#005c4b] text-[#e9edef] px-3 py-1 rounded-full font-medium whitespace-nowrap">All</button>
+                    <button class="bg-[#202c33] text-[#8696a0] hover:bg-[#2a3942] hover:text-[#e9edef] px-3 py-1 rounded-full font-medium transition whitespace-nowrap">Unread</button>
+                    <button class="bg-[#202c33] text-[#8696a0] hover:bg-[#2a3942] hover:text-[#e9edef] px-3 py-1 rounded-full font-medium transition whitespace-nowrap">Favourites</button>
+                    <button class="bg-[#202c33] text-[#8696a0] hover:bg-[#2a3942] hover:text-[#e9edef] px-3 py-1 rounded-full font-medium transition whitespace-nowrap">Groups</button>
+                </div>
+            </div>
+
+            <!-- Chat Items List Container -->
+            <div id="chat-list" class="flex-1 overflow-y-auto">
+                <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Get WhatsApp for Windows banner -->
+            <div class="bg-[#202c33] p-3 flex items-center justify-between border-t border-[#222d34] flex-shrink-0">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-[#00a884] flex items-center justify-center text-white">
+                        <i class="fa-solid fa-download text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-[#e9edef]">Get WhatsApp for Windows</p>
+                        <p class="text-[11px] text-[#8696a0]">Call, share and get faster experience</p>
+                    </div>
+                </div>
+                <button class="text-[#8696a0] hover:text-[#e9edef] text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+        <div id="main-chat-area" class="flex-1 flex flex-col bg-[#0b141a] h-full relative">
+            
+            <!-- Chat Header -->
+            <div id="chat-header" class="h-[60px] bg-[#202c33] px-4 flex items-center justify-between border-b border-[#222d34] flex-shrink-0 z-10">
+                <div class="flex items-center space-x-3 cursor-pointer">
+                    <div class="w-10 h-10 rounded-full bg-[#6cf] overflow-hidden flex-shrink-0">
+                        <img id="header-avatar" src="https://placehold.co/40x40/005c4b/ffffff?text=XII" alt="Group Avatar" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h2 id="header-title" class="text-sm font-semibold text-[#e9edef] truncate max-w-[200px] md:max-w-md">XII B.V(2027)Fri, Sat-(11-12) b-1 Chemistry</h2>
+                        <p id="header-subtitle" class="text-[11px] text-[#8696a0] truncate max-w-[250px] md:max-w-xl">+880 1914-331164, +880 1715-132544, +880 1713-483128, +880 1917-800963...</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-5 text-[#aebac1]">
+                    <button class="hover:text-[#e9edef] transition" title="Video call"><i class="fa-solid fa-video text-lg"></i></button>
+                    <button class="hover:text-[#e9edef] transition" title="Voice call"><i class="fa-solid fa-phone text-lg"></i></button>
+                    <span class="border-r border-[#374248] h-5"></span>
+                    <button class="hover:text-[#e9edef] transition" title="Search"><i class="fa-solid fa-search text-lg"></i></button>
+                    <button class="hover:text-[#e9edef] transition" title="Menu"><i class="fa-solid fa-ellipsis-vertical text-lg"></i></button>
+                </div>
+            </div>
+
+            <!-- Messages Stream Area -->
+            <div id="messages-container" class="flex-1 chat-bg overflow-y-auto p-4 md:p-6 flex flex-col space-y-2">
+                <!-- Date Pill -->
+                <div class="flex justify-center my-2">
+                    <span class="bg-[#182229] text-[#8696a0] text-[11px] px-3 py-1 rounded-lg uppercase tracking-wider shadow-sm">Thursday</span>
+                </div>
+                <!-- Dynamic messages inserted here -->
+            </div>
+
+            <!-- Typing Bar & Footer Input -->
+            <div id="chat-input-area" class="bg-[#202c33] px-4 py-3 flex items-center space-x-3 flex-shrink-0 z-10">
+                <div class="flex items-center space-x-3 text-[#aebac1] text-xl">
+                    <button class="hover:text-[#e9edef] transition" title="Emoji"><i class="fa-regular fa-face-smile"></i></button>
+                    <button class="hover:text-[#e9edef] transition" title="Attach"><i class="fa-solid fa-paperclip"></i></button>
+                </div>
+                <div class="flex-1 bg-[#2a3942] rounded-lg flex items-center px-4 py-2">
+                    <input type="text" id="message-input" placeholder="Type a message" class="bg-transparent w-full text-sm text-[#e9edef] placeholder-[#8696a0] focus:outline-none">
+                </div>
+                <button id="send-btn" class="text-[#aebac1] hover:text-[#e9edef] text-xl px-1 transition" title="Send Voice Note / Send">
+                    <i id="send-icon" class="fa-solid fa-microphone"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Chat data structure containing all chats and message histories matching the user's reference image
+        const chatsData = [
+            {
+                id: 'xii-chemistry',
+                name: 'XII B.V(2027)Fri, Sat-(11-12) b-1 Chemistry',
+                avatar: 'https://placehold.co/40x40/005c4b/ffffff?text=XII',
+                subtext: '~miju2210: প্রিয় শিক্ষার্থীরা,আগামীকাল ক্লাসটি বিকাল...',
+                time: 'Yesterday',
+                unread: 0,
+                pinned: true,
+                isGroup: true,
+                participants: '+880 1914-331164, +880 1715-132544, +880 1713-483128, +880 1917-800963, +880 1712-001374, +...',
+                messages: [
+                    {
+                        sender: '~miju2210 (+880 1793-872060)',
+                        phone: '+880 1793-872060',
+                        text: '<div class="flex items-center space-x-2 text-[#8696a0] bg-[#111b21]/50 p-2 rounded mb-1 border-l-2 border-[#ef4444]"><i class="fa-solid fa-ban text-xs"></i><span>This message was deleted</span></div>',
+                        time: '8:17 PM',
+                        isDeleted: true
+                    },
+                    {
+                        dateDivider: 'Yesterday'
+                    },
+                    {
+                        sender: '~miju2210 (+880 1793-872060)',
+                        phone: '+880 1793-872060',
+                        text: 'প্রিয় শিক্ষার্থীরা,<br>আজকে সকাল 11.0 টার সময় কেমিস্ট্রি ক্লাস বন্ধ থাকবে।',
+                        time: '8:56 AM',
+                        isIncoming: true
+                    },
+                    {
+                        sender: 'Ravika Chakma (+880 1865-338071)',
+                        phone: '+880 1865-338071',
+                        text: '01865338071<br>কখন হবে?',
+                        time: '9:18 AM',
+                        isIncoming: true
+                    },
+                    {
+                        sender: '~miju2210 (+880 1793-872060)',
+                        phone: '+880 1793-872060',
+                        replyTo: {
+                            sender: 'Ravika Chakma',
+                            text: '01865338071<br>কখন হবে?'
+                        },
+                        text: 'কালকে হবে',
+                        time: '9:20 AM',
+                        isIncoming: true
+                    },
+                    {
+                        sender: '~miju2210 (+880 1793-872060)',
+                        phone: '+880 1793-872060',
+                        text: 'প্রিয় শিক্ষার্থীরা,<br>আগামীকাল সকাল 11.0 টার সময় কেমিস্ট্রি ক্লাস হবে। 14/17 ইকবাল রোড উল্লাস বিল্ডিং ।',
+                        time: '8:42 PM',
+                        isIncoming: true
+                    },
+                    {
+                        sender: '~miju2210 (+880 1793-872060)',
+                        phone: '+880 1793-872060',
+                        text: 'প্রিয় শিক্ষার্থীরা,আগামীকাল ক্লাসটি বিকাল ৩.০০ টার সময় কেমিস্ট্রি ক্লাস হবে এবং তা শুক্রবার ও আজকের টা একসাথে হবে। 14/17 ইকবাল রোড উদ্ভাস বিল্ডিং।',
+                        time: '8:45 PM',
+                        isIncoming: true
+                    }
+                ]
+            },
+            {
+                id: 'math-group-2026',
+                name: 'Math group 2026',
+                avatar: 'https://placehold.co/40x40/1f2c34/ffffff?text=Math',
+                subtext: 'Sayem Khan Rafi: Yes',
+                time: 'Yesterday',
+                unread: 2,
+                pinned: false,
+                isGroup: true,
+                participants: 'Sayem Khan Rafi, Tanvir, Arman, Mehedi',
+                messages: [
+                    {
+                        sender: 'Sayem Khan Rafi',
+                        text: 'Did everyone complete calculus problem set #4?',
+                        time: '4:15 PM',
+                        isIncoming: true
+                    },
+                    {
+                        sender: 'You',
+                        text: 'Yes',
+                        time: '5:30 PM',
+                        isIncoming: false
+                    }
+                ]
+            },
+            {
+                id: 'towsif-bhai',
+                name: 'Towsif Bhai Home Tutor',
+                avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+                subtext: '✓ Okay',
+                time: 'Thursday',
+                unread: 0,
+                pinned: false,
+                isGroup: false,
+                participants: 'Online',
+                messages: [
+                    {
+                        sender: 'Towsif Bhai',
+                        text: 'Will you be ready for physics test tomorrow at 4 PM?',
+                        time: '3:10 PM',
+                        isIncoming: true
+                    },
+                    {
+                        sender: 'You',
+                        text: '✓ Okay',
+                        time: '3:12 PM',
+                        isIncoming: false
+                    }
+                ]
+            },
+            {
+                id: 'class-11-chemistry',
+                name: 'Class 11 Chemistry(9.30)',
+                avatar: 'https://placehold.co/40x40/2a3942/ffffff?text=C11',
+                subtext: 'Mistri: আগামীকাল শুক্রবার সকাল ৯:৩০টায় ...',
+                time: 'Thursday',
+                unread: 0,
+                pinned: false,
+                isGroup: true,
+                participants: 'Mistri, Fahim, Sadia, Nusrat',
+                messages: [
+                    {
+                        sender: 'Mistri',
+                        text: 'আগামীকাল শুক্রবার সকাল ৯:৩০টায় অর্গানিক কেমিস্ট্রি এক্সট্রা ক্লাস শুরু হবে। সবাই সময়মতো উপস্থিত থেকো।',
+                        time: '7:00 PM',
+                        isIncoming: true
+                    }
+                ]
+            },
+            {
+                id: 'fuad',
+                name: 'Fuad',
+                avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+                subtext: '📞 Voice call',
+                time: 'Yesterday',
+                unread: 0,
+                pinned: false,
+                isGroup: false,
+                participants: 'Last seen yesterday at 11:45 PM',
+                messages: [
+                    {
+                        sender: 'Fuad',
+                        text: '<div class="flex items-center space-x-2"><i class="fa-solid fa-phone text-red-400"></i><span>Missed voice call</span></div>',
+                        time: '11:45 PM',
+                        isIncoming: true
+                    }
+                ]
+            },
+            {
+                id: 'blood-st-joseph',
+                name: 'Blood St. Joseph',
+                avatar: 'https://placehold.co/40x40/831843/ffffff?text=BSJ',
+                subtext: 'Urgent donor needed O+',
+                time: 'Thursday',
+                unread: 5,
+                pinned: false,
+                isGroup: true,
+                participants: 'St. Joseph Blood Donors (142 members)',
+                messages: [
+                    {
+                        sender: 'Admin',
+                        text: 'Urgent donor needed O+ blood at Dhaka Medical College Hospital tomorrow morning.',
+                        time: '1:20 PM',
+                        isIncoming: true
+                    }
+                ]
+            }
+        ];
+
+        let activeChatId = 'xii-chemistry';
+
+        function renderChatList(filter = '') {
+            const listContainer = document.getElementById('chat-list');
+            listContainer.innerHTML = '';
+
+            const filteredChats = chatsData.filter(chat => 
+                chat.name.toLowerCase().includes(filter.toLowerCase()) || 
+                chat.subtext.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            filteredChats.forEach(chat => {
+                const isActive = chat.id === activeChatId;
+                const chatEl = document.createElement('div');
+                chatEl.className = `flex items-center px-3 py-3 cursor-pointer hover:bg-[#202c33] transition relative ${isActive ? 'bg-[#2a3942]' : ''}`;
+                chatEl.onclick = () => selectChat(chat.id);
+
+                chatEl.innerHTML = `
+                    <div class="relative w-12 h-12 rounded-full overflow-hidden mr-3 flex-shrink-0">
+                        <img src="${chat.avatar}" alt="${chat.name}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/40x40/005c4b/ffffff?text=Chat'">
+                    </div>
+                    <div class="flex-1 min-w-0 border-b border-[#222d34] pb-3 -mb-3 flex flex-col justify-center">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h3 class="text-sm font-medium text-[#e9edef] truncate">${chat.name}</h3>
+                            <span class="text-[11px] ${chat.unread > 0 ? 'text-[#00a884] font-medium' : 'text-[#8696a0]'} ml-2 flex-shrink-0">${chat.time}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <p class="text-xs text-[#8696a0] truncate pr-2">${chat.subtext}</p>
+                            <div class="flex items-center space-x-1 flex-shrink-0">
+                                ${chat.pinned ? '<i class="fa-solid fa-thumbtack text-[11px] text-[#8696a0]"></i>' : ''}
+                                ${chat.unread > 0 ? `<span class="bg-[#00a884] text-[#111b21] text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">${chat.unread}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(chatEl);
+            });
+        }
+
+        function renderActiveChat() {
+            const chat = chatsData.find(c => c.id === activeChatId);
+            if (!chat) return;
+
+            // Update header info
+            document.getElementById('header-title').innerText = chat.name;
+            document.getElementById('header-subtitle').innerText = chat.participants;
+            document.getElementById('header-avatar').src = chat.avatar;
+
+            // Render messages
+            const msgContainer = document.getElementById('messages-container');
+            msgContainer.innerHTML = '';
+
+            chat.messages.forEach(msg => {
+                if (msg.dateDivider) {
+                    msgContainer.innerHTML += `
+                        <div class="flex justify-center my-2">
+                            <span class="bg-[#182229] text-[#8696a0] text-[11px] px-3 py-1 rounded-lg uppercase tracking-wider shadow-sm">${msg.dateDivider}</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const isIncoming = msg.isIncoming !== false;
+                const bubbleBg = isIncoming ? 'bg-[#202c33]' : 'bg-[#005c4b]';
+                const alignment = isIncoming ? 'self-start' : 'self-end';
+
+                let replyHtml = '';
+                if (msg.replyTo) {
+                    replyHtml = `
+                        <div class="bg-[#111b21]/40 border-l-4 border-[#00a884] p-1.5 mb-1 rounded text-xs">
+                            <p class="font-bold text-[#00a884] text-[11px]">${msg.replyTo.sender}</p>
+                            <p class="text-[#8696a0] truncate">${msg.replyTo.text.replace(/<br>/g, ' ')}</p>
+                        </div>
+                    `;
+                }
+
+                const msgEl = document.createElement('div');
+                msgEl.className = `max-w-[85%] md:max-w-[65%] rounded-lg p-2.5 px-3 shadow-sm ${bubbleBg} ${alignment} relative group text-sm text-[#e9edef] my-0.5`;
+                
+                // Color-code incoming group senders with distinct soft hues matching real WhatsApp
+                let senderHeader = '';
+                if (isIncoming && chat.isGroup) {
+                    // Generate pseudo-random consistent color based on sender name
+                    const colors = ['text-[#f15c6d]', 'text-[#f3b742]', 'text-[#53bdeb]', 'text-[#25d366]', 'text-[#d97706]'];
+                    let hash = 0;
+                    for (let i = 0; i < msg.sender.length; i++) hash = msg.sender.charCodeAt(i) + ((hash << 5) - hash);
+                    const colorClass = colors[Math.abs(hash) % colors.length];
+                    senderHeader = `<p class="text-xs font-bold ${colorClass} mb-0.5 cursor-pointer hover:underline">${msg.sender}</p>`;
+                }
+
+                msgEl.innerHTML = `
+                    ${senderHeader}
+                    ${replyHtml}
+                    <div class="leading-relaxed break-words pr-12">${msg.text}</div>
+                    <div class="flex items-center justify-end space-x-1 float-right mt-1 ml-3 select-none">
+                        <span class="text-[10px] text-[#8696a0]">${msg.time}</span>
+                        ${!isIncoming ? '<i class="fa-solid fa-check-double text-[11px] text-[#53bdeb]"></i>' : ''}
+                    </div>
+                `;
+                msgContainer.appendChild(msgEl);
+            });
+
+            // Scroll to bottom
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+        }
+
+        function selectChat(id) {
+            activeChatId = id;
+            const chat = chatsData.find(c => c.id === id);
+            if (chat) {
+                chat.unread = 0;
+            }
+            renderChatList(document.getElementById('chat-search').value);
+            renderActiveChat();
+        }
+
+        document.getElementById('chat-search').addEventListener('input', (e) => {
+            renderChatList(e.target.value);
+        });
+
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const sendIcon = document.getElementById('send-icon');
+
+        messageInput.addEventListener('input', (e) => {
+            if (e.target.value.trim().length > 0) {
+                sendIcon.className = 'fa-solid fa-paper-plane text-[#00a884]';
+                sendBtn.title = 'Send message';
+            } else {
+                sendIcon.className = 'fa-solid fa-microphone';
+                sendBtn.title = 'Send Voice Note / Send';
+            }
+        });
+
+        function handleSendMessage() {
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            const chat = chatsData.find(c => c.id === activeChatId);
+            if (chat) {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                chat.messages.push({
+                    sender: 'You',
+                    text: text,
+                    time: timeStr,
+                    isIncoming: false
+                });
+
+                chat.subtext = `You: ${text}`;
+                chat.time = 'Just now';
+
+                messageInput.value = '';
+                sendIcon.className = 'fa-solid fa-microphone';
+                sendBtn.title = 'Send Voice Note / Send';
+
+                renderActiveChat();
+                renderChatList(document.getElementById('chat-search').value);
+            }
+        }
+
+        sendBtn.addEventListener('click', handleSendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSendMessage();
+            }
+        });
+
+        // Initial render on load
+        window.onload = function() {
+            renderChatList();
+            renderActiveChat();
+        };
+    </script>
+</body>
+</html>
