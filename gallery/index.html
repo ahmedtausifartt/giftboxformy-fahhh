@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Photo Gallery & Uploader</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Load FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.97); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-md shadow-indigo-200">
+                    <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900">Local Gallery Uploader</h1>
+                    <p class="text-xs text-slate-500">Upload and preview instantly</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span id="image-counter" class="text-sm font-medium text-slate-600 bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200">
+                    <i class="fa-solid fa-images mr-1.5 text-indigo-500"></i> 0 Images
+                </span>
+                <button onclick="clearAllImages()" id="clear-btn" class="hidden text-sm font-medium text-rose-600 bg-rose-50 hover:bg-rose-100 px-3.5 py-1.5 rounded-full border border-rose-200 transition-all cursor-pointer">
+                    <i class="fa-solid fa-trash-can mr-1.5"></i> Clear All
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <!-- Hero Upload Area / Drop Zone -->
+        <div class="mb-10 max-w-3xl mx-auto">
+            <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-indigo-500 bg-white hover:bg-indigo-50/30 transition-all rounded-3xl p-8 sm:p-12 text-center cursor-pointer shadow-sm relative group">
+                <input type="file" id="file-input" multiple accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" aria-label="Upload image files">
+                
+                <div class="inline-flex bg-indigo-50 group-hover:bg-indigo-100 text-indigo-600 p-4 rounded-2xl mb-4 transition-transform group-hover:scale-110 duration-300">
+                    <i class="fa-solid fa-folder-open text-3xl"></i>
+                </div>
+                
+                <h3 class="text-lg font-semibold text-slate-800 mb-1">Drag & drop your photos here</h3>
+                <p class="text-sm text-slate-500 mb-4">or click to browse from your device</p>
+                
+                <span class="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-3.5 py-1.5 rounded-full border border-indigo-100">
+                    <i class="fa-solid fa-plus mr-1"></i> Supports PNG, JPG, WEBP, GIF
+                </span>
+            </div>
+        </div>
+
+        <!-- Gallery Grid Header & Sorting Info -->
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold tracking-tight text-slate-900">Your Photos</h2>
+            <p id="helper-text" class="text-xs text-slate-500">Click any image to enlarge</p>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Dynamically populated via JS -->
+        </div>
+
+        <!-- Empty State Container -->
+        <div id="empty-state" class="text-center py-20 bg-white rounded-3xl border border-slate-200 shadow-xs">
+            <div class="inline-flex bg-slate-100 p-4 rounded-2xl text-slate-400 mb-3">
+                <i class="fa-solid fa-image text-3xl"></i>
+            </div>
+            <h3 class="text-base font-semibold text-slate-700">No photos uploaded yet</h3>
+            <p class="text-sm text-slate-400 mt-1">Upload images above to build your gallery instantly.</p>
+        </div>
+    </main>
+
+    <div id="lightbox" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
+        <div class="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center justify-center">
+            <!-- Close Button -->
+            <button onclick="closeLightbox()" class="absolute -top-12 right-0 sm:-right-4 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-all focus:outline-none cursor-pointer" aria-label="Close lightbox">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <!-- Navigation Buttons -->
+            <button onclick="navigateLightbox(-1)" class="absolute left-2 sm:-left-12 top-1/2 -translate-y-1/2 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all focus:outline-none cursor-pointer" aria-label="Previous image">
+                <i class="fa-solid fa-chevron-left text-lg"></i>
+            </button>
+            <button onclick="navigateLightbox(1)" class="absolute right-2 sm:-right-12 top-1/2 -translate-y-1/2 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all focus:outline-none cursor-pointer" aria-label="Next image">
+                <i class="fa-solid fa-chevron-right text-lg"></i>
+            </button>
+
+            <!-- Enlarged Image Wrapper -->
+            <div class="overflow-hidden rounded-2xl bg-slate-900 shadow-2xl max-h-[75vh] flex items-center justify-center">
+                <img id="lightbox-img" src="" alt="Enlarged view" class="max-h-[75vh] max-w-full object-contain transition-transform duration-300">
+            </div>
+
+            <!-- Image Caption / Sequential Label -->
+            <div class="mt-4 text-center text-white">
+                <h3 id="lightbox-title" class="text-lg font-semibold tracking-wide"></h3>
+                <p id="lightbox-filename" class="text-xs text-slate-400 mt-0.5"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-sm text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>Responsive Local Photo Gallery &bull; Base64 Uploader</p>
+        </div>
+    </footer>
+
+    <script>
+        let galleryImages = [];
+        let currentIndex = 0;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('file-input');
+            const dropZone = document.getElementById('drop-zone');
+            const lightbox = document.getElementById('lightbox');
+
+            // Handle file selection
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+                fileInput.value = ''; // Reset input so same file can be re-uploaded if needed
+            });
+
+            // Drag and drop visual feedback
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('border-indigo-500', 'bg-indigo-50/50');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('border-indigo-500', 'bg-indigo-50/50');
+                }, false);
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            });
+
+            // Close lightbox on backdrop click
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) {
+                    closeLightbox();
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (lightbox.classList.contains('flex')) {
+                    if (e.key === 'Escape') closeLightbox();
+                    if (e.key === 'ArrowRight') navigateLightbox(1);
+                    if (e.key === 'ArrowLeft') navigateLightbox(-1);
+                }
+            });
+        });
+
+        function handleFiles(files) {
+            const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+            
+            if (imageFiles.length === 0) return;
+
+            let processedCount = 0;
+            imageFiles.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    galleryImages.push({
+                        dataUrl: e.target.result,
+                        name: file.name
+                    });
+                    processedCount++;
+                    
+                    if (processedCount === imageFiles.length) {
+                        renderGallery();
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function renderGallery() {
+            const grid = document.getElementById('gallery-grid');
+            const emptyState = document.getElementById('empty-state');
+            const counter = document.getElementById('image-counter');
+            const clearBtn = document.getElementById('clear-btn');
+            
+            grid.innerHTML = '';
+
+            if (galleryImages.length === 0) {
+                emptyState.classList.remove('hidden');
+                clearBtn.classList.add('hidden');
+                counter.innerHTML = `<i class="fa-solid fa-images mr-1.5 text-indigo-500"></i> 0 Images`;
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            clearBtn.classList.remove('hidden');
+            counter.innerHTML = `<i class="fa-solid fa-images mr-1.5 text-indigo-500"></i> ${galleryImages.length} Image${galleryImages.length === 1 ? '' : 's'}`;
+
+            galleryImages.forEach((img, idx) => {
+                const labelNumber = idx + 1;
+                const card = document.createElement('div');
+                card.className = "group relative bg-white rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 border border-slate-200 flex flex-col fade-in";
+                
+                card.innerHTML = `
+                    <div class="relative aspect-[4/3] overflow-hidden bg-slate-100 cursor-pointer" onclick="openLightbox(${idx})">
+                        <img src="${img.dataUrl}" alt="Image ${labelNumber}" loading="lazy" class="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                            <span class="text-white text-xs font-semibold px-2.5 py-1 bg-white/20 backdrop-blur-md rounded-full uppercase tracking-wider">
+                                <i class="fa-solid fa-expand mr-1"></i> Expand
+                            </span>
+                        </div>
+                        <div class="absolute top-3 left-3 bg-slate-900/70 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+                            Image ${labelNumber}
+                        </div>
+                    </div>
+                    <div class="p-4 flex items-center justify-between bg-white">
+                        <div class="truncate mr-2">
+                            <h3 class="font-semibold text-slate-800 text-sm truncate">Image ${labelNumber}</h3>
+                            <p class="text-xs text-slate-400 truncate mt-0.5">${img.name}</p>
+                        </div>
+                        <button onclick="deleteImage(${idx}, event)" class="text-slate-400 hover:text-rose-600 bg-slate-100 hover:bg-rose-50 p-2 rounded-xl transition-all cursor-pointer" title="Delete image" aria-label="Delete image">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function deleteImage(index, event) {
+            event.stopPropagation();
+            galleryImages.splice(index, 1);
+            renderGallery();
+        }
+
+        function clearAllImages() {
+            galleryImages = [];
+            renderGallery();
+        }
+
+        function openLightbox(index) {
+            currentIndex = index;
+            const imgData = galleryImages[currentIndex];
+            const labelNumber = currentIndex + 1;
+
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxTitle = document.getElementById('lightbox-title');
+            const lightboxFilename = document.getElementById('lightbox-filename');
+
+            lightboxImg.src = imgData.dataUrl;
+            lightboxTitle.textContent = `Image ${labelNumber}`;
+            lightboxFilename.textContent = imgData.name;
+
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-0');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.add('opacity-0');
+            setTimeout(() => {
+                lightbox.classList.remove('flex');
+                lightbox.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        function navigateLightbox(direction) {
+            currentIndex = (currentIndex + direction + galleryImages.length) % galleryImages.length;
+            const imgData = galleryImages[currentIndex];
+            const labelNumber = currentIndex + 1;
+
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxTitle = document.getElementById('lightbox-title');
+            const lightboxFilename = document.getElementById('lightbox-filename');
+
+            lightboxImg.style.opacity = '0';
+            setTimeout(() => {
+                lightboxImg.src = imgData.dataUrl;
+                lightboxTitle.textContent = `Image ${labelNumber}`;
+                lightboxFilename.textContent = imgData.name;
+                lightboxImg.style.opacity = '1';
+            }, 150);
+        }
+    </script>
+</body>
+</html>
