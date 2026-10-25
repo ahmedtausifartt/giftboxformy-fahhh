@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pakhi's Romantic Quiz V2 💚</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mint: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        sage: '#e2ece9',
+                        rosepink: '#ffb3c1'
+                    },
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        quicksand: ['Quicksand', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Canvas for Rose Petals */
+        #petalCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* Glassmorphism Containers */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 70, 30, 0.12);
+        }
+
+        /* Option Buttons Styling */
+        .quiz-option {
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #bbf7d0;
+        }
+
+        .quiz-option:hover {
+            transform: translateY(-3px) scale(1.01);
+            background: #dcfce7;
+            border-color: #4ade80;
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.2);
+        }
+
+        .quiz-option:active {
+            transform: translateY(1px);
+        }
+
+        /* Custom Modal Animations */
+        @keyframes modalPop {
+            0% { transform: scale(0.8) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .animate-pop {
+            animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Floating animation for gift */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(34, 197, 94, 0.4)); }
+            50% { filter: drop-shadow(0 0 30px rgba(34, 197, 94, 0.8)); }
+        }
+
+        .gift-glow {
+            animation: pulse-glow 2s infinite;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4 sm:p-6 select-none relative">
+
+    <!-- Canvas background for Rose Petals -->
+    <canvas id="petalCanvas"></canvas>
+
+    <!-- MAIN QUIZ CONTAINER -->
+    <main class="w-full max-w-2xl glass-card rounded-3xl p-6 sm:p-8 relative z-10 my-auto">
+        <!-- Header / Progress -->
+        <header class="mb-6">
+            <div class="flex justify-between items-center mb-3">
+                <span class="font-fredoka text-green-800 text-lg sm:text-xl flex items-center gap-2">
+                    <i class="fa-solid fa-heart-pulse text-red-500 animate-pulse"></i> 
+                    Pakhi's Quiz V2
+                </span>
+                <span id="questionCounter" class="bg-green-100 text-green-800 text-xs sm:text-sm font-semibold px-3 py-1 rounded-full border border-green-300">
+                    Question 1 / 14
+                </span>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-green-100/80 rounded-full h-3.5 p-0.5 border border-green-200">
+                <div id="progressBar" class="bg-gradient-to-r from-green-400 to-emerald-500 h-full rounded-full transition-all duration-500 ease-out w-[7.14%]"></div>
+            </div>
+        </header>
+
+        <!-- Question Area -->
+        <div id="quizBox" class="space-y-6">
+            <div class="min-h-[90px] flex items-center">
+                <h2 id="questionText" class="font-fredoka text-xl sm:text-2xl text-green-950 leading-snug">
+                    Loading Question...
+                </h2>
+            </div>
+
+            <!-- Options Grid -->
+            <div id="optionsContainer" class="grid grid-cols-1 gap-3 sm:gap-4">
+                <!-- Dynamically filled options -->
+            </div>
+        </div>
+
+        <!-- END GIFT AREA (Initially Hidden) -->
+        <div id="giftContainer" class="hidden flex-col items-center justify-center text-center py-8 space-y-6 animate-pop">
+            <h2 class="font-fredoka text-2xl sm:text-3xl text-green-900">🎉 Quiz Completed! 🎉</h2>
+            <p class="text-green-700 text-base sm:text-lg">You made it all the way to the end without failing!</p>
+            
+            <!-- Clickable Gift Box -->
+            <div id="giftBox" class="cursor-pointer transform hover:scale-105 transition-transform duration-300 my-4 inline-block gift-glow">
+                <div id="giftIcon" class="text-8xl sm:text-9xl text-emerald-500 animate-float drop-shadow-lg">
+                    🎁
+                </div>
+            </div>
+
+            <p id="giftHint" class="text-xs sm:text-sm font-bold text-emerald-800 bg-emerald-100 px-4 py-2 rounded-full border border-emerald-300">
+                Tap the gift box to open your reward!
+            </p>
+
+            <!-- Unfolded Note Box -->
+            <div id="noteContent" class="hidden w-full max-w-md bg-amber-50 border-2 border-amber-200 p-6 rounded-2xl shadow-xl text-amber-950 font-serif leading-relaxed text-left animate-pop relative">
+                <i class="fa-solid fa-quote-left text-3xl text-amber-300 absolute top-2 left-2 opacity-50"></i>
+                <div id="noteText" class="relative z-10 text-base sm:text-lg space-y-3 font-quicksand font-semibold">
+                    <!-- Dynamic Note Content -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- GENERIC / SEQUENCE MODAL POPUP -->
+    <div id="popupModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card bg-white/95 rounded-3xl max-w-md w-full p-6 text-center space-y-5 animate-pop relative border-2 border-green-300 shadow-2xl">
+            <div id="modalIcon" class="text-5xl">✨</div>
+            <p id="modalMessage" class="font-fredoka text-lg sm:text-xl text-green-900 leading-snug">
+                Message goes here...
+            </p>
+            <button id="modalBtn" class="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-fredoka text-lg rounded-2xl shadow-lg transition-all active:scale-95">
+                Continue
+            </button>
+        </div>
+    </div>
+
+    <!-- EXTRA WRONG ANSWER LOOP RESTART MODAL -->
+    <div id="restartModal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card bg-white/95 rounded-3xl max-w-md w-full p-6 text-center space-y-5 animate-pop relative border-2 border-red-200 shadow-2xl">
+            <!-- Small Cross Icon (Visible ONLY when Option 2 "going back in a min, wait" flow is active) -->
+            <button id="modalCloseX" class="hidden absolute top-3 right-3 w-8 h-8 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-600 flex items-center justify-center font-bold text-base transition-colors border border-rose-300 shadow-sm cursor-pointer z-20">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-5xl text-rose-500">💔</div>
+            <h3 class="font-fredoka text-xl text-gray-800" id="restartModalTitle">NICE TRY, RESTART</h3>
+            <p id="restartModalSubtext" class="text-sm text-gray-600 font-medium">Choose an option below:</p>
+            
+            <div id="restartOptionsContainer" class="space-y-3 pt-2">
+                <button id="restartOpt1" class="w-full py-3 px-4 bg-rose-500 hover:bg-rose-600 text-white font-fredoka rounded-2xl shadow-md transition-all active:scale-95 cursor-pointer">
+                    1. NICE TRY, RESTART
+                </button>
+                <button id="restartOpt2" class="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white font-fredoka rounded-2xl shadow-md transition-all active:scale-95 cursor-pointer">
+                    2. It’s ok love, try again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIC -->
+    <script>
+        /* -------------------------------------------------------------
+           1. QUESTION DATA & SPECIFIC LOGIC DEFINITION
+        ------------------------------------------------------------- */
+        const questions = [
+            {
+                q: "1. How long has it been since the last or the first quiz?",
+                options: [
+                    "A) 3months",
+                    "B) 4months",
+                    "C) 5months",
+                    "D) monenai,been waiting for the v2"
+                ],
+                correct: [3], // D (0-indexed)
+            },
+            {
+                q: "2. In the last 226days, what was the best thing that I did(consistently)?",
+                options: [
+                    "A) Proposed you",
+                    "B) composed poems for you",
+                    "C) all those romantic gestures",
+                    "D) Making you feel loved everyday"
+                ],
+                correct: [0, 1, 2, 3], // A, B, C, D
+            },
+            {
+                q: "3. What would you do if you suddenly see me behind you out of nowhere",
+                options: [
+                    "A) Scream for help",
+                    "B) hug me tight",
+                    "C) wave at me",
+                    "D) run like there’s no tomorrow"
+                ],
+                correct: [1], // B
+            },
+            {
+                q: "4. What would you do if u suddenly realized that I was gay all along",
+                options: [
+                    "A) Slap me",
+                    "B) still love me the same",
+                    "C) do nothing",
+                    "D) leave me"
+                ],
+                correct: [2], // C
+                customRule: (idx) => {
+                    // Special Rule: If ANY option other than D (index 3) is chosen
+                    if (idx !== 3) {
+                        return { pop: "goodgirl, leaving wasn’t an option either ways btw" };
+                    }
+                    return null;
+                }
+            },
+            {
+                q: "5. If you could magically read my mind for 24 hours, what would you spend most of your time looking for?",
+                options: [
+                    "A) Secret thoughts about our future together",
+                    "B) What I secretly find cute about you that I haven't said yet",
+                    "C) Proof that I'm even more obsessed with you than I let on",
+                    "D) All of the above (and then making fun of me for it)"
+                ],
+                correct: [3], // D
+                correctPop: "Good news, option C is already 100% verified."
+            },
+            {
+                q: "6. In an alternate timeline where we never met, what are you doing right now?",
+                options: [
+                    "A) Looking for me in every crowd without realizing it",
+                    "B) Feeling like something very important is missing from your life",
+                    "C) Sitting around being bored because your life lacks drama",
+                    "D) Re-rolling the universe until we meet anyway"
+                ],
+                correct: [0, 1, 2, 3], // All correct
+                correctPop: "destiny fixed it."
+            },
+            {
+                q: "7. You have a terrible, exhausting day. What is the single best thing I can do when you see me?",
+                options: [
+                    "A) Give you a 30-second silent hug without asking any questions first",
+                    "B) Bring your favorite snack and listen to you rant about everything",
+                    "C) Hold your hand, sit in silence, and let you decompress",
+                    "D) Gently tell you \"I've got you\" and handle everything for the rest of the day"
+                ],
+                correct: [0, 1, 2, 3], // All correct
+                correctPop: "Noted. Saved to my memory forever."
+            },
+            {
+                q: "8. How much do I love you on a scale of 1 to 10?",
+                options: [
+                    "A) 10/10",
+                    "B) 100/10",
+                    "C) Error: Number too high for Microsoft Word to calculate",
+                    "D) More than yesterday, but less than tomorrow"
+                ],
+                correct: [2, 3], // C or D
+                customRule: (idx) => {
+                    if (idx === 0 || idx === 1) {
+                        return { pop: "oh so my love can be defined by numbers?" };
+                    }
+                    return null;
+                }
+            },
+            {
+                q: "9. What is the exact moment you realized \"yeah, I'm completely stuck with this guy forever\"?",
+                options: [
+                    "A) During one of our really deep, late-night conversations",
+                    "B) When I did something so stupid/funny that you couldn't help but smile",
+                    "C) From the very first quiz/beginning",
+                    "D) You're still deciding (Warning: Incorrect choice)"
+                ],
+                correct: [0, 1, 2], // A, B, C
+                customRule: (idx) => {
+                    if (idx === 3) {
+                        return { pop: "System Error: Option D is temporarily disabled due to overwhelming affection." };
+                    }
+                    return null;
+                }
+            },
+            {
+                q: "10. do u think that the previous quiz was better?",
+                options: [
+                    "A) yes",
+                    "B) no",
+                    "C) I don’t want to differentiate, I love every single one of em",
+                    "D) idk"
+                ],
+                correct: [0], // A
+                customRule: (idx) => {
+                    if (idx !== 0) {
+                        return { pop: "oh so you’re saying that I don’t get better day by day????????????????????????????????????????????????????" };
+                    }
+                    return null;
+                }
+            },
+            {
+                q: "11. If I suddenly showed up outside your college right now with your favorite food, what would you do?",
+                options: [
+                    "A) Pretend you don't know me and walk away",
+                    "B) Drop everything and run like there's no tomorrow",
+                    "C) Yell at me for skipping class/waiting",
+                    "D) Stare in disbelief until I hand over the food"
+                ],
+                correct: [1], // B
+                correctPop: "Correct response. The food delivery service is officially on its way.",
+                wrongPop: "Warning: System error. That option violates the romance guidelines. Try again."
+            },
+            {
+                q: "12. Complete this sentence: \"Whenever we're talking, I am usually thinking about...\"",
+                options: [
+                    "A) How much I want to annoy you today",
+                    "B) All of the above&below at the exact same time",
+                    "C) What we're going to eat next",
+                    "D) How lucky I am to be talking to you"
+                ],
+                correct: [1], // B
+                correctPop: "Get out of my head! That is terrifyingly accurate.",
+                wrongPop: "Close, but you underestimated how chaotic my brain is. Try D."
+            },
+            {
+                q: "13. Who loves who more?",
+                options: [
+                    "A) You love me more",
+                    "B) I love you more",
+                    "C) We love each other equally",
+                    "D) This question is rigged and a trap"
+                ],
+                correct: [3], // D
+                customRule: (idx) => {
+                    if (idx === 0 || idx === 1) {
+                        return { pop: "Loop activated: Changing answer to Option D because arguing this is illegal." };
+                    }
+                    return null;
+                },
+                correctPop: "Smartest choice you've made all day. You win a prize (redeemable in person RN YES CZ IM INFRONT OF YOU)."
+            },
+            {
+                q: "14. u had fun my pakhi?",
+                options: [
+                    "A) YES",
+                    "B) YESSSSSSSSSSSSS",
+                    "C) meh",
+                    "D) I love you so much"
+                ],
+                correct: [1], // B
+                customRule: (idx) => {
+                    if (idx === 2) return { pop: "ohh thikase bhalo hoise" };
+                    if (idx === 0) return { pop: "good excitement, try better" };
+                    if (idx === 3) return { pop: "didn’t ask whether u love me or not, read the question carefully next time" };
+                    return null;
+                }
+            }
+        ];
+
+        /* RANDOMIZED GENERAL POP-UPS */
+        const randomGeneralCorrect = [
+            "good girl, now we move on",
+            "n1 bb",
+            "mwahhh",
+            "yayayay that’s my shona"
+        ];
+
+        const randomGeneralWrong = [
+            "I thought 226days were enough to know someone",
+            "Nice try (bitch it was shit, oops how did u read my mind)",
+            "Correct answer choose korte hoy, erjonnoi mcq te fail ashe",
+            "ETA TO EASY SILO, or maybe not XD",
+            "Goodgirl mwah, JUST KIDDING FUCKYOU RESTARTNOW!!!"
+        ];
+
+        /* -------------------------------------------------------------
+           2. STATE MANAGEMENT & GLOBALS
+        ------------------------------------------------------------- */
+        let currentQIndex = 0;
+        let giftClickCount = 0;
+        let isProcessing = false;
+
+        // Interactive modal sequence states
+        let restartModalStage = 1; // 1 = first attempt, 2 = second attempt after opt 1 clicked
+
+        // Elements
+        const questionCounterEl = document.getElementById("questionCounter");
+        const progressBarEl = document.getElementById("progressBar");
+        const questionTextEl = document.getElementById("questionText");
+        const optionsContainerEl = document.getElementById("optionsContainer");
+        const giftContainerEl = document.getElementById("giftContainer");
+        const quizBoxEl = document.getElementById("quizBox");
+
+        // Generic Modal Elements
+        const popupModal = document.getElementById("popupModal");
+        const modalMessage = document.getElementById("modalMessage");
+        const modalIcon = document.getElementById("modalIcon");
+        const modalBtn = document.getElementById("modalBtn");
+
+        // Restart Modal Elements
+        const restartModal = document.getElementById("restartModal");
+        const modalCloseX = document.getElementById("modalCloseX");
+        const restartOpt1 = document.getElementById("restartOpt1");
+        const restartOpt2 = document.getElementById("restartOpt2");
+        const restartModalTitle = document.getElementById("restartModalTitle");
+        const restartModalSubtext = document.getElementById("restartModalSubtext");
+
+        // Gift elements
+        const giftBox = document.getElementById("giftBox");
+        const giftIcon = document.getElementById("giftIcon");
+        const giftHint = document.getElementById("giftHint");
+        const noteContent = document.getElementById("noteContent");
+        const noteText = document.getElementById("noteText");
+
+        /* -------------------------------------------------------------
+           3. PETAL CANVAS ANIMATION
+        ------------------------------------------------------------- */
+        const canvas = document.getElementById("petalCanvas");
+        const ctx = canvas.getContext("2d");
+        let petals = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Petal {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * -canvas.height;
+                this.size = Math.random() * 12 + 8;
+                this.speedY = Math.random() * 2 + 1.5;
+                this.speedX = Math.random() * 1.5 - 0.75;
+                this.rotation = Math.random() * 360;
+                this.rotSpeed = Math.random() * 2 - 1;
+                this.color = ['#ffb3c1', '#ff85a1', '#f72585', '#4ade80', '#86efac'][Math.floor(Math.random() * 5)];
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.rotation += this.rotSpeed;
+                if (this.y > canvas.height + 20) {
+                    this.y = -20;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.beginPath();
+                ctx.fillStyle = this.color;
+                // Draw rose petal heart-ish shape
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-this.size / 2, -this.size / 2, -this.size, this.size / 3, 0, this.size);
+                ctx.bezierCurveTo(this.size, this.size / 3, this.size / 2, -this.size / 2, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function triggerPetalShower(count = 35) {
+            for (let i = 0; i < count; i++) {
+                petals.push(new Petal());
+            }
+        }
+
+        function animatePetals() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            petals.forEach((p, index) => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animatePetals);
+        }
+        animatePetals();
+
+        /* -------------------------------------------------------------
+           4. QUIZ LOGIC & DISPLAY
+        ------------------------------------------------------------- */
+        function loadQuestion() {
+            isProcessing = false;
+            const qData = questions[currentQIndex];
+
+            // Progress Bar & Counter
+            questionCounterEl.innerText = `Question ${currentQIndex + 1} / ${questions.length}`;
+            const pct = ((currentQIndex + 1) / questions.length) * 100;
+            progressBarEl.style.width = `${pct}%`;
+
+            // Question Text
+            questionTextEl.innerText = qData.q;
+
+            // Render Options
+            optionsContainerEl.innerHTML = '';
+            qData.options.forEach((optText, index) => {
+                const btn = document.createElement('button');
+                btn.className = "quiz-option w-full p-4 rounded-2xl text-left font-semibold text-green-950 flex items-center justify-between text-base sm:text-lg shadow-sm";
+                btn.innerHTML = `
+                    <span>${optText}</span>
+                    <i class="fa-regular fa-heart text-green-400 opacity-60"></i>
+                `;
+                btn.onclick = () => handleOptionClick(index);
+                optionsContainerEl.appendChild(btn);
+            });
+        }
+
+        function handleOptionClick(selectedIndex) {
+            if (isProcessing) return;
+            isProcessing = true;
+
+            const qData = questions[currentQIndex];
+            const isCorrect = qData.correct.includes(selectedIndex);
+
+            // Sequential popups list for this attempt
+            let popupsToShow = [];
+
+            // 1. Check custom rules per question choice first
+            if (qData.customRule) {
+                const ruleRes = qData.customRule(selectedIndex);
+                if (ruleRes && ruleRes.pop) {
+                    popupsToShow.push({ text: ruleRes.pop, icon: "💬" });
+                }
+            }
+
+            if (isCorrect) {
+                // Correct Answer Path
+                triggerPetalShower(20);
+
+                // Specific popup if defined
+                if (qData.correctPop) {
+                    popupsToShow.push({ text: qData.correctPop, icon: "🥰" });
+                }
+
+                // General randomized correct popup
+                const randGen = randomGeneralCorrect[Math.floor(Math.random() * randomGeneralCorrect.length)];
+                popupsToShow.push({ text: randGen, icon: "💖" });
+
+                // Display popups in sequence then move forward
+                showSequentialModals(popupsToShow, () => {
+                    if (currentQIndex < questions.length - 1) {
+                        currentQIndex++;
+                        loadQuestion();
+                    } else {
+                        showEndGiftScreen();
+                    }
+                });
+
+            } else {
+                // Wrong Answer Path
+                if (qData.wrongPop) {
+                    popupsToShow.push({ text: qData.wrongPop, icon: "⚠️" });
+                }
+
+                // General randomized wrong popup
+                const randGenW = randomGeneralWrong[Math.floor(Math.random() * randomGeneralWrong.length)];
+                popupsToShow.push({ text: randGenW, icon: "🙄" });
+
+                // Display popups in sequence then show extra restart loop modal
+                showSequentialModals(popupsToShow, () => {
+                    triggerRestartFlow();
+                });
+            }
+        }
+
+        /* -------------------------------------------------------------
+           5. MODAL SYSTEM (Generic Sequential Modals)
+        ------------------------------------------------------------- */
+        function showSequentialModals(list, onComplete) {
+            if (!list || list.length === 0) {
+                if (onComplete) onComplete();
+                return;
+            }
+
+            let index = 0;
+            function displayNext() {
+                if (index >= list.length) {
+                    popupModal.classList.add("hidden");
+                    if (onComplete) onComplete();
+                    return;
+                }
+
+                const item = list[index];
+                modalMessage.innerText = item.text;
+                modalIcon.innerText = item.icon || "✨";
+                popupModal.classList.remove("hidden");
+
+                modalBtn.onclick = () => {
+                    index++;
+                    displayNext();
+                };
+            }
+
+            displayNext();
+        }
+
+        /* -------------------------------------------------------------
+           6. EXTRA WRONG ANSWER RESTART LOGIC (Specific requirements)
+        ------------------------------------------------------------- */
+        function triggerRestartFlow() {
+            restartModalStage = 1;
+            modalCloseX.classList.add("hidden");
+            restartModalTitle.innerText = "NICE TRY, RESTART?";
+            restartModalSubtext.innerText = "Select an option below:";
+            restartOpt1.innerText = "1. NICE TRY, RESTART";
+            restartOpt2.innerText = "2. It’s ok love, try again";
+            restartModal.classList.remove("hidden");
+        }
+
+        // Option 1 Clicked
+        restartOpt1.onclick = () => {
+            if (restartModalStage === 1) {
+                // First time clicking Option 1 -> Popup appears AGAIN!
+                restartModalStage = 2;
+                restartModalTitle.innerText = "NICE TRY, RESTART! (Confirm)";
+                restartModalSubtext.innerText = "You MUST select option 1 again to actually restart!";
+                // Modal stays open, user forced to click Opt 1 again
+            } else if (restartModalStage === 2) {
+                // Second time clicking Option 1 -> Restart Quiz
+                restartModal.classList.add("hidden");
+                resetQuiz();
+            }
+        };
+
+        // Option 2 Clicked
+        restartOpt2.onclick = () => {
+            if (restartModalStage === 1 || restartModalStage === 2) {
+                // Choosing 2 -> "going back in a min, wait" & show small top-right X icon
+                restartModalTitle.innerText = "going back in a min, wait";
+                restartModalSubtext.innerText = "Click the 'X' button on top-right to restart.";
+                modalCloseX.classList.remove("hidden");
+                // Reset stage so clicking 1 later requires proper path
+            }
+        };
+
+        // Small top-right cross icon click
+        modalCloseX.onclick = () => {
+            restartModal.classList.add("hidden");
+            resetQuiz();
+        };
+
+        function resetQuiz() {
+            currentQIndex = 0;
+            loadQuestion();
+        }
+
+        /* -------------------------------------------------------------
+           6. EXTRA WRONG ANSWER RESTART LOGIC (Strict Option 1 & 2 logic)
+        ------------------------------------------------------------- */
+        let opt1ClickCount = 0;
+        const restartOptionsContainer = document.getElementById("restartOptionsContainer");
+
+        function triggerRestartFlow() {
+            opt1ClickCount = 0;
+            modalCloseX.classList.add("hidden");
+            restartOptionsContainer.classList.remove("hidden");
+            restartModalTitle.innerText = "NICE TRY, RESTART";
+            restartModalSubtext.innerText = "Choose an option below:";
+            restartOpt1.innerText = "1. NICE TRY, RESTART";
+            restartOpt2.innerText = "2. It’s ok love, try again";
+            restartModal.classList.remove("hidden");
+        }
+
+        // Option 1 Clicked
+        restartOpt1.onclick = () => {
+            opt1ClickCount++;
+            if (opt1ClickCount === 1) {
+                // First click on Option 1 -> Pop up appears AGAIN!
+                restartModalTitle.innerText = "NICE TRY, RESTART";
+                restartModalSubtext.innerText = "You must select Option 1 again to confirm restart!";
+            } else if (opt1ClickCount >= 2) {
+                // Second click on Option 1 -> Successfully restart quiz
+                restartModal.classList.add("hidden");
+                resetQuiz();
+            }
+        };
+
+        // Option 2 Clicked (First or Second attempt)
+        restartOpt2.onclick = () => {
+            // Display "going back in a min, wait" and reveal top-right 'X' on the popup card
+            restartModalTitle.innerText = "going back in a min, wait";
+            restartModalSubtext.innerText = "Click the small 'X' button at the top-right of this card to restart.";
+            restartOptionsContainer.classList.add("hidden"); // Hide options while waiting for 'X'
+            modalCloseX.classList.remove("hidden"); // Show top-right X button
+        };
+
+        // Small top-right cross icon click on modal card
+        modalCloseX.onclick = () => {
+            restartModal.classList.add("hidden");
+            resetQuiz();
+        };
+
+        function resetQuiz() {
+            currentQIndex = 0;
+            loadQuestion();
+        }
+
+        /* -------------------------------------------------------------
+           7. END OF QUIZ GIFT BOX
