@@ -135,7 +135,7 @@
                     </div>
                     <div>
                         <h2 id="header-title" class="text-sm font-semibold text-[#e9edef] truncate max-w-[200px] md:max-w-md">XII B.V(2027)Fri, Sat-(11-12) b-1 Chemistry</h2>
-                        <p id="header-subtitle" class="text-[11px] text-[#8696a0] truncate max-w-[250px] md:max-w-xl">+880 1914-331164, +880 1715-132544, +880 1713-483128, +880 1917-800963...</p>
+                        <p id="header-subtitle" class="text-[11px] text-[#8696a0] truncate max-w-[250px] md:max-w-xl">@nafiz_rehman, ~ Ishtiak Ahmed, ~ Jash,...</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-5 text-[#aebac1]">
@@ -149,10 +149,6 @@
 
             <!-- Messages Stream Area -->
             <div id="messages-container" class="flex-1 chat-bg overflow-y-auto p-4 md:p-6 flex flex-col space-y-2">
-                <!-- Date Pill -->
-                <div class="flex justify-center my-2">
-                    <span class="bg-[#182229] text-[#8696a0] text-[11px] px-3 py-1 rounded-lg uppercase tracking-wider shadow-sm">Thursday</span>
-                </div>
                 <!-- Dynamic messages inserted here -->
             </div>
 
@@ -174,79 +170,100 @@
     </div>
 
     <script>
-        // Chat data structure containing all chats and message histories matching the user's reference image
+        // Chat data structure containing all chats and message histories matching the image reference
         const chatsData = [
             {
                 id: 'xii-chemistry',
                 name: 'XII B.V(2027)Fri, Sat-(11-12) b-1 Chemistry',
                 avatar: 'https://placehold.co/40x40/005c4b/ffffff?text=XII',
-                subtext: '~miju2210: প্রিয় শিক্ষার্থীরা,আগামীকাল ক্লাসটি বিকাল...',
-                time: 'Yesterday',
+                subtext: '~miju2210: প্রিয় শিক্ষার্থীরা,আগামীকাল শুক্রবারের...',
+                time: '12:45 AM',
                 unread: 0,
                 pinned: true,
                 isGroup: true,
-                participants: '+880 1914-331164, +880 1715-132544, +880 1713-483128, +880 1917-800963, +880 1712-001374, +...',
+                participants: '@nafiz_rehman, ~ Ishtiak Ahmed, ~ Jash,...',
                 messages: [
                     {
                         sender: '~miju2210 (+880 1793-872060)',
                         phone: '+880 1793-872060',
                         text: '<div class="flex items-center space-x-2 text-[#8696a0] bg-[#111b21]/50 p-2 rounded mb-1 border-l-2 border-[#ef4444]"><i class="fa-solid fa-ban text-xs"></i><span>This message was deleted</span></div>',
-                        time: '8:17 PM',
+                        time: '7:32 PM',
                         isDeleted: true
                     },
                     {
-                        dateDivider: 'Yesterday'
+                        sender: '~miju2210 (+880 1793-872060)',
+                        phone: '+880 1793-872060',
+                        text: 'প্রিয় শিক্ষার্থীরা,<br>আগামীকাল সকাল 11.0 টার সময় কেমিস্ট্রি ক্লাস হবে। 14/17 ইকবাল রোড উদ্ভাস বিল্ডিং।',
+                        time: '7:33 PM',
+                        isIncoming: true
+                    },
+                    {
+                        dateDivider: '15 October 2026'
                     },
                     {
                         sender: '~miju2210 (+880 1793-872060)',
                         phone: '+880 1793-872060',
-                        text: 'প্রিয় শিক্ষার্থীরা,<br>আজকে সকাল 11.0 টার সময় কেমিস্ট্রি ক্লাস বন্ধ থাকবে।',
-                        time: '8:56 AM',
+                        text: 'প্রিয় শিক্ষার্থীরা,<br>আগামীকাল সকাল 11.0 টার সময় কেমিস্ট্রি ক্লাস বন্ধ থাকবে।',
+                        time: '10:15 PM',
                         isIncoming: true
                     },
                     {
-                        sender: 'Ravika Chakma (+880 1865-338071)',
-                        phone: '+880 1865-338071',
-                        text: '01865338071<br>কখন হবে?',
-                        time: '9:18 AM',
-                        isIncoming: true
+                        dateDivider: '16 October 2026'
                     },
                     {
                         sender: '~miju2210 (+880 1793-872060)',
                         phone: '+880 1793-872060',
-                        replyTo: {
-                            sender: 'Ravika Chakma',
-                            text: '01865338071<br>কখন হবে?'
-                        },
-                        text: 'কালকে হবে',
-                        time: '9:20 AM',
+                        text: 'প্রিয় শিক্ষার্থীরা,<br>আগামীকাল সকাল 11.0 টার সময় কেমিস্ট্রি ক্লাস হবে। 14/17 ইকবাল রোড উদ্ভাস বিল্ডিং।',
+                        time: '8:11 PM',
                         isIncoming: true
+                    },
+                    {
+                        dateDivider: '17 October 2026'
+                    },
+                    {
+                        sender: 'Ripa Sumi (+880 1614-697178)',
+                        phone: '+880 1614-697178',
+                        text: '@~miju2210 কাল রবিবার ক্লাস কোন সময়ে?',
+                        time: '9:30 PM',
+                        isIncoming: true
+                    },
+                    {
+                        sender: '~Najm_Tasin (+880 1880-859201)',
+                        phone: '+880 1880-859201',
+                        text: '?',
+                        time: '9:47 PM',
+                        isIncoming: true
+                    },
+                    {
+                        dateDivider: 'Thursday'
                     },
                     {
                         sender: '~miju2210 (+880 1793-872060)',
                         phone: '+880 1793-872060',
-                        text: 'প্রিয় শিক্ষার্থীরা,<br>আগামীকাল সকাল 11.0 টার সময় কেমিস্ট্রি ক্লাস হবে। 14/17 ইকবাল রোড উল্লাস বিল্ডিং ।',
-                        time: '8:42 PM',
+                        text: 'প্রিয় শিক্ষার্থীরা,<br>আগামীকাল সকাল 11.0 টার সময় কেমিস্ট্রি ক্লাস হবে। 14/17 ইকবাল রোড উদ্ভাস বিল্ডিং।',
+                        time: '7:38 PM',
                         isIncoming: true
+                    },
+                    {
+                        dateDivider: 'Friday'
                     },
                     {
                         sender: '~miju2210 (+880 1793-872060)',
                         phone: '+880 1793-872060',
-                        text: 'প্রিয় শিক্ষার্থীরা,আগামীকাল ক্লাসটি বিকাল ৩.০০ টার সময় কেমিস্ট্রি ক্লাস হবে এবং তা শুক্রবার ও আজকের টা একসাথে হবে। 14/17 ইকবাল রোড উদ্ভাস বিল্ডিং।',
-                        time: '8:45 PM',
+                        text: 'প্রিয় শিক্ষার্থীরা,<br>আগামীকাল সকাল 11.0 টার সময় কেমিস্ট্রি ক্লাস হবে। 14/17 ইকবাল রোড উদ্ভাস বিল্ডিং।',
+                        time: '8:01 PM',
                         isIncoming: true
                     },
-                        {
-        sender: '~miju2210 (+880 1793-872060)',
-        phone: '+880 1793-872060',
-        text: 'প্রিয় শিক্ষার্থীরা,আগামীকাল বিকাল ৩.০০ সময় কেমিস্ট্রি ক্লাস হবে না, জাহিদ স্যার অসুস্থ, সবাই তার জন্য দোয়া করবে।',
-        time: '12:13 PM',
-        isIncoming: true
-    }
-              
-           
-    
-                    
+                    {
+                        dateDivider: 'Saturday'
+                    },
+                    {
+                        sender: '~miju2210 (+880 1793-872060)',
+                        phone: '+880 1793-872060',
+                        text: 'প্রিয় শিক্ষার্থীরা,<br>আগামীকাল শুক্রবারের এক্সট্রা ক্লাসটি নেওয়া হবে ১২ঃ৩০ এ। ১৪/১৭ ইকবাল রোড উদ্ভাস বিল্ডিং',
+                        time: '12:45 AM',
+                        isIncoming: true
+                    }
                 ]
             },
             {
@@ -298,63 +315,6 @@
                         isIncoming: false
                     }
                 ]
-            },
-            {
-                id: 'class-11-chemistry',
-                name: 'Class 11 Chemistry(9.30)',
-                avatar: 'https://placehold.co/40x40/2a3942/ffffff?text=C11',
-                subtext: 'Mistri: আগামীকাল শুক্রবার সকাল ৯:৩০টায় ...',
-                time: 'Thursday',
-                unread: 0,
-                pinned: false,
-                isGroup: true,
-                participants: 'Mistri, Fahim, Sadia, Nusrat',
-                messages: [
-                    {
-                        sender: 'Mistri',
-                        text: 'আগামীকাল শুক্রবার সকাল ৯:৩০টায় অর্গানিক কেমিস্ট্রি এক্সট্রা ক্লাস শুরু হবে। সবাই সময়মতো উপস্থিত থেকো।',
-                        time: '7:00 PM',
-                        isIncoming: true
-                    }
-                ]
-            },
-            {
-                id: 'fuad',
-                name: 'Fuad',
-                avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-                subtext: '📞 Voice call',
-                time: 'Yesterday',
-                unread: 0,
-                pinned: false,
-                isGroup: false,
-                participants: 'Last seen yesterday at 11:45 PM',
-                messages: [
-                    {
-                        sender: 'Fuad',
-                        text: '<div class="flex items-center space-x-2"><i class="fa-solid fa-phone text-red-400"></i><span>Missed voice call</span></div>',
-                        time: '11:45 PM',
-                        isIncoming: true
-                    }
-                ]
-            },
-            {
-                id: 'blood-st-joseph',
-                name: 'Blood St. Joseph',
-                avatar: 'https://placehold.co/40x40/831843/ffffff?text=BSJ',
-                subtext: 'Urgent donor needed O+',
-                time: 'Thursday',
-                unread: 5,
-                pinned: false,
-                isGroup: true,
-                participants: 'St. Joseph Blood Donors (142 members)',
-                messages: [
-                    {
-                        sender: 'Admin',
-                        text: 'Urgent donor needed O+ blood at Dhaka Medical College Hospital tomorrow morning.',
-                        time: '1:20 PM',
-                        isIncoming: true
-                    }
-                ]
             }
         ];
 
@@ -401,12 +361,10 @@
             const chat = chatsData.find(c => c.id === activeChatId);
             if (!chat) return;
 
-            // Update header info
             document.getElementById('header-title').innerText = chat.name;
             document.getElementById('header-subtitle').innerText = chat.participants;
             document.getElementById('header-avatar').src = chat.avatar;
 
-            // Render messages
             const msgContainer = document.getElementById('messages-container');
             msgContainer.innerHTML = '';
 
@@ -437,10 +395,8 @@
                 const msgEl = document.createElement('div');
                 msgEl.className = `max-w-[85%] md:max-w-[65%] rounded-lg p-2.5 px-3 shadow-sm ${bubbleBg} ${alignment} relative group text-sm text-[#e9edef] my-0.5`;
                 
-                // Color-code incoming group senders with distinct soft hues matching real WhatsApp
                 let senderHeader = '';
                 if (isIncoming && chat.isGroup) {
-                    // Generate pseudo-random consistent color based on sender name
                     const colors = ['text-[#f15c6d]', 'text-[#f3b742]', 'text-[#53bdeb]', 'text-[#25d366]', 'text-[#d97706]'];
                     let hash = 0;
                     for (let i = 0; i < msg.sender.length; i++) hash = msg.sender.charCodeAt(i) + ((hash << 5) - hash);
@@ -460,7 +416,6 @@
                 msgContainer.appendChild(msgEl);
             });
 
-            // Scroll to bottom
             msgContainer.scrollTop = msgContainer.scrollHeight;
         }
 
@@ -527,7 +482,6 @@
             }
         });
 
-        // Initial render on load
         window.onload = function() {
             renderChatList();
             renderActiveChat();
