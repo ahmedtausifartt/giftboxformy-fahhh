@@ -59,7 +59,7 @@
 
         /* Glassmorphism Containers */
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 2px solid rgba(255, 255, 255, 0.6);
@@ -69,7 +69,7 @@
         /* Option Buttons Styling */
         .quiz-option {
             transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             border: 2px solid #bbf7d0;
         }
 
@@ -114,15 +114,15 @@
         }
     </style>
 </head>
-<body class="flex items-center justify-center p-4 sm:p-6 select-none relative">
+<body class="flex items-center justify-center p-4 sm:p-6 select-none relative min-h-screen">
 
     <!-- Canvas background for Rose Petals -->
     <canvas id="petalCanvas"></canvas>
 
     <!-- MAIN QUIZ CONTAINER -->
-    <main class="w-full max-w-2xl glass-card rounded-3xl p-6 sm:p-8 relative z-10 my-auto">
+    <main class="w-full max-w-2xl glass-card rounded-3xl p-6 sm:p-8 relative z-10 my-auto shadow-2xl">
         <!-- Header / Progress -->
-        <header class="mb-6">
+        <header id="quizHeader" class="mb-6">
             <div class="flex justify-between items-center mb-3">
                 <span class="font-fredoka text-green-800 text-lg sm:text-xl flex items-center gap-2">
                     <i class="fa-solid fa-heart-pulse text-red-500 animate-pulse"></i> 
@@ -149,14 +149,14 @@
 
             <!-- Options Grid -->
             <div id="optionsContainer" class="grid grid-cols-1 gap-3 sm:gap-4">
-                <!-- Dynamically filled options -->
+                <!-- Options populated dynamically -->
             </div>
         </div>
 
         <!-- END GIFT AREA (Initially Hidden) -->
         <div id="giftContainer" class="hidden flex-col items-center justify-center text-center py-8 space-y-6 animate-pop">
             <h2 class="font-fredoka text-2xl sm:text-3xl text-green-900">🎉 Quiz Completed! 🎉</h2>
-            <p class="text-green-700 text-base sm:text-lg">You made it all the way to the end without failing!</p>
+            <p class="text-green-700 text-base sm:text-lg font-medium">You made it all the way to the end without failing!</p>
             
             <!-- Clickable Gift Box -->
             <div id="giftBox" class="cursor-pointer transform hover:scale-105 transition-transform duration-300 my-4 inline-block gift-glow">
@@ -169,8 +169,8 @@
                 Tap the gift box to open your reward!
             </p>
 
-            <!-- Unfolded Note Box -->
-            <div id="noteContent" class="hidden w-full max-w-md bg-amber-50 border-2 border-amber-200 p-6 rounded-2xl shadow-xl text-amber-950 font-serif leading-relaxed text-left animate-pop relative">
+            <!-- Note Box -->
+            <div id="noteContent" class="hidden w-full max-w-md bg-amber-50 border-2 border-amber-200 p-6 rounded-2xl shadow-xl text-amber-950 leading-relaxed text-left animate-pop relative">
                 <i class="fa-solid fa-quote-left text-3xl text-amber-300 absolute top-2 left-2 opacity-50"></i>
                 <div id="noteText" class="relative z-10 text-base sm:text-lg space-y-3 font-quicksand font-semibold">
                     <!-- Dynamic Note Content -->
@@ -179,23 +179,23 @@
         </div>
     </main>
 
-    <!-- GENERIC / SEQUENCE MODAL POPUP -->
+    <!-- GENERIC SEQUENTIAL MODAL -->
     <div id="popupModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="glass-card bg-white/95 rounded-3xl max-w-md w-full p-6 text-center space-y-5 animate-pop relative border-2 border-green-300 shadow-2xl">
             <div id="modalIcon" class="text-5xl">✨</div>
             <p id="modalMessage" class="font-fredoka text-lg sm:text-xl text-green-900 leading-snug">
-                Message goes here...
+                Message...
             </p>
-            <button id="modalBtn" class="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-fredoka text-lg rounded-2xl shadow-lg transition-all active:scale-95">
+            <button id="modalBtn" class="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-fredoka text-lg rounded-2xl shadow-lg transition-all active:scale-95 cursor-pointer">
                 Continue
             </button>
         </div>
     </div>
 
-    <!-- EXTRA WRONG ANSWER LOOP RESTART MODAL -->
+    <!-- WRONG ANSWER RESTART MODAL -->
     <div id="restartModal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="glass-card bg-white/95 rounded-3xl max-w-md w-full p-6 text-center space-y-5 animate-pop relative border-2 border-red-200 shadow-2xl">
-            <!-- Small Cross Icon (Visible ONLY when Option 2 "going back in a min, wait" flow is active) -->
+            <!-- Top Right 'X' Button (Revealed ONLY when Option 2 is clicked) -->
             <button id="modalCloseX" class="hidden absolute top-3 right-3 w-8 h-8 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-600 flex items-center justify-center font-bold text-base transition-colors border border-rose-300 shadow-sm cursor-pointer z-20">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -218,7 +218,7 @@
     <!-- SCRIPT LOGIC -->
     <script>
         /* -------------------------------------------------------------
-           1. QUESTION DATA & SPECIFIC LOGIC DEFINITION
+           1. QUESTION DATA & CUSTOM RULES
         ------------------------------------------------------------- */
         const questions = [
             {
@@ -229,7 +229,7 @@
                     "C) 5months",
                     "D) monenai,been waiting for the v2"
                 ],
-                correct: [3], // D (0-indexed)
+                correct: [3]
             },
             {
                 q: "2. In the last 226days, what was the best thing that I did(consistently)?",
@@ -239,7 +239,7 @@
                     "C) all those romantic gestures",
                     "D) Making you feel loved everyday"
                 ],
-                correct: [0, 1, 2, 3], // A, B, C, D
+                correct: [0, 1, 2, 3]
             },
             {
                 q: "3. What would you do if you suddenly see me behind you out of nowhere",
@@ -249,7 +249,7 @@
                     "C) wave at me",
                     "D) run like there’s no tomorrow"
                 ],
-                correct: [1], // B
+                correct: [1]
             },
             {
                 q: "4. What would you do if u suddenly realized that I was gay all along",
@@ -259,9 +259,8 @@
                     "C) do nothing",
                     "D) leave me"
                 ],
-                correct: [2], // C
+                correct: [2],
                 customRule: (idx) => {
-                    // Special Rule: If ANY option other than D (index 3) is chosen
                     if (idx !== 3) {
                         return { pop: "goodgirl, leaving wasn’t an option either ways btw" };
                     }
@@ -276,7 +275,7 @@
                     "C) Proof that I'm even more obsessed with you than I let on",
                     "D) All of the above (and then making fun of me for it)"
                 ],
-                correct: [3], // D
+                correct: [3],
                 correctPop: "Good news, option C is already 100% verified."
             },
             {
@@ -287,7 +286,7 @@
                     "C) Sitting around being bored because your life lacks drama",
                     "D) Re-rolling the universe until we meet anyway"
                 ],
-                correct: [0, 1, 2, 3], // All correct
+                correct: [0, 1, 2, 3],
                 correctPop: "destiny fixed it."
             },
             {
@@ -298,7 +297,7 @@
                     "C) Hold your hand, sit in silence, and let you decompress",
                     "D) Gently tell you \"I've got you\" and handle everything for the rest of the day"
                 ],
-                correct: [0, 1, 2, 3], // All correct
+                correct: [0, 1, 2, 3],
                 correctPop: "Noted. Saved to my memory forever."
             },
             {
@@ -309,7 +308,7 @@
                     "C) Error: Number too high for Microsoft Word to calculate",
                     "D) More than yesterday, but less than tomorrow"
                 ],
-                correct: [2, 3], // C or D
+                correct: [2, 3],
                 customRule: (idx) => {
                     if (idx === 0 || idx === 1) {
                         return { pop: "oh so my love can be defined by numbers?" };
@@ -325,7 +324,7 @@
                     "C) From the very first quiz/beginning",
                     "D) You're still deciding (Warning: Incorrect choice)"
                 ],
-                correct: [0, 1, 2], // A, B, C
+                correct: [0, 1, 2],
                 customRule: (idx) => {
                     if (idx === 3) {
                         return { pop: "System Error: Option D is temporarily disabled due to overwhelming affection." };
@@ -341,7 +340,7 @@
                     "C) I don’t want to differentiate, I love every single one of em",
                     "D) idk"
                 ],
-                correct: [0], // A
+                correct: [0],
                 customRule: (idx) => {
                     if (idx !== 0) {
                         return { pop: "oh so you’re saying that I don’t get better day by day????????????????????????????????????????????????????" };
@@ -357,7 +356,7 @@
                     "C) Yell at me for skipping class/waiting",
                     "D) Stare in disbelief until I hand over the food"
                 ],
-                correct: [1], // B
+                correct: [1],
                 correctPop: "Correct response. The food delivery service is officially on its way.",
                 wrongPop: "Warning: System error. That option violates the romance guidelines. Try again."
             },
@@ -369,7 +368,7 @@
                     "C) What we're going to eat next",
                     "D) How lucky I am to be talking to you"
                 ],
-                correct: [1], // B
+                correct: [1],
                 correctPop: "Get out of my head! That is terrifyingly accurate.",
                 wrongPop: "Close, but you underestimated how chaotic my brain is. Try D."
             },
@@ -381,7 +380,7 @@
                     "C) We love each other equally",
                     "D) This question is rigged and a trap"
                 ],
-                correct: [3], // D
+                correct: [3],
                 customRule: (idx) => {
                     if (idx === 0 || idx === 1) {
                         return { pop: "Loop activated: Changing answer to Option D because arguing this is illegal." };
@@ -398,7 +397,7 @@
                     "C) meh",
                     "D) I love you so much"
                 ],
-                correct: [1], // B
+                correct: [1],
                 customRule: (idx) => {
                     if (idx === 2) return { pop: "ohh thikase bhalo hoise" };
                     if (idx === 0) return { pop: "good excitement, try better" };
@@ -408,7 +407,7 @@
             }
         ];
 
-        /* RANDOMIZED GENERAL POP-UPS */
+        /* RANDOM GENERAL FEEDBACK MESSAGES */
         const randomGeneralCorrect = [
             "good girl, now we move on",
             "n1 bb",
@@ -425,14 +424,12 @@
         ];
 
         /* -------------------------------------------------------------
-           2. STATE MANAGEMENT & GLOBALS
+           2. GLOBAL STATE
         ------------------------------------------------------------- */
         let currentQIndex = 0;
         let giftClickCount = 0;
         let isProcessing = false;
-
-        // Interactive modal sequence states
-        let restartModalStage = 1; // 1 = first attempt, 2 = second attempt after opt 1 clicked
+        let opt1ClickCount = 0;
 
         // Elements
         const questionCounterEl = document.getElementById("questionCounter");
@@ -440,6 +437,7 @@
         const questionTextEl = document.getElementById("questionText");
         const optionsContainerEl = document.getElementById("optionsContainer");
         const giftContainerEl = document.getElementById("giftContainer");
+        const quizHeaderEl = document.getElementById("quizHeader");
         const quizBoxEl = document.getElementById("quizBox");
 
         // Generic Modal Elements
@@ -453,6 +451,7 @@
         const modalCloseX = document.getElementById("modalCloseX");
         const restartOpt1 = document.getElementById("restartOpt1");
         const restartOpt2 = document.getElementById("restartOpt2");
+        const restartOptionsContainer = document.getElementById("restartOptionsContainer");
         const restartModalTitle = document.getElementById("restartModalTitle");
         const restartModalSubtext = document.getElementById("restartModalSubtext");
 
@@ -464,7 +463,7 @@
         const noteText = document.getElementById("noteText");
 
         /* -------------------------------------------------------------
-           3. PETAL CANVAS ANIMATION
+           3. ROSE PETAL ANIMATION
         ------------------------------------------------------------- */
         const canvas = document.getElementById("petalCanvas");
         const ctx = canvas.getContext("2d");
@@ -503,7 +502,6 @@
                 ctx.rotate((this.rotation * Math.PI) / 180);
                 ctx.beginPath();
                 ctx.fillStyle = this.color;
-                // Draw rose petal heart-ish shape
                 ctx.moveTo(0, 0);
                 ctx.bezierCurveTo(-this.size / 2, -this.size / 2, -this.size, this.size / 3, 0, this.size);
                 ctx.bezierCurveTo(this.size, this.size / 3, this.size / 2, -this.size / 2, 0, 0);
@@ -520,7 +518,7 @@
 
         function animatePetals() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            petals.forEach((p, index) => {
+            petals.forEach((p) => {
                 p.update();
                 p.draw();
             });
@@ -529,7 +527,7 @@
         animatePetals();
 
         /* -------------------------------------------------------------
-           4. QUIZ LOGIC & DISPLAY
+           4. QUIZ LOGIC
         ------------------------------------------------------------- */
         function loadQuestion() {
             isProcessing = false;
@@ -547,7 +545,7 @@
             optionsContainerEl.innerHTML = '';
             qData.options.forEach((optText, index) => {
                 const btn = document.createElement('button');
-                btn.className = "quiz-option w-full p-4 rounded-2xl text-left font-semibold text-green-950 flex items-center justify-between text-base sm:text-lg shadow-sm";
+                btn.className = "quiz-option w-full p-4 rounded-2xl text-left font-semibold text-green-950 flex items-center justify-between text-base sm:text-lg shadow-sm cursor-pointer";
                 btn.innerHTML = `
                     <span>${optText}</span>
                     <i class="fa-regular fa-heart text-green-400 opacity-60"></i>
@@ -563,11 +561,9 @@
 
             const qData = questions[currentQIndex];
             const isCorrect = qData.correct.includes(selectedIndex);
-
-            // Sequential popups list for this attempt
             let popupsToShow = [];
 
-            // 1. Check custom rules per question choice first
+            // 1. Custom question rule popup
             if (qData.customRule) {
                 const ruleRes = qData.customRule(selectedIndex);
                 if (ruleRes && ruleRes.pop) {
@@ -576,19 +572,16 @@
             }
 
             if (isCorrect) {
-                // Correct Answer Path
-                triggerPetalShower(20);
+                // Correct Path
+                triggerPetalShower(25);
 
-                // Specific popup if defined
                 if (qData.correctPop) {
                     popupsToShow.push({ text: qData.correctPop, icon: "🥰" });
                 }
 
-                // General randomized correct popup
                 const randGen = randomGeneralCorrect[Math.floor(Math.random() * randomGeneralCorrect.length)];
                 popupsToShow.push({ text: randGen, icon: "💖" });
 
-                // Display popups in sequence then move forward
                 showSequentialModals(popupsToShow, () => {
                     if (currentQIndex < questions.length - 1) {
                         currentQIndex++;
@@ -599,16 +592,14 @@
                 });
 
             } else {
-                // Wrong Answer Path
+                // Wrong Path
                 if (qData.wrongPop) {
                     popupsToShow.push({ text: qData.wrongPop, icon: "⚠️" });
                 }
 
-                // General randomized wrong popup
                 const randGenW = randomGeneralWrong[Math.floor(Math.random() * randomGeneralWrong.length)];
                 popupsToShow.push({ text: randGenW, icon: "🙄" });
 
-                // Display popups in sequence then show extra restart loop modal
                 showSequentialModals(popupsToShow, () => {
                     triggerRestartFlow();
                 });
@@ -616,7 +607,7 @@
         }
 
         /* -------------------------------------------------------------
-           5. MODAL SYSTEM (Generic Sequential Modals)
+           5. MODAL SYSTEM
         ------------------------------------------------------------- */
         function showSequentialModals(list, onComplete) {
             if (!list || list.length === 0) {
@@ -647,61 +638,8 @@
         }
 
         /* -------------------------------------------------------------
-           6. EXTRA WRONG ANSWER RESTART LOGIC (Specific requirements)
+           6. RESTART MODAL & OPTION LOGIC
         ------------------------------------------------------------- */
-        function triggerRestartFlow() {
-            restartModalStage = 1;
-            modalCloseX.classList.add("hidden");
-            restartModalTitle.innerText = "NICE TRY, RESTART?";
-            restartModalSubtext.innerText = "Select an option below:";
-            restartOpt1.innerText = "1. NICE TRY, RESTART";
-            restartOpt2.innerText = "2. It’s ok love, try again";
-            restartModal.classList.remove("hidden");
-        }
-
-        // Option 1 Clicked
-        restartOpt1.onclick = () => {
-            if (restartModalStage === 1) {
-                // First time clicking Option 1 -> Popup appears AGAIN!
-                restartModalStage = 2;
-                restartModalTitle.innerText = "NICE TRY, RESTART! (Confirm)";
-                restartModalSubtext.innerText = "You MUST select option 1 again to actually restart!";
-                // Modal stays open, user forced to click Opt 1 again
-            } else if (restartModalStage === 2) {
-                // Second time clicking Option 1 -> Restart Quiz
-                restartModal.classList.add("hidden");
-                resetQuiz();
-            }
-        };
-
-        // Option 2 Clicked
-        restartOpt2.onclick = () => {
-            if (restartModalStage === 1 || restartModalStage === 2) {
-                // Choosing 2 -> "going back in a min, wait" & show small top-right X icon
-                restartModalTitle.innerText = "going back in a min, wait";
-                restartModalSubtext.innerText = "Click the 'X' button on top-right to restart.";
-                modalCloseX.classList.remove("hidden");
-                // Reset stage so clicking 1 later requires proper path
-            }
-        };
-
-        // Small top-right cross icon click
-        modalCloseX.onclick = () => {
-            restartModal.classList.add("hidden");
-            resetQuiz();
-        };
-
-        function resetQuiz() {
-            currentQIndex = 0;
-            loadQuestion();
-        }
-
-        /* -------------------------------------------------------------
-           6. EXTRA WRONG ANSWER RESTART LOGIC (Strict Option 1 & 2 logic)
-        ------------------------------------------------------------- */
-        let opt1ClickCount = 0;
-        const restartOptionsContainer = document.getElementById("restartOptionsContainer");
-
         function triggerRestartFlow() {
             opt1ClickCount = 0;
             modalCloseX.classList.add("hidden");
@@ -717,23 +655,23 @@
         restartOpt1.onclick = () => {
             opt1ClickCount++;
             if (opt1ClickCount === 1) {
-                // First click on Option 1 -> Pop up appears AGAIN!
+                // First click -> Prompt must appear again requiring selection of Option 1 again
                 restartModalTitle.innerText = "NICE TRY, RESTART";
                 restartModalSubtext.innerText = "You must select Option 1 again to confirm restart!";
             } else if (opt1ClickCount >= 2) {
-                // Second click on Option 1 -> Successfully restart quiz
+                // Second click -> Restarts quiz
                 restartModal.classList.add("hidden");
                 resetQuiz();
             }
         };
 
-        // Option 2 Clicked (First or Second attempt)
+        // Option 2 Clicked
         restartOpt2.onclick = () => {
-            // Display "going back in a min, wait" and reveal top-right 'X' on the popup card
+            // Displays text "going back in a min, wait" and shows top-right X button inside card
             restartModalTitle.innerText = "going back in a min, wait";
-            restartModalSubtext.innerText = "Click the small 'X' button at the top-right of this card to restart.";
-            restartOptionsContainer.classList.add("hidden"); // Hide options while waiting for 'X'
-            modalCloseX.classList.remove("hidden"); // Show top-right X button
+            restartModalSubtext.innerText = "Click the 'X' button on top-right to restart.";
+            restartOptionsContainer.classList.add("hidden");
+            modalCloseX.classList.remove("hidden");
         };
 
         // Small top-right cross icon click on modal card
@@ -748,4 +686,67 @@
         }
 
         /* -------------------------------------------------------------
-           7. END OF QUIZ GIFT BOX
+           7. END OF QUIZ & GIFT BOX LOGIC
+        ------------------------------------------------------------- */
+        function showEndGiftScreen() {
+            quizHeaderEl.classList.add("hidden");
+            quizBoxEl.classList.add("hidden");
+            giftContainerEl.classList.remove("hidden");
+            giftContainerEl.classList.add("flex");
+            triggerPetalShower(50);
+        }
+
+        giftBox.onclick = () => {
+            giftClickCount++;
+
+            if (giftClickCount < 3) {
+                giftHint.innerText = `Keep tapping! (${giftClickCount}/3 taps)`;
+            } else if (giftClickCount === 3) {
+                // 3 Clicks -> Show Folded Note
+                noteContent.classList.remove("hidden");
+                noteText.innerHTML = `
+                    <div class="flex items-center gap-2 text-amber-800 font-bold mb-2">
+                        <i class="fa-solid fa-envelope-open-text text-xl"></i> A Folded Note Appeared...
+                    </div>
+                    <p class="italic text-amber-900">Keep tapping the gift box to unfold it further!</p>
+                `;
+                giftHint.innerText = "Tap 3 more times to open it!";
+            } else if (giftClickCount > 3 && giftClickCount < 6) {
+                giftHint.innerText = `Tapping... (${giftClickCount}/6 taps)`;
+            } else if (giftClickCount === 6) {
+                // 6 Clicks -> "LOL KISUINAI"
+                noteText.innerHTML = `
+                    <div class="text-center py-4">
+                        <span class="text-3xl sm:text-4xl font-extrabold text-amber-900 block tracking-wider">LOL KISUINAI 😂</span>
+                        <p class="text-xs text-amber-700 mt-2 font-sans font-normal">(...or is there? Try tapping 10 more times!)</p>
+                    </div>
+                `;
+                giftHint.innerText = "Tap 10 more times to reveal the true message!";
+            } else if (giftClickCount > 6 && giftClickCount < 16) {
+                giftHint.innerText = `Unlocking secret note... (${giftClickCount - 6}/10 taps)`;
+            } else if (giftClickCount === 16) {
+                // 16 Clicks -> Full Romantic Message
+                triggerPetalShower(100);
+                giftIcon.innerText = "💖";
+                giftHint.innerText = "❤️ Message Unlocked! ❤️";
+                noteText.innerHTML = `
+                    <p class="font-bold text-lg text-emerald-900 mb-2">My Dearest Pakhi,</p>
+                    <p class="leading-relaxed">
+                        "I love you so much. Thank you for everything u have done for me so far and thank you in advance for the future. Sorry beshikichu likhbo na cz its already way too late and I have to finish it ASAP. But I LOVE YOU SO MUCH"
+                    </p>
+                    <div class="mt-4 pt-3 border-t border-amber-200 text-right text-sm text-amber-800 font-bold">
+                        Forever & Always 💕
+                    </div>
+                `;
+            }
+        };
+
+        /* -------------------------------------------------------------
+           8. STARTUP INITIALIZATION
+        ------------------------------------------------------------- */
+        window.onload = function() {
+            loadQuestion();
+        };
+    </script>
+</body>
+</html>
