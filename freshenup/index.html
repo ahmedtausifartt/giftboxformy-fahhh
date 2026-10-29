@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rest Well, My Love</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #070913;
+            color: #f3f4f6;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .font-cursive {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .font-serif-custom {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Dreamy background gradient glow */
+        .bg-glow {
+            background: radial-gradient(circle at 50% 50%, rgba(88, 28, 135, 0.35) 0%, rgba(15, 23, 42, 0.8) 50%, rgba(7, 9, 19, 1) 100%);
+        }
+
+        /* Ambient floating light particles */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: twinkle var(--duration) ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.3); filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8)); }
+        }
+
+        /* Smooth Canvas Container Zoom */
+        .zoom-stage {
+            transition: transform 3.5s cubic-bezier(0.16, 1, 0.3, 1), filter 3s ease;
+            transform-origin: center center;
+        }
+
+        .zoom-active {
+            transform: scale(2.2);
+            filter: blur(1.5px);
+        }
+
+        /* Text reveal overlay styling */
+        .message-card {
+            opacity: 0;
+            transform: scale(0.85) translateY(20px);
+            transition: all 2.5s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(216, 180, 254, 0.15);
+        }
+
+        .message-card.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        .glowing-text {
+            background: linear-gradient(135deg, #ffffff 0%, #fbcfe8 40%, #e9d5ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(244, 114, 182, 0.3);
+        }
+
+        /* Custom pulsing glowing aura */
+        .pulse-aura {
+            animation: auraPulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes auraPulse {
+            0% { opacity: 0.3; transform: scale(0.95); }
+            100% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        /* Soft button hover transition */
+        .btn-glow {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.2);
+        }
+        .btn-glow:hover {
+            box-shadow: 0 0 25px rgba(236, 72, 153, 0.5);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="w-screen h-screen relative flex items-center justify-center bg-glow">
+
+    <!-- Starfield Layer -->
+    <div id="starfield" class="absolute inset-0 pointer-events-none"></div>
+
+    <!-- Soft Glow Radial Core -->
+    <div class="absolute w-[600px] h-[600px] rounded-full bg-purple-600/10 blur-[120px] pointer-events-none pulse-aura"></div>
+    <div class="absolute w-[400px] h-[400px] rounded-full bg-pink-500/10 blur-[90px] pointer-events-none pulse-aura" style="animation-delay: -2s;"></div>
+
+    <!-- Main Animation Stage (Canvas Zoomed Container) -->
+    <div id="stage" class="zoom-stage absolute inset-0 flex items-center justify-center">
+        <canvas id="flowerCanvas" class="w-full h-full block"></canvas>
+    </div>
+
+    <!-- Cozy Card Message Overlay -->
+    <div id="messageBox" class="message-card z-20 max-w-xl w-[90%] p-8 sm:p-12 rounded-3xl text-center flex flex-col items-center gap-6 border border-pink-500/20">
+        <!-- Decorative Top Icon/Petal -->
+        <div class="w-12 h-12 rounded-full bg-pink-500/10 border border-pink-400/30 flex items-center justify-center text-pink-300 shadow-inner">
+            <svg class="w-6 h-6 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+        </div>
+
+        <!-- Heartfelt Message Text -->
+        <div class="space-y-4">
+            <h1 class="font-cursive text-4xl sm:text-6xl glowing-text leading-tight tracking-wide px-2">
+                "You had a hard and tiring day, rest well my love"
+            </h1>
+            <p class="text-slate-300/80 text-sm sm:text-base font-light tracking-widest uppercase">
+                Close your eyes & let peace surround you
+            </p>
+        </div>
+
+        <!-- Action Controls -->
+        <div class="flex flex-wrap justify-center items-center gap-4 pt-2">
+            <button id="replayBtn" class="btn-glow px-6 py-3 rounded-full bg-gradient-to-r from-pink-500/80 to-purple-600/80 text-white font-medium text-sm tracking-wider uppercase backdrop-blur-md border border-white/20 flex items-center gap-2 cursor-pointer active:scale-95 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Replay Journey
+            </button>
+            <button id="audioBtn" class="px-4 py-3 rounded-full bg-slate-800/60 hover:bg-slate-700/60 text-slate-300 hover:text-white border border-slate-700/50 text-sm flex items-center gap-2 transition-all cursor-pointer">
+                <svg id="audioIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                </svg>
+                <span id="audioText">Ambient Sound</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Gentle Click-to-Start Prompt (Ensures audio/animation smooth sync on touch devices) -->
+    <div id="startOverlay" class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm cursor-pointer transition-opacity duration-700">
+        <div class="text-center space-y-4 p-6 rounded-2xl bg-slate-900/80 border border-slate-700/50 shadow-2xl">
+            <div class="w-16 h-16 mx-auto rounded-full bg-pink-500/20 border border-pink-400/40 flex items-center justify-center text-pink-300">
+                <svg class="w-8 h-8 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-serif-custom text-pink-100">Click anywhere to begin</h2>
+            <p class="text-xs text-slate-400 tracking-wider">Turn on sound for a relaxing experience</p>
+        </div>
+    </div>
+
+    <script>
+        // --- STARFIELD GENERATION ---
+        const starfield = document.getElementById('starfield');
+        const STAR_COUNT = 120;
+
+        for (let i = 0; i < STAR_COUNT; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 2.5 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+            star.style.animationDelay = `${Math.random() * 5}s`;
+            star.style.opacity = Math.random() * 0.7 + 0.3;
+            starfield.appendChild(star);
+        }
+
+        // --- CANVAS ANIMATION SYSTEM ---
+        const canvas = document.getElementById('flowerCanvas');
+        const ctx = canvas.getContext('2d');
+        const stage = document.getElementById('stage');
+        const messageBox = document.getElementById('messageBox');
+        const startOverlay = document.getElementById('startOverlay');
+        const replayBtn = document.getElementById('replayBtn');
+        const audioBtn = document.getElementById('audioBtn');
+
+        let width, height, centerX, centerY;
+        let animationFrame;
+        let startTime = null;
+        let isRunning = false;
+        let isZoomed = false;
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            centerX = width / 2;
+            centerY = height / 2;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Color palettes for soft, glowing ethereal flowers
+        const outerPalettes = [
+            { petal: '#f472b6', center: '#fef08a', glow: 'rgba(244, 114, 182, 0.4)' }, // Pink
+            { petal: '#c084fc', center: '#fed7aa', glow: 'rgba(192, 132, 252, 0.4)' }, // Purple
+            { petal: '#38bdf8', center: '#fef08a', glow: 'rgba(56, 189, 248, 0.4)' },  // Soft Blue
+            { petal: '#fb7185', center: '#fef08a', glow: 'rgba(251, 113, 133, 0.4)' }  // Rose
+        ];
+
+        const innerPalettes = [
+            { petal: '#fbcfe8', center: '#fef08a', glow: 'rgba(251, 207, 232, 0.5)' }, // Soft Pearl Pink
+            { petal: '#e9d5ff', center: '#fef08a', glow: 'rgba(233, 213, 255, 0.5)' }, // Gentle Lavender
+            { petal: '#fde047', center: '#ffffff', glow: 'rgba(253, 224, 71, 0.5)' }   // Warm Gold
+        ];
+
+        // Particle Class for trailing sparkles
+        class Sparkle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 1.5;
+                this.speedY = (Math.random() - 0.5) * 1.5 - 0.5;
+                this.color = color;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.02 + 0.015;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.alpha -= this.decay;
+            }
+            draw(ctx) {
+                if (this.alpha <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        let sparkles = [];
+
+        // Flower Drawing Function
+        function drawFlower(ctx, x, y, radius, petalCount, palette, rotation, bloomFactor = 1) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(rotation);
+
+            const currRadius = radius * bloomFactor;
+            if (currRadius <= 0) {
+                ctx.restore();
+                return;
+            }
+
+            // Glow aura behind flower
+            ctx.shadowColor = palette.glow;
+            ctx.shadowBlur = 15 * bloomFactor;
+
+            // Draw Petals
+            ctx.fillStyle = palette.petal;
+            const angleStep = (Math.PI * 2) / petalCount;
+            const petalLength = currRadius * 1.2;
+            const petalWidth = currRadius * 0.5;
+
+            for (let i = 0; i < petalCount; i++) {
+                ctx.save();
+                ctx.rotate(i * angleStep);
+
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(
+                    -petalWidth, petalLength * 0.4,
+                    -petalWidth * 0.8, petalLength,
+                    0, petalLength
+                );
+                ctx.bezierCurveTo(
+                    petalWidth * 0.8, petalLength,
+                    petalWidth, petalLength * 0.4,
+                    0, 0
+                );
+                ctx.fill();
+
+                // Inner petal highlight gradient detail
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(
+                    -petalWidth * 0.4, petalLength * 0.3,
+                    0, petalLength * 0.7,
+                    0, petalLength * 0.8
+                );
+                ctx.fill();
+
+                ctx.restore();
+            }
+
+            // Draw Center Pistil
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = '#ffffff';
+            ctx.fillStyle = palette.center;
+            ctx.beginPath();
+            ctx.arc(0, 0, currRadius * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Center Ring details
+            ctx.strokeStyle = 'rgba(217, 119, 6, 0.4)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // Configuration of Flowers
+        const OUTER_COUNT = 14;
+        const INNER_COUNT = 10;
+        let outerFlowers = [];
+        let innerFlowers = [];
+
+        function initFlowers() {
+            outerFlowers = [];
+            innerFlowers = [];
+
+            // Outer ring: Spirals UPWARDS while closing in slightly
+            for (let i = 0; i < OUTER_COUNT; i++) {
+                outerFlowers.push({
+                    index: i,
+                    palette: outerPalettes[i % outerPalettes.length],
+                    petalCount: i % 2 === 0 ? 5 : 6,
+                    baseRadius: Math.min(width, height) * 0.025 + 10,
+                    phaseOffset: (i / OUTER_COUNT) * Math.PI * 2,
+                    speedMultiplier: 0.8 + Math.random() * 0.4
+                });
+            }
+
+            // Inner ring: Spirals INWARDS, shrinking circle tighter
+            for (let i = 0; i < INNER_COUNT; i++) {
+                innerFlowers.push({
+                    index: i,
+                    palette: innerPalettes[i % innerPalettes.length],
+                    petalCount: 5,
+                    baseRadius: Math.min(width, height) * 0.02 + 8,
+                    phaseOffset: (i / INNER_COUNT) * Math.PI * 2,
+                    speedMultiplier: 1.1 + Math.random() * 0.3
+                });
+            }
+        }
+
+        // Main Animation Loop
+        function animate(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = (timestamp - startTime) / 1000; // time in seconds
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Total duration for the spiral dance before convergence
+            const DURATION = 8.5;
+            const progress = Math.min(elapsed / DURATION, 1);
+
+            // Ease timing functions
+            const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+            const easeInQuad = progress * progress;
+
+            // 1. ANIMATE OUTER FLOWERS (Circling Upwards and inwards)
+            const outerStartRadius = Math.min(width, height) * 0.38;
+            const outerCurrentRadius = outerStartRadius * (1 - easeOutCubic * 0.7);
+            const outerYOffset = (1 - easeOutCubic) * (height * 0.25) - (progress * 60); // Floating upwards
+
+            outerFlowers.forEach((flower) => {
+                const angle = flower.phaseOffset + elapsed * 1.2 * flower.speedMultiplier;
+                const x = centerX + Math.cos(angle) * outerCurrentRadius;
+                const y = centerY + Math.sin(angle) * outerCurrentRadius - outerYOffset;
+
+                // Bloom factor based on progression
+                const bloom = Math.min(elapsed * 1.5, 1);
+                const rotation = elapsed * 1.5 + flower.index;
+
+                drawFlower(ctx, x, y, flower.baseRadius, flower.petalCount, flower.palette, rotation, bloom);
+
+                // Add sparkles occasionally
+                if (Math.random() < 0.35) {
+                    sparkles.push(new Sparkle(x, y, flower.palette.petal));
+                }
+            });
+
+            // 2. ANIMATE INNER FLOWERS (Making circle smaller / tightening inner spiral)
+            const innerStartRadius = Math.min(width, height) * 0.25;
+            // Radius tightens significantly towards center
+            const innerCurrentRadius = Math.max(10, innerStartRadius * (1 - Math.pow(progress, 1.8)));
+
+            innerFlowers.forEach((flower) => {
+                // Counter-rotation or faster spiral for inner ring
+                const angle = flower.phaseOffset - elapsed * 1.8 * flower.speedMultiplier;
+                const x = centerX + Math.cos(angle) * innerCurrentRadius;
+                const y = centerY + Math.sin(angle) * innerCurrentRadius;
+
+                // Bloom & fade as they converge into the center
+                const bloom = Math.min(elapsed * 1.8, 1) * (1 - Math.pow(progress, 4) * 0.5);
+                const rotation = -elapsed * 2.0 + flower.index;
+
+                drawFlower(ctx, x, y, flower.baseRadius, flower.petalCount, flower.palette, rotation, bloom);
+
+                if (Math.random() < 0.3) {
+                    sparkles.push(new Sparkle(x, y, flower.palette.petal));
+                }
+            });
+
+            // Render Trailing Sparkles
+            for (let i = sparkles.length - 1; i >= 0; i--) {
+                sparkles[i].update();
+                sparkles[i].draw(ctx);
+                if (sparkles[i].alpha <= 0) {
+                    sparkles.splice(i, 1);
+                }
+            }
+
+            // Draw Central Ethereal Core Light
+            const coreRadius = (1 - Math.abs(progress - 0.8) * 2) * 60;
+            if (coreRadius > 0) {
+                const radialGlow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, Math.max(1, coreRadius));
+                radialGlow.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+                radialGlow.addColorStop(0.5, 'rgba(244, 114, 182, 0.4)');
+                radialGlow.addColorStop(1, 'rgba(147, 51, 234, 0)');
+                ctx.fillStyle = radialGlow;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, Math.max(1, coreRadius), 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 3. TRIGGER ZOOM & TEXT REVEAL AT CONVERGENCE END
+            if (progress >= 0.75 && !isZoomed) {
+                isZoomed = true;
+                stage.classList.add('zoom-active');
+                setTimeout(() => {
+                    messageBox.classList.add('show');
+                }, 1200);
+            }
+
+            if (isRunning) {
+                animationFrame = requestAnimationFrame(animate);
+            }
+        }
+
+        // --- WEB AUDIO API (Relaxing Synth Chords) ---
+        let audioCtx = null;
+        let isAudioPlaying = false;
+        let soundInterval = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Relaxing pentatonic/ambient notes (Hz)
+        const notes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
+
+        function playAmbientTone() {
+            if (!isAudioPlaying || !audioCtx) return;
+
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                // Select soft random pitch
+                const note = notes[Math.floor(Math.random() * notes.length)];
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(note, audioCtx.currentTime);
+
+                // Gentle envelope fade-in / fade-out
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.04, audioCtx.currentTime + 1.5);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 5.0);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 5.2);
+            } catch (e) {
+                console.error("Audio playback error", e);
+            }
+        }
+
+        function toggleAudio() {
+            initAudio();
+            isAudioPlaying = !isAudioPlaying;
+
+            if (isAudioPlaying) {
+                audioBtn.classList.add('border-pink-500/50', 'bg-pink-950/40', 'text-pink-200');
+                audioText.innerText = "Sound: On";
+                playAmbientTone();
+                soundInterval = setInterval(playAmbientTone, 2200);
+            } else {
+                audioBtn.classList.remove('border-pink-500/50', 'bg-pink-950/40', 'text-pink-200');
+                audioText.innerText = "Ambient Sound";
+                clearInterval(soundInterval);
+            }
+        }
+
+        audioBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleAudio();
+        });
+
+        // --- CONTROLS & RESET HANDLERS ---
+        function startJourney() {
+            if (isRunning) return;
+            startOverlay.style.opacity = '0';
+            setTimeout(() => startOverlay.style.display = 'none', 700);
+
+            initAudio();
+            if (!isAudioPlaying) {
+                toggleAudio(); // Start ambient audio automatically
+            }
+
+            resetAndRun();
+        }
+
+        function resetAndRun() {
+            cancelAnimationFrame(animationFrame);
+            startTime = null;
+            isRunning = true;
+            isZoomed = false;
+
+            // Reset UI state
+            stage.classList.remove('zoom-active');
+            messageBox.classList.remove('show');
+            sparkles = [];
+
+            initFlowers();
+            animationFrame = requestAnimationFrame(animate);
+        }
+
+        startOverlay.addEventListener('click', startJourney);
+        replayBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            resetAndRun();
+        });
+
+        // Touch fallback for full interactive start
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && startOverlay.style.display !== 'none') {
+                startJourney();
+            }
+        });
+    </script>
+</body>
+</html>
